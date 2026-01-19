@@ -6,6 +6,11 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
+# 1. 宣告有一個參數叫做 VITE_API_URL
+ARG VITE_API_URL
+# 2. 把這個參數設定成環境變數，這樣 npm run build 才讀得到
+ENV VITE_API_URL=$VITE_API_URL
+
 # 2. 複製所有程式碼並打包
 COPY . .
 RUN npm run build
