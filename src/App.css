@@ -1,0 +1,117 @@
+/* src/App.css */
+
+/* 模擬手機螢幕的容器 */
+.container {
+  /* 關鍵修正：限制最大寬度，讓它像手機 */
+  width: 100%;
+  max-width: 430px; /* iPhone Pro Max 的寬度，適合模擬 */
+  height: 100vh;    /* 高度佔滿 */
+  max-height: 932px; /* 避免在超大螢幕上太長，也可以設 100vh */
+  
+  /* 排版設定 */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  
+  /* 外觀 */
+  background-color: #E0F7FA; /* 你的淺藍色背景 */
+  box-shadow: 0 0 20px rgba(0,0,0,0.5); /* 加一點陰影讓它從背景浮出來 */
+  overflow: hidden; /* 防止內容爆出去 */
+}
+
+/* 確保你的圖片不會被切掉或變形 */
+.avatar-img {
+  max-width: 100%;
+  max-height: 60vh; /* 限制圖片高度，留空間給按鈕 */
+  object-fit: contain; /* 保持圖片比例 */
+  margin-top: 20px;
+  display: block; /* 消除圖片底部空隙 */
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column; /* 讓圖片跟文字垂直排列 */
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%; /* 確保內容區塊寬度足夠 */
+}
+
+/* ... 底下保留原本的 status-overlay, bottom-nav, black-circle 等設定 ... */
+/* 記得把剛剛我給你的 status-overlay 等 CSS 貼在下面 */
+.status-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px 40px;
+  border-radius: 12px;
+  z-index: 20;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  white-space: nowrap; /* 防止文字斷行 */
+}
+
+.bottom-nav {
+  height: 80px;
+  background-color: #D6F1F5;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: relative;
+  width: 100%; /* 確保導覽列也是滿寬 */
+}
+
+.add-button-container {
+  position: relative;
+  top: -25px; /* 往上推一點 */
+  cursor: pointer;
+}
+
+.black-circle {
+  width: 70px;
+  height: 70px;
+  background-color: black;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.1s;
+}
+
+.add-button-container:active .black-circle {
+  transform: scale(0.95);
+}
+
+.plus-sign {
+  color: white;
+  font-size: 40px;
+  margin-top: -5px; /* 微調加號位置 */
+}
+
+/* 圖片容器：設定為相對定位，當作對齊的基準點 */
+.avatar-wrapper {
+  position: relative; /* 關鍵！讓裡面的 absolute 是根據這裡定位 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* 這裡不設固定寬高，讓它隨圖片大小縮放 */
+}
+
+/* 上層衣服：設定絕對定位，蓋在人偶上 */
+.overlay-img {
+  position: absolute; /* 讓它浮起來 */
+  top: 0;
+  left: 0;
+  width: 100%;  /* 強制跟底層人偶一樣寬 */
+  height: 100%; /* 強制跟底層人偶一樣高 */
+  object-fit: contain; /* 確保衣服比例不變，跟人偶一樣的縮放邏輯 */
+  z-index: 5; /* 確保它在人偶 (z-index 預設 0) 上面 */
+  
+  /* 選項：如果你想要衣服稍微透明一點，可以看到後面的人偶，可以加 opacity */
+  /* opacity: 0.9; */
+  margin-top: 20px; /* 必須跟 avatar-img 的 margin 一樣，位置才會對齊 */
+}

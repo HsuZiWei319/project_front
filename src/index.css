@@ -1,0 +1,24 @@
+/* src/index.css */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  /* 這裡把背景設成深灰色，模擬你在電腦上看手機的感覺 */
+  background-color: #242424; 
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;         /* 讓你的 App 在螢幕正中間 */
+  justify-content: center;
+  align-items: center;
+}
+
+#root {
+  width: 100%;
+  display: flex;        /* 確保 root 也是滿版並置中 */
+  justify-content: center;
+}
