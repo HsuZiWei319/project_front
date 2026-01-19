@@ -1,16 +1,14 @@
-# React + Vite
+前置需求 (Prerequisites)
+Node.js (v20+)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Python (v3.9+)
 
-Currently, two official plugins are available:
+Docker & Docker Compose
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 如何執行 (Getting Started)
 
-## React Compiler
+本專案不依賴 Docker Compose，使用原生 Docker 指令建置，適合學習與除錯。
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 一鍵啟動 (推薦)
+我們將繁雜的指令封裝在腳本中，請執行：
+./start.sh

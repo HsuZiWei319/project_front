@@ -3,6 +3,10 @@ import axios from 'axios';
 import './App.css'; 
 
 const App = () => {
+  // 讀取環境變數 (Vite 專用寫法)
+  // 如果 .env 沒設定，就預設用 localhost 防止報錯
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
   const [statusMessage, setStatusMessage] = useState(""); 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -38,9 +42,15 @@ const App = () => {
     }
 
     try {
+      // 使用變數組出完整的網址
+      // 注意：確保你的變數最後沒有斜線，或者這裡要補斜線
+      const uploadUrl = `${API_URL}/api/upload-image`;
+
+      console.log("正在連線至:", uploadUrl); // Debug 用
+      
       // --- 修改重點 2: 更新 API 網址 ---
       // 根據規格表 Function/API 欄位
-      const response = await axios.post('http://172.16.211.128:5000/api/upload-image', formData, {
+      const response = await axios.post(uploadUrl, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         timeout: 60000, 
       });
