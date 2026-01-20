@@ -5,6 +5,7 @@
 ## 快速啟動 (Quick Start)
 
 前置需求 (Prerequisites)
+
 Node.js (v20+)
 
 Python (v3.9+)
