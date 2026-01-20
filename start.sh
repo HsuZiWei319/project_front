@@ -7,8 +7,8 @@
 BACKEND_URL="http://localhost:8000"
 
 # 容器名稱與 Port
-CONTAINER_NAME="frontend-container"
-IMAGE_NAME="frontend-image"
+CONTAINER_NAME="upload-image-cont"
+IMAGE_NAME="fupload-image-img"
 PORT=8080
 # ==========================================
 
