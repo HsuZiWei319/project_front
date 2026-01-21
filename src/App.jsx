@@ -5,7 +5,7 @@ import './App.css';
 const App = () => {
   // 讀取環境變數 (Vite 專用寫法)
   // 如果 .env 沒設定，就預設用 localhost 防止報錯
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:5000";
 
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
   const [statusMessage, setStatusMessage] = useState(""); 
@@ -31,29 +31,31 @@ const App = () => {
     setIsProcessing(true);
     setStatusMessage("正在去背處理中..."); 
     
-    // --- 修改重點 1: 建立 FormData ---
-    const formData = new FormData();
-    // 根據規格表
-    formData.append('file', file);         // 放入實體檔案
-    formData.append('user_id', '12345');   // 放入使用者 ID (先寫死測試用)
+    // --- 修改重點 1: 把檔案轉成 Base64 ---
+    const reader = new FileReader();
+    reader.onload = async () => {
+      // Base64 格式: "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
+      const base64File = reader.result;
 
-    for (var pair of formData.entries()) {
-    console.log(pair[0]+ ', ' + pair[1]); 
-    }
+      // 建立 JSON 物件 (符合後端期望的欄位名)
+      const jsonData = {
+        image_data: base64File,     // Base64 編碼的檔案
+        filename: file.name         // 原始檔案名稱
+      };
 
-    try {
-      // 使用變數組出完整的網址
-      // 注意：確保你的變數最後沒有斜線，或者這裡要補斜線
-      const uploadUrl = `${API_URL}/api/upload-image`;
+      console.log("即將上傳 JSON 資料:", jsonData);
 
-      console.log("正在連線至:", uploadUrl); // Debug 用
-      
-      // --- 修改重點 2: 更新 API 網址 ---
-      // 根據規格表 Function/API 欄位
-      const response = await axios.post(uploadUrl, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 60000, 
-      });
+      try {
+        // 使用變數組出完整的網址
+        const uploadUrl = `${API_URL}/api/upload-image`;
+
+        console.log("正在連線至:", uploadUrl); // Debug 用
+        
+        // --- 修改重點 2: 改成 JSON 格式 ---
+        const response = await axios.post(uploadUrl, jsonData, {
+          headers: { 'Content-Type': 'application/json' },
+          timeout: 60000, 
+        });
 
       console.log("回傳結果:", response.data);
       
@@ -74,6 +76,8 @@ const App = () => {
       setIsProcessing(false);
       event.target.value = '';
     }
+    };
+    reader.readAsDataURL(file);
   };
 
   const [resultImage, setResultImage] = useState(null);
