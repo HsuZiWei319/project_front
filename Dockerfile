@@ -17,17 +17,24 @@ RUN npm run build
 # (Vite 預設會打包到 /app/dist 資料夾)
 
 
-# --- 階段二：執行 (Runner) ---
-FROM nginx:alpine
+# --- 階段二：開發/生產 (Runner) ---
+FROM node:20-alpine AS dev
+WORKDIR /app
 
-# 1. 把階段一打包好的 dist 資料夾，複製到 Nginx 預設目錄
-COPY --from=builder /app/dist /usr/share/nginx/html
+# 1. 宣告有一個參數叫做 VITE_API_URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
-# 2. 複製我們寫好的 nginx 設定檔
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# 2. 安裝依賴
+COPY package.json package-lock.json ./
+RUN npm install
 
-# 3. 開放 80 port
-EXPOSE 80
+# 3. 複製程式碼
+COPY . .
 
-# 4. 啟動 Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# 4. 開放 5173 port (Vite dev server 預設埠)
+EXPOSE 5173
+
+# 5. 啟動 Vite dev server (預設行為)
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+

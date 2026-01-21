@@ -5,6 +5,7 @@ import './App.css';
 const App = () => {
   // 讀取環境變數 (Vite 專用寫法)
   // 如果 .env 沒設定，就預設用 localhost 防止報錯
+
   const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:5000";
 
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)

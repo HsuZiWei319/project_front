@@ -10,10 +10,20 @@ BACKEND_URL="http://192.168.233.128:5000"
 CONTAINER_NAME="upload-image-cont"
 IMAGE_NAME="upload-image-img"
 PORT=8080
+DEV_MODE=${1:-dev}  # 預設為開發模式，可以傳入其他值改為生產模式
 # ==========================================
 
 echo "🚀 [前端] 準備啟動..."
 echo "🔗 後端 API 指向: $BACKEND_URL"
+
+# 檢查是否為開發模式
+if [ "$DEV_MODE" = "dev" ]; then
+    echo "🔥 開發模式 (HOT RELOAD 已啟用)"
+    IS_DEV=true
+else
+    echo "📦 生產模式"
+    IS_DEV=false
+fi
 
 # 1. 清理舊的容器 (如果有)
 if [ "$(docker ps -aq -f name=$CONTAINER_NAME)" ]; then
@@ -30,11 +40,19 @@ docker build \
 
 # 3. 啟動容器
 echo "🔥 啟動容器中..."
-docker run -d \
-  -p $PORT:80 \
-  --name $CONTAINER_NAME \
-  $IMAGE_NAME
 
+# 啟動開發模式容器：使用卷掛載和 Vite dev server
+docker run -d \
+  -p $PORT:5173 \
+  -v "$(pwd)/src:/app/src" \
+  -v "$(pwd)/public:/app/public" \
+  --name $CONTAINER_NAME \
+  $IMAGE_NAME npm run dev -- --host 0.0.0.0
 echo "========================================"
-echo "🎉 前端已成功跑在: http://localhost:$PORT"
+echo "🎉 前端開發模式運行在: http://localhost:$PORT"
+echo "📝 檔案變更會自動重新載入 (HOT RELOAD)"
 echo "========================================"
+
+echo "📋 容器名稱: $CONTAINER_NAME"
+echo "💡 查看日誌: docker logs -f $CONTAINER_NAME"
+echo "⏹️  停止容器: docker stop $CONTAINER_NAME"
