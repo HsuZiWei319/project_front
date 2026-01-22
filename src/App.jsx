@@ -32,31 +32,24 @@ const App = () => {
     setIsProcessing(true);
     setStatusMessage("正在去背處理中..."); 
     
-    // --- 修改重點 1: 把檔案轉成 Base64 ---
-    const reader = new FileReader();
-    reader.onload = async () => {
-      // Base64 格式: "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
-      const base64File = reader.result;
+    // --- 修改重點 1: 建立 FormData 物件 ---
+    const formData = new FormData();
+    formData.append('image', file);           // 直接追加檔案物件
+    formData.append('filename', file.name);   // 原始檔案名稱
 
-      // 建立 JSON 物件 (符合後端期望的欄位名)
-      const jsonData = {
-        image_data: base64File,     // Base64 編碼的檔案
-        filename: file.name         // 原始檔案名稱
-      };
+    console.log("即將上傳 FormData 資料，檔案:", file.name);
 
-      console.log("即將上傳 JSON 資料:", jsonData);
+    try {
+      // 使用變數組出完整的網址
+      const uploadUrl = `${API_URL}/api/upload-image`;
 
-      try {
-        // 使用變數組出完整的網址
-        const uploadUrl = `${API_URL}/api/upload-image`;
-
-        console.log("正在連線至:", uploadUrl); // Debug 用
-        
-        // --- 修改重點 2: 改成 JSON 格式 ---
-        const response = await axios.post(uploadUrl, jsonData, {
-          headers: { 'Content-Type': 'application/json' },
-          timeout: 60000, 
-        });
+      console.log("正在連線至:", uploadUrl); // Debug 用
+      
+      // --- 修改重點 2: 改成 multipart/form-data 格式 ---
+      const response = await axios.post(uploadUrl, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: 60000, 
+      });
 
       console.log("回傳結果:", response.data);
       
@@ -77,8 +70,6 @@ const App = () => {
       setIsProcessing(false);
       event.target.value = '';
     }
-    };
-    reader.readAsDataURL(file);
   };
 
   const [resultImage, setResultImage] = useState(null);
