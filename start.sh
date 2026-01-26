@@ -4,7 +4,7 @@
 # 🔧 設定區 (Config)
 # 請在這裡填入後端的 IP (可以是 localhost, 192.168.x.x 或 ngrok)
 # 預設值先寫 localhost，組員拿去跑的時候叫他們自己改這裡
-BACKEND_URL="http://192.168.233.128:5000"
+BACKEND_URL="http://192.168.233.128:30000"
 
 # 容器名稱與 Port
 CONTAINER_NAME="upload-image-cont"

@@ -6,7 +6,7 @@ const App = () => {
   // 讀取環境變數 (Vite 專用寫法)
   // 如果 .env 沒設定，就預設用 localhost 防止報錯
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:5000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:30000";
 
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
   const [statusMessage, setStatusMessage] = useState(""); 
@@ -34,7 +34,7 @@ const App = () => {
     
     // --- 修改重點 1: 建立 FormData 物件 ---
     const formData = new FormData();
-    formData.append('image', file);           // 直接追加檔案物件
+    formData.append('image_data', file);      // 後端預期的檔案欄位
     formData.append('filename', file.name);   // 原始檔案名稱
 
     console.log("即將上傳 FormData 資料，檔案:", file.name);
