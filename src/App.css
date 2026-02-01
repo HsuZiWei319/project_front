@@ -253,6 +253,15 @@
   cursor: pointer;
 }
 
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+
 .plus-icon {
   position: relative;
   width: 100px;
@@ -261,7 +270,6 @@
   flex: 1;            /* 均勻分散 */
   z-index: 100;
   margin-top: -10px;
-  transition: transform 0.1s;
 }
 
 .add-button-container {
@@ -269,8 +277,15 @@
   cursor: pointer;
 }
 
+.add-button-container:hover .plus-icon {
+    animation: none;
+    transform: scale(1.05);
+    opacity: 0.85;
+}
+
 .add-button-container:active .plus-icon {
-  transform: scale(0.95);
+  animation: none;
+  transform: scale(0.92);
 }
 
 .notification-card {

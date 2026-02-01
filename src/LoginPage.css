@@ -103,6 +103,10 @@
     opacity: 0.85;
 }
 
+.login-btn:active {
+    transform: scale(0.95);
+}
+
 /* 社群登入區 */
 .social-login {
     text-align: center;
