@@ -16,6 +16,10 @@ DEV_MODE=${1:-dev}  # 預設為開發模式，可以傳入其他值改為生產�
 echo "🚀 [前端] 準備啟動..."
 echo "🔗 後端 API 指向: $BACKEND_URL"
 
+# 安裝依賴
+echo "📦 安裝 npm 依賴..."
+npm install
+
 # 檢查是否為開發模式
 if [ "$DEV_MODE" = "dev" ]; then
     echo "🔥 開發模式 (HOT RELOAD 已啟用)"
