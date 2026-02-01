@@ -1,4 +1,3 @@
-/* src/App.css */
 
 /* 模擬手機螢幕的容器 */
 .container {
@@ -14,7 +13,16 @@
   position: relative;
   
   /* 外觀 */
-  background-color: #E0F7FA; /* 你的淺藍色背景 */
+  background-image: url('./assets/background/background_color.png'); 
+
+ /*寬度佔 100%，高度自動算出 (保持比例) */
+  background-size: 100% auto;; 
+
+  /*設定圖片位置置中 */
+  background-position: center;
+
+  /*防止圖片重複排列 */
+  background-repeat: no-repeat;
   box-shadow: 0 0 20px rgba(0,0,0,0.5); /* 加一點陰影讓它從背景浮出來 */
   overflow: hidden; /* 防止內容爆出去 */
 }
@@ -38,8 +46,7 @@
   width: 100%; /* 確保內容區塊寬度足夠 */
 }
 
-/* ... 底下保留原本的 status-overlay, bottom-nav, black-circle 等設定 ... */
-/* 記得把剛剛我給你的 status-overlay 等 CSS 貼在下面 */
+/* 狀態覆蓋層 */
 .status-overlay {
   position: absolute;
   top: 50%;
@@ -54,37 +61,252 @@
   white-space: nowrap; /* 防止文字斷行 */
 }
 
-.bottom-nav {
-  height: 80px;
-  background-color: #D6F1F5;
+/* ---------------------------------------------------------- */
+/* 共用導覽列樣式 */
+.shared-nav {
+  width: 100%;
+  height: 100px;         /* 假設的高度 */
+  background-color: #D2ECFF; 
   display: flex;
-  justify-content: space-around;
+  justify-content: space-around; /* 讓內容平均分配 */
   align-items: center;
+  z-index: 10;          /* 確保浮在最上面 */
+}
+
+/* 頂部導覽列 */
+.top-nav {
+  position: absolute;   /* 絕對定位 */
+  top: 0;               /* 黏在頂部 */
+  left: 0;
+  
+  /*  如果需要設定圓角，通常在上面
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px; */
+}
+
+/* 底部導覽列 */
+.bottom-nav {
+  position: absolute;   /* 絕對定位 */
+  bottom: 0;            /* 黏在底部 */
+  left: 0;
+
+  /* 如果需要設定圓角，通常在上面 
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;*/
+}
+/* ---------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------- */
+/* 個人檔案卡片容器 */
+.profile-card {
   position: relative;
-  width: 100%; /* 確保導覽列也是滿寬 */
+  display: flex;
+  flex-direction: column;  /* icon 在上，文字在下 */
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: 20px;
+}
+
+/* 個人檔案icon */
+.profile-icon {
+  width: 30px;        /* 設定圖片寬度 */
+  height: auto;       /* 高度自動，保持比例 */
+  cursor: pointer;    /* 滑鼠移過去變成手指 */
+}
+
+/* 個人檔案文字 */
+.profile-text {
+  margin-top: 8px;        /* icon 和文字之間的距離 */
+  font-size: 14px;        /* 字的大小 */
+  font-weight: bold;      /* 粗體 */
+  color: #333333;         /* 深灰色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;     /* 文字置中 */
+  white-space: nowrap;    /* 防止文字斷行 */
+}
+
+.like-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* icon 在上，文字在下 */
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: 20px;
+}
+
+/* 喜歡icon */
+.like-icon {
+  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
+  height: auto;       /* 高度自動，保持比例 */
+  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
+  
+  /* 選用：如果想要加一點陰影讓它更清楚 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  */
+}
+
+.like-text {
+  margin-top: 8px;        /* icon 和文字之間的距離 */
+  font-size: 14px;        /* 字的大小 */
+  font-weight: bold;      /* 粗體 */
+  color: #333333;         /* 深灰色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;     /* 文字置中 */
+  white-space: nowrap;    /* 防止文字斷行 */
+}
+
+.mode-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* icon 在上，文字在下 */
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: 20px;
+}
+
+/* 設定icon */
+.mode-icon {
+  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
+  height: auto;       /* 高度自動，保持比例 */
+  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
+  
+  /* 選用：如果想要加一點陰影讓它更清楚 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  */
+}
+
+.mode-text {
+  margin-top: 8px;        /* icon 和文字之間的距離 */
+  font-size: 14px;        /* 字的大小 */
+  font-weight: bold;      /* 粗體 */
+  color: #333333;         /* 深灰色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;     /* 文字置中 */
+  white-space: nowrap;    /* 防止文字斷行 */
+}
+
+.setting-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* icon 在上，文字在下 */
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: 20px;
+}
+
+/* 設定icon */
+.setting-icon {
+  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
+  height: auto;       /* 高度自動，保持比例 */
+  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
+  
+  /* 選用：如果想要加一點陰影讓它更清楚 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  */
+}
+
+.setting-text {
+  margin-top: 8px;        /* icon 和文字之間的距離 */
+  font-size: 14px;        /* 字的大小 */
+  font-weight: bold;      /* 粗體 */
+  color: #333333;         /* 深灰色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;     /* 文字置中 */
+  white-space: nowrap;    /* 防止文字斷行 */
+}
+
+.home-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* icon 在上，文字在下 */
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: -10px;
+}
+
+/* 設定icon */
+.home-icon {
+  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
+  height: auto;       /* 高度自動，保持比例 */
+  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
+  
+  /* 選用：如果想要加一點陰影讓它更清楚 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  */
+}
+
+.home-text {
+  margin-top: 8px;        /* icon 和文字之間的距離 */
+  font-size: 14px;        /* 字的大小 */
+  font-weight: bold;      /* 粗體 */
+  color: #333333;         /* 深灰色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;     /* 文字置中 */
+  white-space: nowrap;    /* 防止文字斷行 */
+  height: auto;
+  cursor: pointer;
+}
+
+.plus-icon {
+  position: relative;
+  width: 100px;
+  display: flex;
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: -10px;
+  transition: transform 0.1s;
 }
 
 .add-button-container {
   position: relative;
-  top: -25px; /* 往上推一點 */
   cursor: pointer;
 }
 
-.black-circle {
-  width: 70px;
-  height: 70px;
-  background-color: black;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: transform 0.1s;
-}
-
-.add-button-container:active .black-circle {
+.add-button-container:active .plus-icon {
   transform: scale(0.95);
 }
+
+.notification-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;  /* icon 在上，文字在下 */
+  align-items: center; /* 水平置中 */
+  flex: 1;            /* 均勻分散 */
+  z-index: 100;
+  margin-top: -10px;
+}
+
+/* 通知icon */
+.notification-icon {
+  width: 27px;        /* 設定圖片寬度 (依你的圖片大小調整) */
+  height: auto;       /* 高度自動，保持比例 */
+  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
+  
+  /* 選用：如果想要加一點陰影讓它更清楚 
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  */
+}
+
+.notification-text {
+  margin-top: 8px;        /* icon 和文字之間的距離 */
+  font-size: 14px;        /* 字的大小 */
+  font-weight: bold;      /* 粗體 */
+  color: #333333;         /* 深灰色 */
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+  text-align: center;     /* 文字置中 */
+  white-space: nowrap;    /* 防止文字斷行 */
+  height: auto;
+  cursor: pointer;
+}
+/* ---------------------------------------------------------- */
+
 
 .plus-sign {
   color: white;
@@ -114,4 +336,12 @@
   /* 選項：如果你想要衣服稍微透明一點，可以看到後面的人偶，可以加 opacity */
   /* opacity: 0.9; */
   margin-top: 20px; /* 必須跟 avatar-img 的 margin 一樣，位置才會對齊 */
+}
+
+/* 分隔線樣式 */
+.divider-line {
+  width: 1.5px;
+  height: auto;
+  flex-shrink: 0;
+  z-index: 100;
 }

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import './App.css'; 
+import * as Images from './assets'; // 從 assets/index.js 匯入所有圖片
 
 const App = () => {
   // 讀取環境變數 (Vite 專用寫法)
@@ -76,7 +77,7 @@ const App = () => {
 
   return (
     <div className="container">
-      {/* --- 這一塊是隱藏的 Input，這行最重要，不要刪掉 --- */}
+      {/* --- 這一塊是隱藏的 Input --- */}
       <input 
         type="file" 
         ref={fileInputRef} 
@@ -84,11 +85,43 @@ const App = () => {
         onChange={handleFileChange}
         accept="image/*" // 限制只能選圖片
       />
-      {/* ----------------------------------------------- */}
 
       {/* 頂部導覽列 ( header) */}
-      <div className="header">
-        {/* ...圖示 icons... */}
+      <div className="shared-nav top-nav">
+        <div className="profile-card"> 
+          <img src={Images.icon_profile} alt="個人檔案" className="profile-icon"/>
+          <div className="profile-text">
+            個人檔案
+          </div>
+        </div>
+
+        <img src={Images.line} alt="" className="divider-line" />
+
+        <div className="like-card"> 
+          <img src={Images.icon_like} alt="喜歡" className="like-icon" />
+          <div className="like-text">
+            喜歡
+          </div>
+        </div>
+
+        <img src={Images.line} alt="" className="divider-line" />
+
+        <div className="mode-card"> 
+          <img src={Images.icon_mode} alt="模式" className="mode-icon" />
+          <div className="mode-text">
+            模式
+          </div>
+        </div>
+
+        <img src={Images.line} alt="" className="divider-line" />
+        
+        <div className="setting-card"> 
+          <img src={Images.icon_setting} alt="設定" className="setting-icon" />
+          <div className="setting-text">
+            設定
+          </div>
+        </div>
+
       </div>
 
       {/* 中間主要區塊 (Avatar 與 訊息顯示區) */}
@@ -117,18 +150,26 @@ const App = () => {
       </div>
 
       {/* 底部導覽列 (Bottom Nav) */}
-      <div className="bottom-nav">
-        <div className="nav-icon">🏠<br/>主畫面</div>
+      <div className="shared-nav bottom-nav">
+        <div className="home-card"> 
+          <img src={Images.icon_home} alt="主畫面" className="home-icon"/>
+          <div className="home-text">
+            主畫面
+          </div>
+        </div>
         
         {/* --- 按鈕 --- */}
         <div className="add-button-container" onClick={handleBlackButtonClick}>
-          <div className="black-circle">
-            <span className="plus-sign">+</span>
-          </div>
+          <img src={Images.button_plus} alt="新增" className="plus-icon"/>
         </div>
         {/* --------------------- */}
 
-        <div className="nav-icon">🔔<br/>通知</div>
+        <div className="notification-card"> 
+          <img src={Images.icon_notification} alt="通知" className="notification-icon"/>
+          <div className="notification-text">
+            通知
+          </div>
+        </div>
       </div>
     </div>
   );
