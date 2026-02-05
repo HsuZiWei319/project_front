@@ -16,6 +16,7 @@
 .app-subtitle {
     font-size: 18px;
     color: #333;
+    font-weight: bold;
     margin-bottom: 40px;
 }
 
@@ -148,4 +149,39 @@
 .google-color { background-color: #DB4437; } /* Google 紅 */
 .fb-color { background-color: #4267B2; } /* FB 藍 */
 
-/*icon設定*/
+/* ----------- register 設定 --------------- */
+/* 左上角返回箭頭 */
+.back-arrow {
+    position: absolute;
+    top: 105px;
+    left: 10px;
+    width: 14px;
+    height: auto;
+    cursor: pointer;
+    padding: 10px; /* 增加點擊範圍 */
+}
+
+/* 註冊頁專用的輸入框群組 (不需要左右圖示，但需要上方 Label) */
+.input-group-register {
+  width: 300px;
+  margin-bottom: 15px;
+  text-align: left; /* 讓 label 靠左 */
+}
+
+.input-group-register label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.input-group-register input {
+  width: 100%;
+  padding: 10px; /* 不需要留圖示位置了 */
+  border: 1px solid #999; /* 加個邊框比較像你的設計圖 */
+  border-radius: 5px;     /* 方一點的圓角 */
+  background-color: white;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+}

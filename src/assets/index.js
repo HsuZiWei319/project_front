@@ -10,8 +10,9 @@ import button_plus from './background/button_plus.png';
 import icon_profile_login from './login/icon_profile_login.png';
 import icon_lock from './login/icon_lock.png';
 import icon_eye from './login/icon_eye.png';
-import icon_google from './login/icon _google.png';
-import icon_facebook from './login/icon _facebook.png';
+import icon_google from './login/icon_google.png';
+import icon_facebook from './login/icon_facebook.png';
+import icon_return from './register/icon_return.png';
 
 export {
     icon_profile,
@@ -27,4 +28,5 @@ export {
     icon_eye,
     icon_google,
     icon_facebook,
+    icon_return,
 };

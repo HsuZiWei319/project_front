@@ -43,7 +43,10 @@ const LoginPage = () => {
 
             {/* 連結區 */}
             <div className="links-container">
-            <span className="link-text">註冊</span>
+            <span className="link-text" onClick={() => navigate('/register')}>
+                註冊
+            </span>
+            
             <span className="link-text">忘記密碼?</span>
             <span className="link-text">未登入狀態繼續</span>
             </div>
@@ -52,14 +55,16 @@ const LoginPage = () => {
             <button className="login-btn" onClick={handleLogin}>
             登入
             </button>
-
+            
             {/* 社群登入 */}
             <div className="social-login">
+            {/* 
             <p>或用社群帳號註冊</p>
             <div className="social-icons">
                 <img src={Images.icon_google} alt="Google login" className="social-icon" />
                 <img src={Images.icon_facebook} alt="Facebook login" className="social-icon" />
             </div>
+            */}
             </div>
         </div>
 
