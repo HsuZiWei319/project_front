@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './App.css'; 
 import * as Images from './assets'; // 從 assets/index.js 匯入所有圖片
@@ -12,9 +12,18 @@ const MainPage = () => {
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
   const [statusMessage, setStatusMessage] = useState(""); 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [resultImage, setResultImage] = useState(null);
 
   // 2. 建立一個 Ref：用來抓取那個「隱藏的 input」
   const fileInputRef = useRef(null);
+  
+  // 監控 resultImage 的變化
+  useEffect(() => {
+    console.log("🔍 resultImage 狀態已更新:", resultImage);
+    if (resultImage) {
+      console.log("✅ 圖片 URL 已設定，應該會顯示在頁面上");
+    }
+  }, [resultImage]);
 
   // 3. 遙控器函式：當按下黑色按鈕時，觸發這個函式
   const handleBlackButtonClick = () => {
@@ -56,11 +65,15 @@ const MainPage = () => {
       
       // --- 修改重點 3: 接收正確的回傳欄位 ---
       // 根據規格表 Output 欄位
-      if (response.data.processed_url) {
-        setStatusMessage("去背成功！");
-        // 如果有設一個 state 存結果圖，這裡可以更新
-        setResultImage(response.data.processed_url); 
+      if (response.data.processed_url || response.data.storage_status?.url) {
+        const imageUrl = response.data.processed_url || response.data.storage_status.url;
+        console.log("✅ 收到圖片 URL:", imageUrl);
+        console.log("✅ 正在設定 resultImage 狀態");
+        setStatusMessage(""); // 成功後清空狀態訊息，直接顯示圖片
+        setResultImage(imageUrl);
+        console.log("✅ resultImage 已設定為:", imageUrl);
       } else {
+        console.error("❌ 後端未返回圖片 URL，完整回應:", response.data);
         setStatusMessage("處理完成，但沒有回傳圖片連結");
       }
       
@@ -72,8 +85,6 @@ const MainPage = () => {
       event.target.value = '';
     }
   };
-
-  const [resultImage, setResultImage] = useState(null);
 
   return (
     <div className="container">
@@ -132,7 +143,7 @@ const MainPage = () => {
         <div className="avatar-wrapper">
           
           {/* 1. 底層：原本的 3D 人偶 (永遠顯示) */}
-          <img src="/avatar-placeholder.png" alt="" className="avatar-img" />
+          {/*<img src="" alt="" className="avatar-img" />*/}
 
           {/* 2. 上層：去背後的衣服 (如果有拿到 resultImage 才顯示) */}
           {resultImage && (
