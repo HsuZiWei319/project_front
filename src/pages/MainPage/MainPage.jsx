@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './App.css'; 
-import * as Images from './assets'; // 從 assets/index.js 匯入所有圖片
+import '../../App.css'; 
+import * as Images from '../../assets';
 
 const MainPage = () => {
   // 讀取環境變數 (Vite 專用寫法)
@@ -21,7 +22,7 @@ const MainPage = () => {
   useEffect(() => {
     console.log("🔍 resultImage 狀態已更新:", resultImage);
     if (resultImage) {
-      console.log("✅ 圖片 URL 已設定，應該會顯示在頁面上");
+      console.log("✅ 圖片 URL 已設定");
     }
   }, [resultImage]);
 

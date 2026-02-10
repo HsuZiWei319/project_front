@@ -1,9 +1,11 @@
-// src/LoginPage.jsx
+// src/pages/Login/LoginPage.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // 引入導航鉤子
-import './LoginPage.css';
-import './App.css'; // 如果有共用樣式，可以引入
-import * as Images from './assets'; // 從 assets/index.js 匯入所有圖片
+import { useNavigate } from 'react-router-dom';
+import '../../App.css';
+import * as Images from '../../assets';
+import AppHeader from '../../components/Header/AppHeader';
+import Navigation from '../../components/Navigation/Navigation';
+import PrimaryButton from '../../components/Button/PrimaryButton';
 
 const LoginPage = () => {
   const navigate = useNavigate(); // 取得導航功能
@@ -16,13 +18,10 @@ const LoginPage = () => {
 
   return (
     <div className="container">
-        <div className="shared-nav top-nav"></div>
+        <Navigation position="top" />
       
         {/* 標題區 */}
-        <div className="login-header">
-            <h1 className="app-title">APP名稱</h1>
-            <p className="app-subtitle">你的專屬AI穿搭助理</p>
-        </div>
+        <AppHeader />
 
         {/* 表單區 */}
         <div className="login-form">
@@ -52,9 +51,9 @@ const LoginPage = () => {
             </div>
 
             {/* 登入按鈕 */}
-            <button className="login-btn" onClick={handleLogin}>
+            <PrimaryButton onClick={handleLogin}>
             登入
-            </button>
+            </PrimaryButton>
             
             {/* 社群登入 */}
             <div className="social-login">
@@ -68,9 +67,8 @@ const LoginPage = () => {
             </div>
         </div>
 
-        <div className="shared-nav bottom-nav"></div>
-    </div>
-  );
-};
-
+        <Navigation position="bottom" />
+        </div>
+        );
+    }
 export default LoginPage;

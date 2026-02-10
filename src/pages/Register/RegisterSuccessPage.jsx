@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css';
-import './App.css';
-import * as Images from './assets';
+import '../../App.css';
+import AppHeader from '../../components/Header/AppHeader';
+import BackButton from '../../components/Header/BackButton';
+import Navigation from '../../components/Navigation/Navigation';
+import PrimaryButton from '../../components/Button/PrimaryButton';
 
 const RegisterSuccessPage = () => {
   const navigate = useNavigate();
@@ -14,14 +16,11 @@ const RegisterSuccessPage = () => {
 
   return (
     <div className="container">
-        <div className="shared-nav top-nav"></div>
+        <Navigation position="top" />
         {/* 左上角返回箭頭 */}
-        <img src={Images.icon_return} alt="return" className="back-arrow" onClick={() => navigate(-1)} />
+        <BackButton />
 
-        <div className="login-header">
-            <h1 className="app-title">APP名稱</h1>
-            <p className="app-subtitle">你的專屬AI穿搭助理</p>
-        </div>
+        <AppHeader />
 
         {/* 成功訊息 */}
         <div style={{ margin: '40px 0', textAlign: 'center' }}>
@@ -30,12 +29,12 @@ const RegisterSuccessPage = () => {
 
         {/* 登入按鈕 */}
         <div className="login-form">
-            <button className="login-btn" onClick={handleGoHome}>
+            <PrimaryButton onClick={handleGoHome}>
             登入
-            </button>
+            </PrimaryButton>
         </div>
 
-        <div className="shared-nav bottom-nav"></div>
+        <Navigation position="bottom" />
     </div>
   );
 };

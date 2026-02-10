@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import './LoginPage.css'; // 我們可以直接共用登入頁的 CSS，風格一致
-import './App.css';
-import * as Images from './assets';
+import '../../App.css';
+import AppHeader from '../../components/Header/AppHeader';
+import BackButton from '../../components/Header/BackButton';
+import Navigation from '../../components/Navigation/Navigation';
+import PrimaryButton from '../../components/Button/PrimaryButton';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -15,15 +17,12 @@ const RegisterPage = () => {
 
   return (
     <div className="container">
-        <div className="shared-nav top-nav"></div>
+        <Navigation position="top" />
 
         {/* 左上角返回箭頭 */}
-        <img src={Images.icon_return} alt="return" className="back-arrow" onClick={() => navigate(-1)} />
+        <BackButton />
 
-        <div className="login-header">
-            <h1 className="app-title">APP名稱</h1>
-            <p className="app-subtitle">你的專屬AI穿搭助理</p>
-        </div>
+        <AppHeader />
 
         <div className="login-form">
             {/* 欄位標籤 + 輸入框 1 */}
@@ -51,14 +50,14 @@ const RegisterPage = () => {
             </div>
 
             {/* 建立帳戶按鈕 */}
-            <button className="login-btn" onClick={handleRegister} style={{ marginTop: '20px' }}>
+            <PrimaryButton onClick={handleRegister}>
             建立帳戶
-            </button>
+            </PrimaryButton>
         </div>
 
-        <div className="shared-nav bottom-nav"></div>
+        <Navigation position="bottom" />
     </div>
-  );
+    );
 };
 
 export default RegisterPage;

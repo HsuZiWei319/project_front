@@ -2,13 +2,10 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // 引入我們剛剛做好的兩個頁面
-import LoginPage from './LoginPage';
-import MainPage from './MainPage';
-import RegisterPage from './RegisterPage';
-import RegisterSuccessPage from './RegisterSuccessPage';
-
-// 如果有共用的 CSS (例如背景設定)，可以在這裡引入
-import './App.css'; 
+import LoginPage from './pages/Login/LoginPage';
+import MainPage from './pages/MainPage/MainPage';
+import RegisterPage from './pages/Register/RegisterPage';
+import RegisterSuccessPage from './pages/Register/RegisterSuccessPage';
 
 const App = () => {
   return (
