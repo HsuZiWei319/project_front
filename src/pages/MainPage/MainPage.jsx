@@ -1,14 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import '../../App.css'; 
 import * as Images from '../../assets';
+import { uploadImageForProcessing } from '../../services/imageService';
 
 const MainPage = () => {
-  // 讀取環境變數 (Vite 專用寫法)
-  // 如果 .env 沒設定，就預設用 localhost 防止報錯
-
-  const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:30000";
+  const navigate = useNavigate();
 
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
   const [statusMessage, setStatusMessage] = useState(""); 
@@ -42,42 +39,12 @@ const MainPage = () => {
 
     setIsProcessing(true);
     setStatusMessage("正在去背處理中..."); 
-    
-    // --- 修改重點 1: 建立 FormData 物件 ---
-    const formData = new FormData();
-    formData.append('image_data', file);      // 後端預期的檔案欄位
-    formData.append('filename', file.name);   // 原始檔案名稱
-
-    console.log("即將上傳 FormData 資料，檔案:", file.name);
 
     try {
-      // 使用變數組出完整的網址
-      const uploadUrl = `${API_URL}/api/upload-image`;
-
-      console.log("正在連線至:", uploadUrl); // Debug 用
-      
-      // --- 修改重點 2: 改成 multipart/form-data 格式 ---
-      const response = await axios.post(uploadUrl, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        timeout: 60000, 
-      });
-
-      console.log("回傳結果:", response.data);
-      
-      // --- 修改重點 3: 接收正確的回傳欄位 ---
-      // 根據規格表 Output 欄位
-      if (response.data.processed_url || response.data.storage_status?.url) {
-        const imageUrl = response.data.processed_url || response.data.storage_status.url;
-        console.log("✅ 收到圖片 URL:", imageUrl);
-        console.log("✅ 正在設定 resultImage 狀態");
-        setStatusMessage(""); // 成功後清空狀態訊息，直接顯示圖片
-        setResultImage(imageUrl);
-        console.log("✅ resultImage 已設定為:", imageUrl);
-      } else {
-        console.error("❌ 後端未返回圖片 URL，完整回應:", response.data);
-        setStatusMessage("處理完成，但沒有回傳圖片連結");
-      }
-      
+      const imageUrl = await uploadImageForProcessing(file);
+      setStatusMessage(""); // 成功後清空狀態訊息，直接顯示圖片
+      setResultImage(imageUrl);
+      console.log("✅ resultImage 已設定為:", imageUrl);
     } catch (error) {
       console.error("上傳失敗:", error);
       setStatusMessage("去背失敗，請檢查後端連線");
