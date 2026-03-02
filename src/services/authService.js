@@ -14,10 +14,10 @@ export const login = async (username, password) => {
       password,
     });
     
-    console.log("✅ 登入成功");
+    console.log("登入成功");
     return response.data;
   } catch (error) {
-    console.error("❌ 登入失敗:", error.message);
+    console.error("登入失敗:", error.message);
     throw error;
   }
 };
@@ -37,10 +37,10 @@ export const register = async (email, username, password) => {
       password,
     });
     
-    console.log("✅ 註冊成功");
+    console.log("註冊成功");
     return response.data;
   } catch (error) {
-    console.error("❌ 註冊失敗:", error.message);
+    console.error("註冊失敗:", error.message);
     throw error;
   }
 };
@@ -52,10 +52,10 @@ export const register = async (email, username, password) => {
 export const logout = async () => {
   try {
     const response = await axios.post(`${API_URL}/api/logout`);
-    console.log("✅ 登出成功");
+    console.log("登出成功");
     return response.data;
   } catch (error) {
-    console.error("❌ 登出失敗:", error.message);
+    console.error("登出失敗:", error.message);
     throw error;
   }
 };
@@ -69,7 +69,7 @@ export const checkAuth = async () => {
     const response = await axios.get(`${API_URL}/api/auth/check`);
     return response.data;
   } catch (error) {
-    console.error("❌ 認證檢查失敗:", error.message);
+    console.error("認證檢查失敗:", error.message);
     throw error;
   }
 };

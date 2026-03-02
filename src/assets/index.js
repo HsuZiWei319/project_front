@@ -13,6 +13,7 @@ import icon_eye from './login/icon_eye.png';
 import icon_google from './login/icon_google.png';
 import icon_facebook from './login/icon_facebook.png';
 import icon_return from './register/icon_return.png';
+import model from './mainpage/model.png';
 
 export {
     icon_profile,
@@ -29,4 +30,5 @@ export {
     icon_google,
     icon_facebook,
     icon_return,
+    model,
 };

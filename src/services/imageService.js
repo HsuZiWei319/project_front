@@ -12,7 +12,7 @@ export const uploadImageForProcessing = async (file) => {
   formData.append('filename', file.name);
 
   try {
-    const uploadUrl = `${API_URL}/api/upload-image`;
+    const uploadUrl = `${API_URL}/upload/picture/upload_image`;
 
     console.log("正在上傳圖片至:", uploadUrl);
 
@@ -26,13 +26,13 @@ export const uploadImageForProcessing = async (file) => {
     // 根據後端回應取得圖片 URL
     if (response.data.processed_url || response.data.storage_status?.url) {
       const imageUrl = response.data.processed_url || response.data.storage_status.url;
-      console.log("✅ 收到圖片 URL:", imageUrl);
+      console.log("收到圖片 URL:", imageUrl);
       return imageUrl;
     } else {
       throw new Error('後端未返回圖片 URL');
     }
   } catch (error) {
-    console.error("❌ 上傳失敗:", error.message);
+    console.error("上傳失敗:", error.message);
     throw error;
   }
 };
@@ -46,7 +46,7 @@ export const getProcessedImages = async () => {
     const response = await axios.get(`${API_URL}/api/processed-images`);
     return response.data.images || [];
   } catch (error) {
-    console.error("❌ 取得圖片列表失敗:", error.message);
+    console.error("取得圖片列表失敗:", error.message);
     throw error;
   }
 };
@@ -61,7 +61,7 @@ export const deleteImage = async (imageId) => {
     const response = await axios.delete(`${API_URL}/api/images/${imageId}`);
     return response.data;
   } catch (error) {
-    console.error("❌ 刪除圖片失敗:", error.message);
+    console.error("刪除圖片失敗:", error.message);
     throw error;
   }
 };
