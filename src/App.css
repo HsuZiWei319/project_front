@@ -448,6 +448,19 @@
     cursor: pointer;
 }
 
+/* 錯誤提示訊息 */
+.error-message {
+    width: 300px;
+    background-color: #fee;
+    color: #c33;
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
 /* 登入按鈕 */
 .login-btn {
     width: 300px;

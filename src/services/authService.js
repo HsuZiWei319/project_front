@@ -9,7 +9,7 @@ import { API_URL } from './api';
  */
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(`${API_URL}/api/login`, {
+    const response = await axios.post(`${API_URL}/account/user/login`, {
       username,
       password,
     });
