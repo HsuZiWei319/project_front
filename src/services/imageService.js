@@ -12,7 +12,7 @@ export const uploadImageForProcessing = async (file) => {
   formData.append('filename', file.name);
 
   try {
-    const uploadUrl = `${API_URL}/upload/picture/upload_image`;
+    const uploadUrl = `${API_URL}/api/upload-image`;
 
     console.log("正在上傳圖片至:", uploadUrl);
 

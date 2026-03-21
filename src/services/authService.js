@@ -31,7 +31,7 @@ export const login = async (username, password) => {
  */
 export const register = async (email, username, password) => {
   try {
-    const response = await axios.post(`${API_URL}/api/register`, {
+    const response = await axios.post(`${API_URL}/account/user/register`, {
       email,
       username,
       password,
@@ -40,8 +40,22 @@ export const register = async (email, username, password) => {
     console.log("註冊成功");
     return response.data;
   } catch (error) {
-    console.error("註冊失敗:", error.message);
-    throw error;
+    console.error("註冊失敗:", error);
+    
+    // 返回詳細的錯誤信息
+    if (error.response?.data) {
+      // 後端返回的驗證錯誤
+      console.error("後端錯誤:", error.response.data);
+      throw {
+        message: error.response.data.detail || JSON.stringify(error.response.data),
+        status: error.response.status,
+        data: error.response.data
+      };
+    } else if (error.message) {
+      throw new Error(`請求失敗: ${error.message}`);
+    } else {
+      throw new Error('註冊失敗，請稍後重試');
+    }
   }
 };
 
