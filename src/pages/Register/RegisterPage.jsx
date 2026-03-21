@@ -134,16 +134,7 @@ const RegisterPage = () => {
             <>
               {/* 錯誤訊息顯示 */}
               {error && (
-                <div style={{ 
-                  color: '#e74c3c', 
-                  marginBottom: '15px', 
-                  textAlign: 'center',
-                  padding: '10px',
-                  backgroundColor: '#fadbd8',
-                  borderRadius: '4px',
-                  whiteSpace: 'pre-wrap',
-                  wordWrap: 'break-word'
-                }}>
+                <div className="error-message">
                   {error}
                 </div>
               )}
