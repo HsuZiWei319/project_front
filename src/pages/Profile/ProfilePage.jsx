@@ -126,6 +126,11 @@ const ProfilePage = () => {
 
         {/* 個人資訊卡片 */}
         <div className="profile-info">
+          {/* 個人檔案圖片 */}
+          <div className="profile-picture">
+            <img src={Images.default_profile_pic} alt="個人檔案圖片" className="profile-pic-image" />
+          </div>
+
           {/* 暱稱 */}
           <div className="profile-row">
             <div className="profile-label">暱稱</div>
@@ -138,8 +143,8 @@ const ProfilePage = () => {
             <div className="profile-value">{email}</div>
           </div>
 
-          {/* 電話（暫時隱藏）*/}
-          {/* <div className="profile-row">
+          {/* 電話 */}
+          {/*<div className="profile-row">
             <div className="profile-label">電話</div>
             <div className="profile-value">新增電話</div>
           </div> */}

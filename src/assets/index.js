@@ -14,6 +14,8 @@ import icon_google from './login/icon_google.png';
 import icon_facebook from './login/icon_facebook.png';
 import icon_return from './register/icon_return.png';
 import model from './mainpage/model.png';
+import default_profile_pic from './profile/default_profile_pic.png';
+import line2 from './profile/line2.png';
 
 export {
     icon_profile,
@@ -31,4 +33,6 @@ export {
     icon_facebook,
     icon_return,
     model,
+    default_profile_pic,
+    line2
 };
