@@ -29,10 +29,22 @@ const LoginPage = () => {
       // 呼叫登入 API
       const response = await login(username, password);
       
-      // 保存 token
-      if (response.token) {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('username', response.username || username);
+      // 保存 token 和用戶資訊
+      if (response.access || response.token) {
+        // 兼容兩種 token 格式
+        const token = response.access || response.token;
+        const refreshToken = response.refresh || '';
+        
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
+        
+        // 保存用戶資訊
+        if (response.user) {
+          localStorage.setItem('username', response.user.username || username);
+          localStorage.setItem('email', response.user.email || '');
+        } else {
+          localStorage.setItem('username', response.username || username);
+        }
       }
       
       // 登入成功，導向首頁

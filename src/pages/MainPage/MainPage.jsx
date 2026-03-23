@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../../App.css'; 
 import * as Images from '../../assets';
+import Navigation from '../../components/Navigation/Navigation';
+import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { uploadImageForProcessing } from '../../services/imageService';
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
   const [statusMessage, setStatusMessage] = useState(""); 
@@ -15,13 +18,33 @@ const MainPage = () => {
   // 2. 建立一個 Ref：用來抓取那個「隱藏的 input」
   const fileInputRef = useRef(null);
   
-  // 監控 resultImage 的變化
+  // 監控 resultImage 的變化，並檢查 localStorage 是否有來自 ProfilePage 的上傳圖片
   useEffect(() => {
     console.log("🔍 resultImage 狀態已更新:", resultImage);
     if (resultImage) {
       console.log("✅ 圖片 URL 已設定");
     }
+    
+    // 檢查是否從 ProfilePage 返回並有上傳的圖片
+    const uploadedImageUrl = localStorage.getItem('uploadedImageUrl');
+    if (uploadedImageUrl && !resultImage) {
+      setResultImage(uploadedImageUrl);
+      // 使用後清除 localStorage
+      localStorage.removeItem('uploadedImageUrl');
+      console.log("✅ 從 ProfilePage 返回，圖片已加載");
+    }
   }, [resultImage]);
+
+  // 監控是否從 ProfilePage 導航回來並帶著文件
+  useEffect(() => {
+    if (location.state?.fileToUpload) {
+      console.log("📁 收到來自 ProfilePage 的文件");
+      // 立即在本頁面處理這個文件
+      handleProfilePageFileUpload(location.state.fileToUpload);
+      // 清除 state 避免重複處理
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // 3. 遙控器函式：當按下黑色按鈕時，觸發這個函式
   const handleBlackButtonClick = () => {
@@ -32,7 +55,12 @@ const MainPage = () => {
     fileInputRef.current.click();
   };
 
-  // 4. 當使用者真的選了檔案後，會執行這個函式
+  // 導航到個人檔案頁面
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
+
+  // 當使用者真的選了檔案後，會執行這個函式
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -54,6 +82,26 @@ const MainPage = () => {
     }
   };
 
+  // 處理來自 ProfilePage 的文件上傳
+  const handleProfilePageFileUpload = async (file) => {
+    if (!file) return;
+
+    setIsProcessing(true);
+    setStatusMessage("正在去背處理中..."); 
+
+    try {
+      const imageUrl = await uploadImageForProcessing(file);
+      setStatusMessage(""); // 成功後清空狀態訊息，直接顯示圖片
+      setResultImage(imageUrl);
+      console.log("✅ resultImage 已設定為:", imageUrl);
+    } catch (error) {
+      console.error("上傳失敗:", error);
+      setStatusMessage("去背失敗，請檢查後端連線");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
     <div className="container">
       {/* --- 這一塊是隱藏的 Input --- */}
@@ -65,34 +113,7 @@ const MainPage = () => {
         accept="image/*" // 限制只能選圖片
       />
 
-      {/* 頂部導覽列 ( header) */}
-      <div className="shared-nav top-nav">
-        <div className="profile-card"> 
-          <img src={Images.icon_profile} alt="個人檔案" className="profile-icon"/>
-          <div className="profile-text">
-            個人檔案
-          </div>
-        </div>
-
-        <img src={Images.line} alt="" className="divider-line" />
-
-        <div className="like-card"> 
-          <img src={Images.icon_like} alt="喜歡" className="like-icon" />
-          <div className="like-text">
-            喜歡
-          </div>
-        </div>
-
-        <img src={Images.line} alt="" className="divider-line" />
-        
-        <div className="setting-card"> 
-          <img src={Images.icon_setting} alt="設定" className="setting-icon" />
-          <div className="setting-text">
-            設定
-          </div>
-        </div>
-
-      </div>
+      <Navigation position="top" />
 
       {/* 中間主要區塊 (Avatar 與 訊息顯示區) */}
       <div className="main-content">
@@ -119,28 +140,7 @@ const MainPage = () => {
         )}
       </div>
 
-      {/* 底部導覽列 (Bottom Nav) */}
-      <div className="shared-nav bottom-nav">
-        <div className="home-card"> 
-          <img src={Images.icon_home} alt="主畫面" className="home-icon"/>
-          <div className="home-text">
-            主畫面
-          </div>
-        </div>
-        
-        {/* --- 按鈕 --- */}
-        <div className="add-button-container" onClick={handleBlackButtonClick}>
-          <img src={Images.button_plus} alt="新增" className="plus-icon"/>
-        </div>
-        {/* --------------------- */}
-
-        <div className="notification-card"> 
-          <img src={Images.icon_notification} alt="通知" className="notification-icon"/>
-          <div className="notification-text">
-            通知
-          </div>
-        </div>
-      </div>
+      <BottomNavigation onAddButtonClick={handleBlackButtonClick} />
     </div>
   );
 };

@@ -65,11 +65,24 @@ export const register = async (email, username, password) => {
  */
 export const logout = async () => {
   try {
-    const response = await axios.post(`${API_URL}/api/logout`);
+    const refreshToken = localStorage.getItem('refreshToken');
+    const token = localStorage.getItem('token');
+    
+    const response = await axios.post(
+      `${API_URL}/account/user/logout`,
+      { refresh: refreshToken },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     console.log("登出成功");
     return response.data;
   } catch (error) {
     console.error("登出失敗:", error.message);
+    // 即使API呼叫失敗，前端仍然會清除localStorage
     throw error;
   }
 };
@@ -84,6 +97,32 @@ export const checkAuth = async () => {
     return response.data;
   } catch (error) {
     console.error("認證檢查失敗:", error.message);
+    throw error;
+  }
+};
+
+/**
+ * 刪除使用者帳號
+ * @param {string} password - 使用者密碼
+ * @returns {Promise<Object>} - 刪除結果
+ */
+export const deleteUser = async (password) => {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await axios.post(
+      `${API_URL}/account/user/delete`,
+      { password },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    console.log("帳號刪除成功");
+    return response.data;
+  } catch (error) {
+    console.error("帳號刪除失敗:", error.message);
     throw error;
   }
 };

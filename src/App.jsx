@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Login/LoginPage';
 import MainPage from './pages/MainPage/MainPage';
 import RegisterPage from './pages/Register/RegisterPage';
+import ProfilePage from './pages/Profile/ProfilePage';
 
 const App = () => {
   return (
@@ -18,6 +19,9 @@ const App = () => {
         {/* 主畫面 */}
         <Route path="/home" element={<MainPage />} />
         
+        {/* 個人檔案頁面 */}
+        <Route path="/profile" element={<ProfilePage />} />
+
         {/* 註冊頁面 */}
         <Route path="/register" element={<RegisterPage />} />
 
