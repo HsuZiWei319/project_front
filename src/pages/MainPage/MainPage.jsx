@@ -84,15 +84,6 @@ const MainPage = () => {
         </div>
 
         <img src={Images.line} alt="" className="divider-line" />
-
-        <div className="mode-card"> 
-          <img src={Images.icon_mode} alt="模式" className="mode-icon" />
-          <div className="mode-text">
-            模式
-          </div>
-        </div>
-
-        <img src={Images.line} alt="" className="divider-line" />
         
         <div className="setting-card"> 
           <img src={Images.icon_setting} alt="設定" className="setting-icon" />

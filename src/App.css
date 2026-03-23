@@ -157,37 +157,6 @@
   white-space: nowrap;    /* 防止文字斷行 */
 }
 
-.mode-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;  /* icon 在上，文字在下 */
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
-  z-index: 100;
-  margin-top: 20px;
-}
-
-/* 設定icon */
-.mode-icon {
-  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
-  height: auto;       /* 高度自動，保持比例 */
-  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
-  
-  /* 選用：如果想要加一點陰影讓它更清楚 
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  */
-}
-
-.mode-text {
-  margin-top: 8px;        /* icon 和文字之間的距離 */
-  font-size: 14px;        /* 字的大小 */
-  font-weight: bold;      /* 粗體 */
-  color: #333333;         /* 深灰色 */
-  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-  text-align: center;     /* 文字置中 */
-  white-space: nowrap;    /* 防止文字斷行 */
-}
-
 .setting-card {
   position: relative;
   display: flex;
