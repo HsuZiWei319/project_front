@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
+import './ProfilePage.css';
+import '../../components/Dialog/Dialog.css';
 import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';

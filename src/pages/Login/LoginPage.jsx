@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
+import './LoginPage.css';
 import * as Images from '../../assets';
 import AppHeader from '../../components/Header/AppHeader';
 import Navigation from '../../components/Navigation/Navigation';

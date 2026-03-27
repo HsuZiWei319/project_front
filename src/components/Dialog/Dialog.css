@@ -1,0 +1,109 @@
+/* ========== 確認對話框樣式 ========== */
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.dialog-container {
+  background-color: white;
+  border-radius: 20px;
+  padding: 30px 20px;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.dialog-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20px;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+.dialog-message {
+  font-size: 14px;
+  color: #666666;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+.input-group-dialog {
+  margin-bottom: 20px;
+}
+
+.input-group-dialog input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+.dialog-error {
+  font-size: 12px;
+  color: #FF4444;
+  margin-top: 8px;
+  text-align: left;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.dialog-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+.confirm-btn {
+  background-color: #E8F0FF;
+  color: #FF4444;
+}
+
+.confirm-btn:hover:not(:disabled) {
+  background-color: #D2ECFF;
+}
+
+.confirm-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background-color: #F0F0F0;
+  color: #333333;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background-color: #E0E0E0;
+}
+
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

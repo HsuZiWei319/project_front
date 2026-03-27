@@ -1,0 +1,114 @@
+/* ========== 個人檔案頁面樣式 ========== */
+
+.profile-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.profile-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-info {
+  padding: 0 20px;
+  margin-top: 30px;  /* 調整這個值來控制框框往下移動的距離 */
+}
+
+.profile-picture {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #E0E0E0;
+  background-color: #F8F8F8;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
+}
+
+.profile-label {
+  font-size: 14px;
+  color: #333333;
+  font-weight: 500;
+}
+
+.profile-value {
+  font-size: 14px;
+  color: #666666;
+  text-align: right;
+}
+
+.profile-clickable {
+  cursor: pointer;
+  background-color: #F0F0F0;
+  transition: all 0.2s ease;
+}
+
+.profile-clickable:active {
+  background-color: #E0E0E0;
+}
+
+.profile-arrow {
+  font-size: 18px;
+  color: #999999;
+}
+
+/* 登出和刪除按鈕的特殊樣式 */
+.profile-action {
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  padding: 15px 20px;
+  transition: all 0.2s ease;
+}
+
+.profile-action:active {
+  opacity: 0.8;
+}
+
+.logout-row {
+  background-color: #FFE8E8;
+  border-bottom: 1px solid #FFD0D0;
+}
+
+.logout-text {
+  color: #FF4444;
+}
+
+.delete-row {
+  background-color: #FFE8E8;
+  border-bottom: 1px solid #FFD0D0;
+}
+
+.delete-text {
+  color: #FF4444;
+}
+
+.profile-error-message {
+  margin: 20px auto;
+  max-width: 90%;
+}
