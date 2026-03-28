@@ -1,0 +1,11 @@
+/* ========== 模特頁面樣式 ========== */
+
+.model-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}

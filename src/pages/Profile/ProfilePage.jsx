@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import './ProfilePage.css';
@@ -18,10 +18,6 @@ const ProfilePage = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  
-  // 建立一個 Ref：用來抓取那個「隱藏的 input」
-  const fileInputRef = useRef(null);
 
   useEffect(() => {
     // 從 localStorage 獲取使用者資訊
@@ -83,37 +79,23 @@ const ProfilePage = () => {
     }
   };
 
-  const handleBlackButtonClick = () => {
-    // 檢查目前是否正在處理中，如果是就不要讓使用者重複按
-    if (isProcessing) return; 
-    
-    // 透過 Ref 去點擊那個隱藏的 input
-    fileInputRef.current.click();
-  };
+  // 處理文件上傳 (從 BottomNavigation 接收文件)
+  const handleFileSelected = (file, onComplete) => {
+    if (!file) {
+      onComplete();
+      return;
+    }
 
-  // 當使用者真的選了檔案後，會執行這個函式
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // 立即導航回主畫面，傳遞文件讓主畫面進行上傳處理
+    // 導航回主畫面，傳遞文件讓主畫面進行上傳處理
     // 這樣用戶能立即看到"正在去背處理中..."的提示
     navigate('/home', { state: { fileToUpload: file } });
     
-    event.target.value = '';
+    // 完成處理回調
+    onComplete();
   };
 
   return (
     <div className="container">
-        {/* --- 這一塊是隱藏的 Input --- */}
-      <input 
-        type="file" 
-        ref={fileInputRef} 
-        style={{ display: 'none' }} // 讓它消失在畫面上
-        onChange={handleFileChange}
-        accept="image/*" // 限制只能選圖片
-      />
-
       <Navigation position="top" />
 
       {/* 左上角返回箭頭 */}
@@ -211,7 +193,7 @@ const ProfilePage = () => {
         />
       )}
 
-      <BottomNavigation onAddButtonClick={handleBlackButtonClick} />
+      <BottomNavigation onFileSelected={handleFileSelected} />
     </div>
   );
 };
