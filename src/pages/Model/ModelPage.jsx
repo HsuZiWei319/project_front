@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import '../../App.css';
 import './ModelPage.css';
 import * as Images from '../../assets';
@@ -14,6 +13,14 @@ const ModelPage = () => {
     { id: 2, name: '模特1' },
     // 你可以在這裡隨意新增更多物件來測試滾動
     ];
+
+    // 簡單的文件選擇回調 (暫時不做任何操作)
+    const handleFileSelected = (file, onComplete) => {
+        console.log("文件已選擇:", file);
+        // 你可以在這裡添加具體的處理邏輯
+        onComplete();
+    };
+
     return (
         <div className="container">
             <Navigation position="top" />
@@ -21,7 +28,7 @@ const ModelPage = () => {
             {/* 左上角返回箭頭 */}
             <BackButton />
 
-            <BottomNavigation onAddButtonClick={handleBlackButtonClick} />
+            <BottomNavigation onFileSelected={handleFileSelected} />
         </div>
     );
 }
