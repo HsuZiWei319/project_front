@@ -120,13 +120,15 @@ const MainPage = () => {
       <div className="main-content">
         {/* 這裡放 3D 人偶圖 */}
 
-        {/* 新增一個 wrapper (容器) 來包住兩張圖 */}
+        {/* 新增一個 wrapper (容器) 來包住所有圖 */}
         <div className="avatar-wrapper">
           
-          {/* 1. 底層：原本的 3D 人偶 (永遠顯示) */}
+          {/* 原本的 3D 人偶 (永遠顯示) */}
           <img src={Images.model} alt="model" className="model-img" />
 
-          {/* 2. 上層：去背後的衣服 (如果有拿到 resultImage 才顯示) */}
+          <img src={Images.icon_info} alt="icon_info" className="info-card" />
+
+          {/* 去背後的衣服 (如果有拿到 resultImage 才顯示) */}
           {resultImage && (
             <img src={resultImage} alt="Try-On" className="overlay-img" />
           )}

@@ -214,7 +214,6 @@
 .avatar-wrapper {
   position: relative;
   top: -50px; /* 往上移動一點，讓它更靠近導覽列 */
-  z-index: 100; /* 確保它在導覽列上面 */
   width: 100%; /* 確保容器寬度足夠 */
   aspect-ratio: 3 / 4; /* 保持 3:4 的寬高比（適合人偶尺寸） */
   display: flex;
@@ -228,4 +227,11 @@
   height: 100%; /* 使用全高 */
   object-fit: contain; /* 保持圖片比例 */
   display: block; /* 消除圖片底部空隙 */
+}
+
+.info-card {
+  position: absolute;
+  transform: translateY(-200px) translateX(100px);
+  width: 35px;
+  height: auto;
 }
