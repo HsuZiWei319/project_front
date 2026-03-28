@@ -124,7 +124,7 @@ const MainPage = () => {
         <div className="avatar-wrapper">
           
           {/* 1. 底層：原本的 3D 人偶 (永遠顯示) */}
-          {/*<img src="" alt="" className="avatar-img" />*/}
+          <img src={Images.model} alt="model" className="model-img" />
 
           {/* 2. 上層：去背後的衣服 (如果有拿到 resultImage 才顯示) */}
           {resultImage && (

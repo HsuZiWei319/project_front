@@ -27,24 +27,6 @@
   overflow: hidden; /* 防止內容爆出去 */
 }
 
-/* 確保你的圖片不會被切掉或變形 */
-.avatar-img {
-  width: 100%; /* 使用全寬 */
-  height: 100%; /* 使用全高 */
-  object-fit: contain; /* 保持圖片比例 */
-  display: block; /* 消除圖片底部空隙 */
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column; /* 讓圖片跟文字垂直排列 */
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  width: 100%; /* 確保內容區塊寬度足夠 */
-}
-
 /* 狀態覆蓋層 */
 .status-overlay {
   position: absolute;
@@ -94,18 +76,6 @@
   border-top-right-radius: 20px;*/
 }
 /* ---------------------------------------------------------- */
-
-/* 圖片容器：設定為相對定位，當作對齊的基準點 */
-.avatar-wrapper {
-  position: relative; /* 關鍵！讓裡面的 absolute 是根據這裡定位 */
-  width: 100%; /* 使用全寬 */
-  max-width: 400px; /* 最大寬度 */
-  margin: 0 auto; /* 水平置中 */
-  aspect-ratio: 3 / 4; /* 保持 3:4 的寬高比（適合人偶尺寸） */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 /* 上層衣服：設定絕對定位，蓋在人偶上 */
 .overlay-img {
