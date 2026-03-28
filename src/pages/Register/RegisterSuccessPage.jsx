@@ -16,7 +16,7 @@ const RegisterSuccessPage = () => {
 
   return (
     <div className="container">
-        <Navigation position="top" />
+        <Navigation position="register" />
         {/* 左上角返回箭頭 */}
         <BackButton />
 

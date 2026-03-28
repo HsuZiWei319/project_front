@@ -21,7 +21,7 @@ const ModelPage = () => {
             {/* 左上角返回箭頭 */}
             <BackButton />
 
-            <BottomNavigation onAddButtonClick={handleBlackButtonClick} />
+            {/*<BottomNavigation onAddButtonClick={handleBlackButtonClick} />*/}
         </div>
     );
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import * as Images from '../../assets';
 
 const BottomNavigation = ({ onAddButtonClick }) => (
-  <div className="shared-nav bottom-nav">
+  <div className="shared-nav">
     <div className="home-card"> 
       <img src={Images.icon_home} alt="主畫面" className="home-icon"/>
       <div className="home-text">主畫面</div>

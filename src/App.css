@@ -54,27 +54,6 @@
   z-index: 10;          /* 確保浮在最上面 */
 }
 
-/* 頂部導覽列 */
-.top-nav {
-  position: absolute;   /* 絕對定位 */
-  top: 0;               /* 黏在頂部 */
-  left: 0;
-  
-  /*  如果需要設定圓角，通常在上面
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px; */
-}
-
-/* 底部導覽列 */
-.bottom-nav {
-  position: absolute;   /* 絕對定位 */
-  bottom: 0;            /* 黏在底部 */
-  left: 0;
-
-  /* 如果需要設定圓角，通常在上面 
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;*/
-}
 /* ---------------------------------------------------------- */
 
 /* 上層衣服：設定絕對定位，蓋在人偶上 */

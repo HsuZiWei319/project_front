@@ -68,7 +68,7 @@ const LoginPage = () => {
 
   return (
     <div className="container">
-      <Navigation position="top" />
+      <Navigation position="top_login" />
       
       {/* 標題區 */}
       <AppHeader />

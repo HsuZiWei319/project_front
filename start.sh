@@ -39,6 +39,7 @@ fi
 echo "📦 正在打包 Docker Image..."
 # --build-arg 就是把變數塞進 Dockerfile 的關鍵
 docker build \
+  --network=host \
   --build-arg VITE_API_URL=$BACKEND_URL \
   -t $IMAGE_NAME .
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Images from '../../assets';
+import './Navigation.css';
 
 const Navigation = ({ position = 'top' }) => {
   const navigate = useNavigate();
@@ -40,9 +41,15 @@ const Navigation = ({ position = 'top' }) => {
     </>
   );
 
+  // 登入頁面導航 - 顯示容器但不顯示導航項目
+  const loginNavContent = <></>; // 登入頁面顯示容器但內容為空
+  const registerNavContent = <></>; // 註冊頁面顯示容器但內容為空
+
   return (
     <div className={`shared-nav ${position}-nav`}>
       {position === 'top' && topNavContent}
+      {position === 'top_login' && loginNavContent}
+      {position === 'top_register' && registerNavContent}
     </div>
   );
 };
