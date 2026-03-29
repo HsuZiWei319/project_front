@@ -55,10 +55,11 @@
 .model-name {
   margin-top: 10px;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 550;
+  color: #333;
 }
 
-.plus_square-placeholder {
+.plus_square-button {
   width: 50px;
   height: auto;
   object-fit: contain;
@@ -67,4 +68,20 @@
   justify-content: center;
   cursor: pointer;
   margin-top: 70px; /* 稍微往下對齊模特兒的身軀 */
+}
+
+.plus_square-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.plus_square-container:hover .plus_square-button {
+    animation: none;
+    transform: scale(1.05);
+    opacity: 0.85;
+}
+
+.plus_square-container:active .plus_square-button {
+  animation: none;
+  transform: scale(0.92);
 }
