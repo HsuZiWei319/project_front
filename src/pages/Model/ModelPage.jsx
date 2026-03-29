@@ -28,6 +28,12 @@ const ModelPage = () => {
             {/* 左上角返回箭頭 */}
             <BackButton />
 
+            <div className="title-bar">
+                <ChevronLeft size={28} />
+                <h1 style={{ fontSize: '24px' }}>模特選擇</h1>
+                <Search size={28} />
+            </div>
+
             {/* 中間內容區域 - 用來推動底部導航到底部 */}
             <div className="model-content">
             </div>

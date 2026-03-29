@@ -19,12 +19,12 @@ const BottomNavigation = ({ onFileSelected }) => {
 
     setIsProcessing(true);
     
-    // 调用父组件传来的回调函数，让父组件处理文件上传逻辑
+    // 調用父組件傳入的回調函數，並提供一個完成後的回調來重置狀態
     if (onFileSelected) {
       onFileSelected(file, () => {
-        // 上传完成后的回调函数
+        // 上傳完成後重置狀態
         setIsProcessing(false);
-        // 清除 input 值，允许再次选择同一个文件
+        // 清除文件輸入的值，讓同一個文件也能再次被選擇
         event.target.value = '';
       });
     }
@@ -48,7 +48,7 @@ const BottomNavigation = ({ onFileSelected }) => {
         </div>
       </div>
 
-      {/* 隐藏的文件输入 */}
+      {/* 隱藏文件輸入 */}
       <input
         ref={fileInputRef}
         type="file"
