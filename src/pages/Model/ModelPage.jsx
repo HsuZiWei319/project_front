@@ -10,7 +10,6 @@ const ModelPage = () => {
     // 模擬模特兒數據
     const models = [
     { id: 1, name: '預設模特' },
-    { id: 2, name: '模特1' },
     // 你可以在這裡隨意新增更多物件來測試滾動
     ];
 
@@ -29,13 +28,36 @@ const ModelPage = () => {
             <BackButton />
 
             <div className="title-bar">
-                <ChevronLeft size={28} />
-                <h1 style={{ fontSize: '24px' }}>模特選擇</h1>
-                <Search size={28} />
+                <div className="model-label">模特選擇</div>
             </div>
 
-            {/* 中間內容區域 - 用來推動底部導航到底部 */}
-            <div className="model-content">
+            {/* 中間滾動內容 */}
+            <div className="scroll-area">
+                <div className="model-grid">
+                {/* 渲染現有的模特兒 */}
+                {models.map((model) => (
+                    <div key={model.id} className="model-item">
+                    <img 
+                        src={Images.model} 
+                        alt={model.name} 
+                        className="model-image-placeholder" 
+                    />
+                    <span className="model-name">{model.name}</span>
+                    </div>
+                ))}
+
+                {/* 藍色加號：它會自動出現在 Grid 的下一個位置 */}
+                <div className="model-item">
+                    <img 
+                        src={Images.plus_square} 
+                        alt="plus_square"
+                        className="plus_square-placeholder" 
+                    />
+                </div>
+                </div>
+                
+                {/* 底部緩衝區：防止內容被 Footer 擋住 */}
+                <div style={{ height: '150px' }}></div>
             </div>
 
             <BottomNavigation onFileSelected={handleFileSelected} />

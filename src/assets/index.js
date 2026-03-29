@@ -17,6 +17,7 @@ import model from './mainpage/model.png';
 import icon_info from './mainpage/icon_info.png';
 import default_profile_pic from './profile/default_profile_pic.png';
 import line2 from './profile/line2.png';
+import plus_square from './modelpage/plus_square.png';
 
 
 export {
@@ -37,5 +38,6 @@ export {
     model,
     icon_info,
     default_profile_pic,
-    line2
+    line2, 
+    plus_square
 };
