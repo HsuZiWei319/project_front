@@ -7,6 +7,7 @@ import MainPage from './pages/MainPage/MainPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
 import ModelPage from './pages/Model/ModelPage';
+import WardrobePage from './pages/Wardrobe/WardrobePage';
 
 const App = () => {
   return (
@@ -28,6 +29,9 @@ const App = () => {
 
         {/* 模特兒選擇頁面 */}
         <Route path="/model" element={<ModelPage />} />
+
+        {/* 衣櫃頁面 */}
+        <Route path="/wardrobe" element={<WardrobePage />} />
 
         {/* 如果亂打網址，通通導回登入頁 */}
         <Route path="*" element={<Navigate to="/" replace />} />

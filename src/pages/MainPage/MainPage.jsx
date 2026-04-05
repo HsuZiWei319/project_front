@@ -74,14 +74,24 @@ const MainPage = () => {
         {/* 新增一個 wrapper (容器) 來包住所有圖 */}
         <div className="avatar-wrapper">
           
-          {/* 原本的 3D 人偶 (永遠顯示) */}
+          {/* 模特圖 */}
           <img src={Images.model} alt="model" className="model-img" />
 
+          {/* 模特info */}
           <img 
             src={Images.icon_info} 
             alt="icon_info" 
             className="info-card"
             onClick={() => navigate('/model')}
+            style={{ cursor: 'pointer' }}
+          />
+
+          {/* 衣櫃 */}
+          <img 
+            src={Images.wardrobe} 
+            alt="wardrobe" 
+            className="wardrobe-card"
+            onClick={() => navigate('/wardrobe')}
             style={{ cursor: 'pointer' }}
           />
 

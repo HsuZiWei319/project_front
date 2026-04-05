@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import './ModelPage.css';
 import * as Images from '../../assets';
@@ -8,6 +9,7 @@ import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { uploadModelPhoto } from '../../services/imageService';
 
 const ModelPage = () => {
+    const navigate = useNavigate();
     // 模擬模特兒數據
     const [models, setModels] = useState([
         { id: 1, name: '預設模特' },
@@ -19,10 +21,17 @@ const ModelPage = () => {
     const fileInputRef = useRef(null);
     const nextIdRef = useRef(2);
 
-    // 簡單的文件選擇回調 (暫時不做任何操作)
     const handleFileSelected = (file, onComplete) => {
-        console.log("文件已選擇:", file);
-        // 你可以在這裡添加具體的處理邏輯
+        if (!file) {
+            onComplete();
+            return;
+        }
+
+        // 導航回主畫面，傳遞文件讓主畫面進行上傳處理
+        // 這樣用戶能立即看到"正在去背處理中..."的提示
+        navigate('/home', { state: { fileToUpload: file } });
+        
+        // 完成處理回調
         onComplete();
     };
 
@@ -77,7 +86,7 @@ const ModelPage = () => {
             <BackButton />
 
             <div className="title-bar">
-                <div className="model-label">模特選擇</div>
+                <div className="pagetitle-label">模特選擇</div>
             </div>
 
             {/* 顯示錯誤信息 */}

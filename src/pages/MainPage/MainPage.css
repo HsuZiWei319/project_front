@@ -235,3 +235,10 @@
   width: 35px;
   height: auto;
 }
+
+.wardrobe-card {
+  position: absolute;
+  transform: translateY(370px) translateX(180px);
+  width: 35px;
+  height: auto;
+}

@@ -18,6 +18,7 @@ import icon_info from './mainpage/icon_info.png';
 import default_profile_pic from './profile/default_profile_pic.png';
 import line2 from './profile/line2.png';
 import plus_square from './modelpage/plus_square.png';
+import wardrobe from './mainpage/wardrobe.png';
 
 
 export {
@@ -39,5 +40,6 @@ export {
     icon_info,
     default_profile_pic,
     line2, 
-    plus_square
+    plus_square,
+    wardrobe
 };
