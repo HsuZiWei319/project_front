@@ -79,20 +79,11 @@ const ProfilePage = () => {
     }
   };
 
-  // 處理文件上傳 (從 BottomNavigation 接收文件)
-  const handleFileSelected = (file, onComplete) => {
-    if (!file) {
-      onComplete();
-      return;
-    }
+    const { handleFileSelectedWithRedirect } = useImageUpload();
 
-    // 導航回主畫面，傳遞文件讓主畫面進行上傳處理
-    // 這樣用戶能立即看到"正在去背處理中..."的提示
-    navigate('/home', { state: { fileToUpload: file } });
-    
-    // 完成處理回調
-    onComplete();
-  };
+    const handleFileSelected = (file, onComplete) => {
+        handleFileSelectedWithRedirect(file, '/home', onComplete);
+    };
 
   return (
     <div className="container">

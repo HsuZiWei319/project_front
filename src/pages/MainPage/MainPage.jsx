@@ -5,16 +5,13 @@ import './MainPage.css';
 import * as Images from '../../assets';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
-import { uploadImageForProcessing } from '../../services/imageService';
+import { useImageUpload } from '../../hooks/useImageUpload';
 
 const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { statusMessage, resultImage, handleFileSelected } = useImageUpload();
 
-  // 1. 定義狀態：用來顯示中間的文字 (處理中 / 成功 / 失敗)
-  const [statusMessage, setStatusMessage] = useState(""); 
-  const [resultImage, setResultImage] = useState(null);
-  
   // 監控 resultImage 的變化，並檢查 localStorage 是否有來自 ProfilePage 的上傳圖片
   useEffect(() => {
     console.log("🔍 resultImage 狀態已更新:", resultImage);
@@ -42,26 +39,6 @@ const MainPage = () => {
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
-
-  // 處理文件上傳 (從 BottomNavigation 接收文件)
-  const handleFileSelected = async (file, onComplete) => {
-    if (!file) return;
-
-    setStatusMessage("正在去背處理中..."); 
-
-    try {
-      const imageUrl = await uploadImageForProcessing(file);
-      setStatusMessage(""); // 成功後清空狀態訊息，直接顯示圖片
-      setResultImage(imageUrl);
-      console.log("✅ resultImage 已設定為:", imageUrl);
-    } catch (error) {
-      console.error("上傳失敗:", error);
-      setStatusMessage("去背失敗，請檢查後端連線");
-    } finally {
-      // 呼叫完成回調，告訴 BottomNavigation 已完成處理
-      onComplete();
-    }
-  };
 
   return (
     <div className="container">

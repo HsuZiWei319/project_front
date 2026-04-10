@@ -20,19 +20,10 @@ const ModelPage = () => {
     const [uploadError, setUploadError] = useState(null);
     const fileInputRef = useRef(null);
     const nextIdRef = useRef(2);
+    const { handleFileSelectedWithRedirect } = useImageUpload();
 
     const handleFileSelected = (file, onComplete) => {
-        if (!file) {
-            onComplete();
-            return;
-        }
-
-        // 導航回主畫面，傳遞文件讓主畫面進行上傳處理
-        // 這樣用戶能立即看到"正在去背處理中..."的提示
-        navigate('/home', { state: { fileToUpload: file } });
-        
-        // 完成處理回調
-        onComplete();
+        handleFileSelectedWithRedirect(file, '/home', onComplete);
     };
 
     // 處理 plus_square 點擊事件

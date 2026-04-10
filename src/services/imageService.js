@@ -2,37 +2,48 @@ import axios from 'axios';
 import { API_URL } from './api';
 
 /**
- * 上傳圖片進行去背處理
- * @param {File} file - 圖片檔案
- * @returns {Promise<string>} - 處理後的圖片 URL
+ * 上傳衣服圖片進行去背處理
+ * @param {File} file - 衣服圖片檔案
+ * @returns {Promise<string>} - 去背後的圖片 URL
  */
 export const uploadImageForProcessing = async (file) => {
   const formData = new FormData();
   formData.append('image_data', file);
-  formData.append('filename', file.name);
 
   try {
-    const uploadUrl = `${API_URL}/api/upload-image`;
+    // 從 localStorage 取得 JWT token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
 
-    console.log("正在上傳圖片至:", uploadUrl);
+    const uploadUrl = `${API_URL}/picture/clothes/`;
+
+    console.log("正在上傳衣服至:", uploadUrl);
 
     const response = await axios.post(uploadUrl, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
       timeout: 60000,
     });
 
     console.log("回傳結果:", response.data);
 
     // 根據後端回應取得圖片 URL
-    if (response.data.processed_url || response.data.storage_status?.url) {
-      const imageUrl = response.data.processed_url || response.data.storage_status.url;
-      console.log("收到圖片 URL:", imageUrl);
+    if (response.data.processed_url) {
+      const imageUrl = response.data.processed_url;
+      console.log("收到衣服圖片 URL:", imageUrl);
       return imageUrl;
     } else {
       throw new Error('後端未返回圖片 URL');
     }
   } catch (error) {
     console.error("上傳失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
     throw error;
   }
 };
@@ -52,7 +63,54 @@ export const getProcessedImages = async () => {
 };
 
 /**
- * 上傳模特照片
+ * 上傳衣服圖片進行去背處理（衣服上傳）
+ * @param {File} file - 衣服圖片檔案
+ * @returns {Promise<Object>} - 衣服上傳結果 (包含 processed_url, clothes_data 等)
+ */
+export const uploadClothes = async (file) => {
+  const formData = new FormData();
+  formData.append('image_data', file);
+
+  try {
+    // 從 localStorage 取得 JWT token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const uploadUrl = `${API_URL}/picture/clothes/`;
+
+    console.log("正在上傳衣服至:", uploadUrl);
+
+    const response = await axios.post(uploadUrl, formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 60000,
+    });
+
+    console.log("衣服上傳成功:", response.data);
+    
+    // 返回完整的上傳結果
+    return {
+      success: true,
+      processed_url: response.data.processed_url,
+      clothes_data: response.data.clothes_data,
+      ai_status: response.data.ai_status,
+      storage_status: response.data.storage_status,
+    };
+  } catch (error) {
+    console.error("上傳衣服失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 上傳模特照片（目前暫時保持舊 API，之後改成 /picture/user/photo）
  * @param {File} file - 圖片檔案
  * @returns {Promise<Object>} - 上傳結果 (包含 photo ID, original_url, removed_bg_url 等)
  */
@@ -82,7 +140,7 @@ export const uploadModelPhoto = async (file) => {
 
     console.log("模特照片上傳成功:", response.data);
     
-    // 轉換响应格式以適應前端需求
+    // 轉換响應格式以適應前端需求
     return {
       success: true,
       photo: {
