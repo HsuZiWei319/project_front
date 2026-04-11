@@ -10,35 +10,15 @@ import { useImageUpload } from '../../hooks/useImageUpload';
 const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { statusMessage, resultImage, handleFileSelected } = useImageUpload();
+  const { statusMessage, resultImage, handleFileSelectedForClothesUpload } = useImageUpload();
 
-  // 監控 resultImage 的變化，並檢查 localStorage 是否有來自 ProfilePage 的上傳圖片
+  // 監控 resultImage 的變化
   useEffect(() => {
     console.log("🔍 resultImage 狀態已更新:", resultImage);
     if (resultImage) {
       console.log("✅ 圖片 URL 已設定");
     }
-    
-    // 檢查是否從 ProfilePage 返回並有上傳的圖片
-    const uploadedImageUrl = localStorage.getItem('uploadedImageUrl');
-    if (uploadedImageUrl && !resultImage) {
-      setResultImage(uploadedImageUrl);
-      // 使用後清除 localStorage
-      localStorage.removeItem('uploadedImageUrl');
-      console.log("✅ 從 ProfilePage 返回，圖片已加載");
-    }
   }, [resultImage]);
-
-  // 監控是否從 ProfilePage 導航回來並帶著文件
-  useEffect(() => {
-    if (location.state?.fileToUpload) {
-      console.log("📁 收到來自 ProfilePage 的文件");
-      // 立即在本頁面處理這個文件
-      handleFileSelected(location.state.fileToUpload, () => {});
-      // 清除 state 避免重複處理
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
 
   return (
     <div className="container">
@@ -87,7 +67,7 @@ const MainPage = () => {
         )}
       </div>
 
-      <BottomNavigation onFileSelected={handleFileSelected} />
+      <BottomNavigation onFileSelected={handleFileSelectedForClothesUpload} />
     </div>
   );
 };

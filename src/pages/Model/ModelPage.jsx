@@ -7,6 +7,7 @@ import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { uploadModelPhoto } from '../../services/imageService';
+import { useImageUpload } from '../../hooks/useImageUpload';
 
 const ModelPage = () => {
     const navigate = useNavigate();
@@ -20,10 +21,10 @@ const ModelPage = () => {
     const [uploadError, setUploadError] = useState(null);
     const fileInputRef = useRef(null);
     const nextIdRef = useRef(2);
-    const { handleFileSelectedWithRedirect } = useImageUpload();
+    const { handleFileSelectedForClothesUpload } = useImageUpload();
 
     const handleFileSelected = (file, onComplete) => {
-        handleFileSelectedWithRedirect(file, '/home', onComplete);
+        handleFileSelectedForClothesUpload(file, onComplete);
     };
 
     // 處理 plus_square 點擊事件
@@ -37,36 +38,11 @@ const ModelPage = () => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        setIsLoading(true);
-        setUploadError(null);
-
-        try {
-            // 調用 API 上傳模特照片
-            const response = await uploadModelPhoto(file);
-
-            console.log("API 回應:", response);
-
-            // 建立新模型，使用 API 返回的去背圖片 URL
-            const newModel = {
-                id: nextIdRef.current,
-                name: `模特 ${nextIdRef.current}`,
-                imageUrl: response.photo?.removed_bg_url || response.photo?.original_url,
-                photoId: response.photo?.id,
-                status: response.photo?.status
-            };
-
-            nextIdRef.current++;
-            setModels([...models, newModel]);
-
-            console.log("模特照片已成功上傳:", newModel);
-        } catch (error) {
-            console.error("上傳失敗:", error);
-            setUploadError(error.message || '上傳失敗，請重試');
-        } finally {
-            setIsLoading(false);
+        // 導航到UploadClothesPage而不是直接上傳
+        handleFileSelected(file, () => {
             // 清除文件輸入的值，讓同一個文件也能再次被選擇
             event.target.value = '';
-        }
+        });
     };
 
     return (

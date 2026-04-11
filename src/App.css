@@ -83,3 +83,25 @@
   font-weight: bold;
   margin-bottom: 10px;
 }
+
+/* 登入按鈕 */
+.login-btn {
+    width: 300px;
+    padding: 12px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.login-btn:hover {
+    transform: scale(1.01);
+    opacity: 0.85;
+}
+
+.login-btn:active {
+    transform: scale(0.95);
+}

@@ -9,6 +9,7 @@ import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import ConfirmDialog from '../../components/Dialog/ConfirmDialog';
 import { logout, deleteUser } from '../../services/authService';
+import { useImageUpload } from '../../hooks/useImageUpload';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -79,10 +80,10 @@ const ProfilePage = () => {
     }
   };
 
-    const { handleFileSelectedWithRedirect } = useImageUpload();
+    const { handleFileSelectedForClothesUpload } = useImageUpload();
 
     const handleFileSelected = (file, onComplete) => {
-        handleFileSelectedWithRedirect(file, '/home', onComplete);
+        handleFileSelectedForClothesUpload(file, onComplete);
     };
 
   return (

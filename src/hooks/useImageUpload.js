@@ -80,6 +80,32 @@ export const useImageUpload = (options = {}) => {
   };
 
   /**
+   * 處理衣服上傳流程
+   * 將圖片轉換為 base64 並導航到上傳衣服頁面
+   * @param {File} file - 衣服圖片文件
+   * @param {Function} onComplete - 完成回調
+   */
+  const handleFileSelectedForClothesUpload = (file, onComplete = () => {}) => {
+    if (!file) {
+      onComplete();
+      return;
+    }
+
+    // 將文件轉換為 base64 URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      navigate('/upload-clothes', {
+        state: {
+          uploadedImage: e.target.result,
+          file: file,
+        },
+      });
+      onComplete();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  /**
    * 清空上傳的圖片和狀態
    */
   const clearImage = () => {
@@ -98,6 +124,7 @@ export const useImageUpload = (options = {}) => {
     // 方法
     handleFileSelected,
     handleFileSelectedWithRedirect,
+    handleFileSelectedForClothesUpload,
     clearImage,
     setResultImage,
     setStatusMessage,

@@ -6,7 +6,7 @@ import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
-import apiClient from '../../services/api';
+import apiClient, { API_URL } from '../../services/api';
 
 const WardrobePage = () => {
     const navigate = useNavigate();
@@ -60,9 +60,37 @@ const WardrobePage = () => {
         onComplete();
     };
 
+    // 轉換衣服圖片 URL（類似 UploadClothesPage）
+    const getFullClothesImageUrl = (url) => {
+        if (!url) return '';
+        
+        // 如果已經是完整的 URL（以 http:// 或 https:// 開頭）
+        if (url.startsWith('http://') || url.startsWith('https://')) {
+            // 獲取當前頁面的域名和協議
+            const currentHost = window.location.hostname;
+            const currentProtocol = window.location.protocol;
+            const currentPort = window.location.port ? `:${window.location.port}` : '';
+            
+            // 如果使用了 localhost 或局域網 IP，轉換為當前頁面的域名
+            if (url.includes('localhost:9000') || url.includes('192.168.')) {
+                // 將任何 http://localhost:9000 或 http://192.168.x.x:9000 轉換為當前頁面的域名
+                return url.replace(/https?:\/\/(localhost|[\d.]+)(:9000)?/, `${currentProtocol}//${currentHost}:9000`);
+            }
+            return url;
+        }
+        
+        // 如果是相對路徑，組合成完整的後端 URL
+        if (url.startsWith('/')) {
+            return `${API_URL}${url}`;
+        }
+        return url;
+    };
+
     const handleClotheClick = (clothes) => {
-        // 點擊衣服時的處理邏輯（可選）
+        // 點擊衣服時導航到衣服詳細信息頁面
+        // 使用 clothes_uid (後端儲存的唯一標識符) 而不是 clothes_id
         console.log('點擊衣服:', clothes);
+        navigate(`/clothes/${clothes.clothes_uid}`);
     };
 
     return (
@@ -103,7 +131,7 @@ const WardrobePage = () => {
                 {!isLoading && Object.keys(groupedClothes).length > 0 ? (
                     Object.keys(groupedClothes).map((category) => (
                         <section key={category} className="category-group">
-                            <h2 className="category-title">
+                            <h2 className="pagetitle-label">
                                 {category} ({groupedClothes[category].length})
                             </h2>
                             <div className="clothes-list">
@@ -115,15 +143,16 @@ const WardrobePage = () => {
                                         style={{ cursor: 'pointer' }}
                                     >
                                         <img
-                                            src={clothes.clothes_image_url}
+                                            src={getFullClothesImageUrl(clothes.clothes_image_url)}
                                             alt={clothes.clothes_category}
                                             className="clothes-image"
                                             style={{
                                                 width: '100%',
-                                                height: '150px',
-                                                objectFit: 'cover',
+                                                height: 'auto',
+                                                objectFit: 'contain',
                                                 borderRadius: '8px'
                                             }}
+                                            onError={() => console.error('圖片加載失敗:', clothes.clothes_image_url)}
                                         />
                                         {clothes.clothes_favorite && (
                                             <span style={{

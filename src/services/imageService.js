@@ -173,3 +173,230 @@ export const deleteImage = async (imageId) => {
     throw error;
   }
 };
+
+/**
+ * 上傳衣服圖片並包含測量數據（袖長、褲長、肩寬、腰圍）
+ * @param {File} file - 衣服圖片檔案
+ * @param {Object} measurements - 測量數據 { sleeve_length, pant_length, shoulder_width, waist_circumference }
+ * @returns {Promise<Object>} - 衣服上傳結果
+ */
+export const uploadClothesWithMeasurements = async (file, measurements) => {
+  const formData = new FormData();
+  formData.append('image_data', file);
+  formData.append('clothes_arm_length', measurements.sleeve_length);
+  formData.append('clothes_leg_length', measurements.pant_length);
+  formData.append('clothes_shoulder_width', measurements.shoulder_width);
+  formData.append('clothes_waistline', measurements.waist_circumference);
+
+  try {
+    // 從 localStorage 取得 JWT token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const uploadUrl = `${API_URL}/picture/clothes/`;
+
+    console.log("正在上傳衣服至:", uploadUrl);
+    console.log("測量數據:", measurements);
+
+    const response = await axios.post(uploadUrl, formData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 60000,
+    });
+
+    console.log("衣服上傳成功:", response.data);
+    
+    // 返回完整的上傳結果
+    return {
+      success: true,
+      processed_url: response.data.processed_url,
+      clothes_data: response.data.clothes_data,
+      ai_status: response.data.ai_status,
+      storage_status: response.data.storage_status,
+    };
+  } catch (error) {
+    console.error("上傳衣服失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 獲取單個衣服的詳細信息
+ * @param {number|string} clothesId - 衣服 ID
+ * @returns {Promise<Object>} - 衣服詳細信息
+ */
+export const getClothesDetail = async (clothesId) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+
+    console.log("正在獲取衣服詳細信息:", url);
+
+    const response = await axios.get(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    console.log("獲取衣服詳細信息成功:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("獲取衣服詳細信息失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 更新衣服信息
+ * @param {number|string} clothesId - 衣服 ID
+ * @param {Object} updateData - 更新的衣服數據 { clothes_category, clothes_arm_length, clothes_shoulder_width, clothes_waistline, clothes_leg_length, colors, styles }
+ * @returns {Promise<Object>} - 更新後的衣服信息
+ */
+export const updateClothes = async (clothesId, updateData) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+
+    console.log("正在更新衣服信息:", url);
+    console.log("更新數據:", updateData);
+
+    const response = await axios.put(url, updateData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    console.log("衣服更新成功:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("衣服更新失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 更新衣服信息（包含新圖片）
+ * @param {number|string} clothesId - 衣服 ID
+ * @param {File} file - 新的衣服圖片檔案（可選）
+ * @param {Object} measurements - 測量數據 { sleeve_length, pant_length, shoulder_width, waist_circumference, category }
+ * @returns {Promise<Object>} - 更新後的衣服信息
+ */
+export const updateClothesWithImage = async (clothesId, file, measurements) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+
+    console.log("正在更新衣服信息（含圖片）:", url);
+    console.log("測量數據:", measurements);
+
+    // 如果有新的圖片，需要先上傳圖片，然後更新衣服信息
+    if (file) {
+      const formData = new FormData();
+      formData.append('image_data', file);
+      formData.append('clothes_arm_length', measurements.sleeve_length);
+      formData.append('clothes_leg_length', measurements.pant_length);
+      formData.append('clothes_shoulder_width', measurements.shoulder_width);
+      formData.append('clothes_waistline', measurements.waist_circumference);
+      if (measurements.category) {
+        formData.append('clothes_category', measurements.category);
+      }
+
+      const response = await axios.put(url, formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 60000,
+      });
+
+      console.log("衣服更新成功（含圖片）:", response.data);
+      return response.data;
+    } else {
+      // 只更新文本信息
+      const updateData = {
+        clothes_arm_length: measurements.sleeve_length,
+        clothes_leg_length: measurements.pant_length,
+        clothes_shoulder_width: measurements.shoulder_width,
+        clothes_waistline: measurements.waist_circumference,
+      };
+      if (measurements.category) {
+        updateData.clothes_category = measurements.category;
+      }
+
+      const response = await axios.put(url, updateData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log("衣服更新成功:", response.data);
+      return response.data;
+    }
+  } catch (error) {
+    console.error("衣服更新失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 刪除衣服
+ * @param {number|string} clothesId - 衣服 ID
+ * @returns {Promise<Object>} - 刪除結果
+ */
+export const deleteClothes = async (clothesId) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+
+    console.log("正在刪除衣服:", url);
+
+    const response = await axios.delete(url, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    console.log("衣服刪除成功:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("衣服刪除失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
