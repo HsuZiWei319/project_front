@@ -1,9 +1,11 @@
 import React, { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Images from '../../assets';
 
 const BottomNavigation = ({ onFileSelected }) => {
   const fileInputRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const navigate = useNavigate();
 
   const handleAddButtonClick = () => {
     // 檢查是否正在處理，如果在處理就不能按
@@ -11,6 +13,10 @@ const BottomNavigation = ({ onFileSelected }) => {
     
     // 透過Ref去觸發隱藏input
     fileInputRef.current?.click();
+  };
+
+  const handleHomeClick = () => {
+    navigate('/home');
   };
 
   const handleFileChange = (event) => {
@@ -33,7 +39,7 @@ const BottomNavigation = ({ onFileSelected }) => {
   return (
     <>
       <div className="shared-nav bottom-nav">
-        <div className="home-card"> 
+        <div className="home-card" onClick={handleHomeClick}> 
           <img src={Images.icon_home} alt="主畫面" className="home-icon"/>
           <div className="home-text">主畫面</div>
         </div>
