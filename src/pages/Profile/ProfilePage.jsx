@@ -131,6 +131,15 @@ const ProfilePage = () => {
             <div className="profile-arrow">&gt;</div>
           </div>
 
+          {/* 變更身體數據 */}
+          <div 
+            className="profile-row profile-clickable"
+            onClick={() => navigate('/user-info')}
+          >
+            <div className="profile-label">變更身體數據</div>
+            <div className="profile-arrow">&gt;</div>
+          </div>
+
           {/* 登出按鈕 */}
           <div 
             className="profile-row profile-action logout-row"

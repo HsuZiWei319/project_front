@@ -6,6 +6,7 @@ import LoginPage from './pages/Login/LoginPage';
 import MainPage from './pages/MainPage/MainPage';
 import RegisterPage from './pages/Register/RegisterPage';
 import ProfilePage from './pages/Profile/ProfilePage';
+import UserInfoPage from './pages/Profile/UserInfoPage';
 import ModelPage from './pages/Model/ModelPage';
 import WardrobePage from './pages/Wardrobe/WardrobePage';
 import UploadClothesPage from './pages/UploadClothes/UploadClothesPage';
@@ -25,6 +26,9 @@ const App = () => {
         
         {/* 個人檔案頁面 */}
         <Route path="/profile" element={<ProfilePage />} />
+
+        {/* 變更身體數據頁面 */}
+        <Route path="/user-info" element={<UserInfoPage />} />
 
         {/* 註冊頁面 */}
         <Route path="/register" element={<RegisterPage />} />

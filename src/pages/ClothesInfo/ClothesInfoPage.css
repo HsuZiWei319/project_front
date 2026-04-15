@@ -68,7 +68,6 @@
 .measurement-input-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .measurement-input-group label {
