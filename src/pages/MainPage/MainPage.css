@@ -213,8 +213,8 @@
 /* 圖片容器：設定為相對定位，當作對齊的基準點 */
 .avatar-wrapper {
   position: relative;
-  top: -50px; /* 往上移動一點，讓它更靠近導覽列 */
-  width: 100%; /* 確保容器寬度足夠 */
+  width: 400px; /* 確保容器寬度足夠 */
+  height: auto;
   aspect-ratio: 3 / 4; /* 保持 3:4 的寬高比（適合人偶尺寸） */
   display: flex;
   justify-content: center;
@@ -231,7 +231,7 @@
 
 .info-card {
   position: absolute;
-  transform: translateY(-220px) translateX(120px);
+  transform: translateY(-240px) translateX(100px);
   width: 35px;
   height: auto;
   opacity: 1;
@@ -245,7 +245,7 @@
 
 .wardrobe-card {
   position: absolute;
-  transform: translateY(370px) translateX(180px);
+  transform: translateY(320px) translateX(180px);
   width: 35px;
   height: auto;
 }

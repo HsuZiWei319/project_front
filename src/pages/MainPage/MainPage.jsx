@@ -6,12 +6,14 @@ import * as Images from '../../assets';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { useImageUpload } from '../../hooks/useImageUpload';
+import { getModelPhoto } from '../../services/imageService';
 
 const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { statusMessage, resultImage, handleFileSelectedForClothesUpload } = useImageUpload();
   const [isMouseIdle, setIsMouseIdle] = useState(false);
+  const [userPhotoUrl, setUserPhotoUrl] = useState(null);
   const idleTimeoutRef = React.useRef(null);
 
   // 監控 resultImage 的變化
@@ -21,6 +23,24 @@ const MainPage = () => {
       console.log("✅ 圖片 URL 已設定");
     }
   }, [resultImage]);
+
+  // 在組件掛載時，獲取之前上傳的模特照片
+  useEffect(() => {
+    const loadModelPhoto = async () => {
+      try {
+        const result = await getModelPhoto();
+        if (result.success && result.photo?.user_image_url) {
+          setUserPhotoUrl(result.photo.user_image_url);
+          console.log('✅ 已加載用戶上傳的模特照片:', result.photo.user_image_url);
+        }
+      } catch (err) {
+        console.error('⚠️ 獲取模特照片失敗:', err);
+        // 如果獲取失敗，使用預設的模特圖
+      }
+    };
+
+    loadModelPhoto();
+  }, [location.pathname]);
 
   // 鼠標空閒檢測
   useEffect(() => {
@@ -68,7 +88,7 @@ const MainPage = () => {
         <div className="avatar-wrapper">
           
           {/* 模特圖 */}
-          <img src={Images.model} alt="model" className="model-img" />
+          <img src={userPhotoUrl || Images.model} alt="model" className="model-img" />
 
           {/* 模特info */}
           <img 
