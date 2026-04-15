@@ -16,13 +16,10 @@ const ClothesInfoPage = () => {
   // 狀態管理
   const [clothesData, setClothesData] = useState(null);
   const [originalClothesData, setOriginalClothesData] = useState(null);
-  const [newImage, setNewImage] = useState(null);
-  const [newImagePreview, setNewImagePreview] = useState(null);
   const [sleeveLength, setSleeveLength] = useState('');
   const [pantLength, setPantLength] = useState('');
   const [shoulderWidth, setShoulderWidth] = useState('');
   const [waistCircumference, setWaistCircumference] = useState('');
-  const [category, setCategory] = useState('');
 
   const [statusMessage, setStatusMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -44,11 +41,10 @@ const ClothesInfoPage = () => {
       parseFloat(sleeveLength) !== (originalClothesData.clothes_arm_length || 0) ||
       parseFloat(pantLength) !== (originalClothesData.clothes_leg_length || 0) ||
       parseFloat(shoulderWidth) !== (originalClothesData.clothes_shoulder_width || 0) ||
-      parseFloat(waistCircumference) !== (originalClothesData.clothes_waistline || 0) ||
-      category !== (originalClothesData.clothes_category || '');
+      parseFloat(waistCircumference) !== (originalClothesData.clothes_waistline || 0);
 
-    setHasChanges(hasDataChanges || newImage !== null);
-  }, [sleeveLength, pantLength, shoulderWidth, waistCircumference, category, newImage, clothesData, originalClothesData]);
+    setHasChanges(hasDataChanges);
+  }, [sleeveLength, pantLength, shoulderWidth, waistCircumference, clothesData, originalClothesData]);
 
   // 調用 API 獲取衣服詳細信息
   const fetchClothesDetail = async () => {
@@ -72,7 +68,6 @@ const ClothesInfoPage = () => {
       setPantLength(data.clothes_leg_length || 0);
       setShoulderWidth(data.clothes_shoulder_width || 0);
       setWaistCircumference(data.clothes_waistline || 0);
-      setCategory(data.clothes_category || '');
     } catch (err) {
       console.error('❌ 獲取衣服詳細信息失敗:', err);
       const errorMsg = err.message || '無法載入衣服信息';
@@ -124,27 +119,6 @@ const ClothesInfoPage = () => {
     return true;
   };
 
-  // 處理圖片上傳
-  const handleImageClick = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        setNewImage(file);
-        
-        // 創建預覽
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          setNewImagePreview(event.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    };
-    input.click();
-  };
-
   // 處理更新衣服按鈕點擊
   const handleUpdateClothes = async () => {
     if (!validateInputs()) {
@@ -161,12 +135,11 @@ const ClothesInfoPage = () => {
         pant_length: parseFloat(pantLength),
         shoulder_width: parseFloat(shoulderWidth),
         waist_circumference: parseFloat(waistCircumference),
-        category: category,
       };
 
       const result = await updateClothesWithImage(
         clothesId,
-        newImage,
+        null,
         measurements
       );
 
@@ -178,8 +151,6 @@ const ClothesInfoPage = () => {
       if (result) {
         setClothesData(result);
         setOriginalClothesData(result);
-        setNewImage(null);
-        setNewImagePreview(null);
       }
 
       // 2秒後返回衣櫃
@@ -300,38 +271,21 @@ const ClothesInfoPage = () => {
 
       {/* 主要內容區域 */}
       <div className="clothes-info-content">
-        {/* 衣服圖片區域（可點擊以重新上傳） */}
+        {/* 衣服圖片區域 */}
         {clothesData && (
           <div 
             className="clothes-image-section"
-            onClick={handleImageClick}
-            style={{ cursor: 'pointer' }}
           >
             <img
-              src={newImagePreview || getFullImageUrl(clothesData.clothes_image_url)}
+              src={getFullImageUrl(clothesData.clothes_image_url)}
               alt="clothes-image"
               className="clothes-image"
             />
-            <div className="image-overlay">
-              <span>點擊更換照片</span>
-            </div>
           </div>
         )}
 
         {/* 測量數據輸入區 */}
         <div className="measurements-section">
-          {/* 衣服分類 */}
-          <div className="measurement-input-group">
-            <label>衣服分類</label>
-            <input
-              type="text"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              placeholder="輸入衣服分類"
-              disabled={isUpdating || isDeleting}
-            />
-          </div>
-
           {/* 袖長 */}
           <div className="measurement-input-group">
             <label>袖長(cm)</label>

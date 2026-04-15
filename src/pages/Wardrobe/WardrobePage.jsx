@@ -148,7 +148,7 @@ const WardrobePage = () => {
                                             className="clothes-image"
                                             style={{
                                                 width: '100%',
-                                                height: 'auto',
+                                                height: '100%',
                                                 objectFit: 'contain',
                                                 borderRadius: '8px'
                                             }}
