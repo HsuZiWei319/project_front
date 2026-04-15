@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { uploadImageForProcessing } from '../services/imageService';
+import { uploadImageForProcessing, uploadModelPhoto } from '../services/imageService';
 
 /**
  * 自定義 Hook 用於統一處理圖片上傳邏輯
@@ -114,6 +114,44 @@ export const useImageUpload = (options = {}) => {
     setError('');
   };
 
+  /**
+   * 處理模特照片上傳
+   * 直接上傳至 /picture/user/photo API
+   * @param {File} file - 模特照片文件
+   * @param {Function} onComplete - 完成回調
+   */
+  const handleFileSelectedForModelUpload = async (file, onComplete = () => {}) => {
+    if (!file) {
+      onComplete();
+      return;
+    }
+
+    setIsLoading(true);
+    setStatusMessage('正在上傳模特照片...');
+    setError('');
+
+    try {
+      const result = await uploadModelPhoto(file);
+      
+      if (result.success && result.photo?.user_image_url) {
+        setResultImage(result.photo.user_image_url);
+        setStatusMessage(''); // 成功後清空狀態訊息
+        setError('');
+        console.log('✅ 模特照片上傳成功:', result.photo.user_image_url);
+      } else {
+        throw new Error('上傳失敗：無法取得照片 URL');
+      }
+    } catch (err) {
+      console.error('模特照片上傳失敗:', err);
+      const errorMsg = err.message || '模特照片上傳失敗，請重試';
+      setStatusMessage(errorMsg);
+      setError(errorMsg);
+    } finally {
+      setIsLoading(false);
+      onComplete();
+    }
+  };
+
   return {
     // 狀態
     statusMessage,
@@ -125,6 +163,7 @@ export const useImageUpload = (options = {}) => {
     handleFileSelected,
     handleFileSelectedWithRedirect,
     handleFileSelectedForClothesUpload,
+    handleFileSelectedForModelUpload,
     clearImage,
     setResultImage,
     setStatusMessage,

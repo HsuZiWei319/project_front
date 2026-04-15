@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import './ModelPage.css';
@@ -6,7 +6,6 @@ import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
-import { uploadModelPhoto } from '../../services/imageService';
 import { useImageUpload } from '../../hooks/useImageUpload';
 
 const ModelPage = () => {
@@ -19,17 +18,45 @@ const ModelPage = () => {
     
     const [isLoading, setIsLoading] = useState(false);
     const [uploadError, setUploadError] = useState(null);
+    const [userPhotoUrl, setUserPhotoUrl] = useState(null); // 用戶上傳的模特照片
     const fileInputRef = useRef(null);
     const nextIdRef = useRef(2);
-    const { handleFileSelectedForClothesUpload } = useImageUpload();
+    const { handleFileSelectedForModelUpload, resultImage, error, isLoading: hookIsLoading } = useImageUpload();
+
+    // 監聽 hook 的 resultImage，當上傳成功時更新 userPhotoUrl
+    useEffect(() => {
+        if (resultImage) {
+            setUserPhotoUrl(resultImage);
+        }
+    }, [resultImage]);
+
+    // 監聽 hook 的 error，當上傳失敗時更新 uploadError
+    useEffect(() => {
+        if (error) {
+            setUploadError(error);
+        }
+    }, [error]);
+
+    // 監聽 hook 的 isLoading
+    useEffect(() => {
+        setIsLoading(hookIsLoading);
+    }, [hookIsLoading]);
 
     const handleFileSelected = (file, onComplete) => {
-        handleFileSelectedForClothesUpload(file, onComplete);
+        handleFileSelectedForModelUpload(file, onComplete);
     };
 
     // 處理 plus_square 點擊事件
     const handlePlusSquareClick = () => {
         if (isLoading) return; // 禁止在上傳中時重複點擊
+        setUploadError(null); // 清除之前的錯誤
+        fileInputRef.current?.click();
+    };
+
+    // 處理已上傳照片點擊（再次上傳）
+    const handlePhotoClick = () => {
+        if (isLoading) return;
+        setUploadError(null); // 清除之前的錯誤
         fileInputRef.current?.click();
     };
 
@@ -38,11 +65,17 @@ const ModelPage = () => {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // 導航到UploadClothesPage而不是直接上傳
-        handleFileSelected(file, () => {
-            // 清除文件輸入的值，讓同一個文件也能再次被選擇
-            event.target.value = '';
-        });
+        setUploadError(null);
+
+        try {
+            await handleFileSelected(file, () => {
+                // 上傳完成後，重置文件輸入
+                event.target.value = '';
+            });
+        } catch (error) {
+            console.error('上傳錯誤:', error);
+            setUploadError(error.message || '上傳失敗，請重試');
+        }
     };
 
     return (
@@ -85,20 +118,54 @@ const ModelPage = () => {
                     </div>
                 ))}
 
-                {/* 藍色加號：它會自動出現在 Grid 的下一個位置 */}
-                <div 
-                    className="plus_square-container" 
-                    onClick={handlePlusSquareClick}
-                    style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
-                >
-                    <img 
-                        src={Images.plus_square} 
-                        alt="plus_square"
-                        className="plus_square-button" 
-                        style={{ filter: isLoading ? 'opacity(0.6)' : 'none' }}
-                    />
-                    {isLoading && <span style={{ position: 'absolute', color: '#666' }}>上傳中...</span>}
-                </div>
+                {/* 顯示用戶上傳的模特照片或藍色加號 */}
+                {userPhotoUrl ? (
+                    // 已上傳照片：顯示用戶上傳的照片，可點擊重新上傳
+                    <div 
+                        className="model-item" 
+                        onClick={handlePhotoClick}
+                        style={{ 
+                            opacity: isLoading ? 0.6 : 1, 
+                            cursor: isLoading ? 'not-allowed' : 'pointer',
+                            position: 'relative'
+                        }}
+                    >
+                        <img 
+                            src={userPhotoUrl} 
+                            alt="用戶上傳的模特照片" 
+                            className="model-image-placeholder" 
+                        />
+                        <span className="model-name">我的模特</span>
+                        {isLoading && (
+                            <span style={{ 
+                                position: 'absolute', 
+                                top: '50%', 
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                color: '#999',
+                                fontSize: '12px',
+                                whiteSpace: 'nowrap'
+                            }}>
+                                更新中...
+                            </span>
+                        )}
+                    </div>
+                ) : (
+                    // 未上傳照片：顯示藍色加號
+                    <div 
+                        className="plus_square-container" 
+                        onClick={handlePlusSquareClick}
+                        style={{ opacity: isLoading ? 0.6 : 1, cursor: isLoading ? 'not-allowed' : 'pointer' }}
+                    >
+                        <img 
+                            src={Images.plus_square} 
+                            alt="plus_square"
+                            className="plus_square-button" 
+                            style={{ filter: isLoading ? 'opacity(0.6)' : 'none' }}
+                        />
+                        {isLoading && <span style={{ position: 'absolute', color: '#666' }}>上傳中...</span>}
+                    </div>
+                )}
                 </div>
                 
                 {/* 底部緩衝區：防止內容被 Footer 擋住 */}

@@ -110,14 +110,13 @@ export const uploadClothes = async (file) => {
 };
 
 /**
- * 上傳模特照片（目前暫時保持舊 API，之後改成 /picture/user/photo）
+ * 上傳模特照片至 /picture/user/photo API
  * @param {File} file - 圖片檔案
- * @returns {Promise<Object>} - 上傳結果 (包含 photo ID, original_url, removed_bg_url 等)
+ * @returns {Promise<Object>} - 上傳結果 (包含 user_image_url 等)
  */
 export const uploadModelPhoto = async (file) => {
   const formData = new FormData();
-  formData.append('image_data', file);
-  formData.append('filename', file.name);
+  formData.append('photo_file', file);
 
   try {
     // 從 localStorage 取得 JWT token
@@ -126,7 +125,7 @@ export const uploadModelPhoto = async (file) => {
       throw new Error('未找到認證 token，請先登入');
     }
 
-    const uploadUrl = `${API_URL}/api/upload-image`;
+    const uploadUrl = `${API_URL}/picture/user/photo`;
 
     console.log("正在上傳模特照片至:", uploadUrl);
 
@@ -140,13 +139,14 @@ export const uploadModelPhoto = async (file) => {
 
     console.log("模特照片上傳成功:", response.data);
     
-    // 轉換响應格式以適應前端需求
+    // 返回用戶照片 URL
+    const user_image_url = response.data.data?.user_image_url || response.data.user_image_url;
+    
     return {
       success: true,
       photo: {
-        id: response.data.image_id || response.data.id,
-        original_url: response.data.storage_status?.url || response.data.original_url,
-        removed_bg_url: response.data.processed_url || response.data.removed_bg_url,
+        user_image_url: user_image_url,
+        upload_time: response.data.data?.upload_time || response.data.upload_time,
         status: 'completed'
       }
     };
