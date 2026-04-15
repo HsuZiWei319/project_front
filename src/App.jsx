@@ -11,6 +11,7 @@ import ModelPage from './pages/Model/ModelPage';
 import WardrobePage from './pages/Wardrobe/WardrobePage';
 import UploadClothesPage from './pages/UploadClothes/UploadClothesPage';
 import ClothesInfoPage from './pages/ClothesInfo/ClothesInfoPage';
+import VirtualTryOn from './pages/VirtualTryOn/VirtualTryOn';
 
 const App = () => {
   return (
@@ -44,6 +45,9 @@ const App = () => {
 
         {/* 衣服詳細信息頁面 */}
         <Route path="/clothes/:clothesId" element={<ClothesInfoPage />} />
+
+        {/* 虛擬試穿頁面 */}
+        <Route path="/virtual-tryon" element={<VirtualTryOn />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
         

@@ -6,10 +6,12 @@ import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import { useImageUpload } from '../../hooks/useImageUpload';
 import apiClient, { API_URL } from '../../services/api';
 
 const WardrobePage = () => {
     const navigate = useNavigate();
+    const { handleFileSelectedForClothesUpload } = useImageUpload();
     const [groupedClothes, setGroupedClothes] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -47,17 +49,6 @@ const WardrobePage = () => {
         } finally {
             setIsLoading(false);
         }
-    };
-
-    const handleFileSelected = (file, onComplete) => {
-        if (!file) {
-            onComplete();
-            return;
-        }
-
-        // 導航回主畫面，傳遞文件讓主畫面進行上傳處理
-        navigate('/home', { state: { fileToUpload: file } });
-        onComplete();
     };
 
     // 轉換衣服圖片 URL（類似 UploadClothesPage）
@@ -181,7 +172,7 @@ const WardrobePage = () => {
                 <div style={{ height: '80px' }}></div>
             </main>
 
-            <BottomNavigation onFileSelected={handleFileSelected} />
+            <BottomNavigation onFileSelected={handleFileSelectedForClothesUpload} />
         </div>
     );
 };

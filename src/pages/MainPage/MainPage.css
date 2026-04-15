@@ -213,6 +213,7 @@
 /* 圖片容器：設定為相對定位，當作對齊的基準點 */
 .avatar-wrapper {
   position: relative;
+  top: -20px;
   width: 400px; /* 確保容器寬度足夠 */
   height: auto;
   aspect-ratio: 3 / 4; /* 保持 3:4 的寬高比（適合人偶尺寸） */
@@ -227,6 +228,17 @@
   height: 100%; /* 使用全高 */
   object-fit: contain; /* 保持圖片比例 */
   display: block; /* 消除圖片底部空隙 */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 虛擬試穿結果圖片 - 用 cover 模式讓圖片填滿容器，裁剪透明邊緣 */
+.model-img.virtual-tryon-result {
+  object-fit: cover;
+}
+
+.model-img.trying-opacity {
+  opacity: 0.5;
+  animation: fadeInOut 3s ease-in-out;
 }
 
 .info-card {
@@ -245,7 +257,38 @@
 
 .wardrobe-card {
   position: absolute;
-  transform: translateY(320px) translateX(180px);
+  transform: translateY(320px) translateX(160px);
   width: 35px;
   height: auto;
+}
+
+/* === 虛擬試穿狀態樣式 === */
+.virtual-tryon-status-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 30px 50px;
+  border-radius: 15px;
+  text-align: center;
+  z-index: 200;
+  font-size: 18px;
+  font-weight: bold;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+.virtual-tryon-status-overlay h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }

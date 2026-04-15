@@ -14,7 +14,33 @@ const MainPage = () => {
   const { statusMessage, resultImage, handleFileSelectedForClothesUpload } = useImageUpload();
   const [isMouseIdle, setIsMouseIdle] = useState(false);
   const [userPhotoUrl, setUserPhotoUrl] = useState(null);
+  const [isVirtualTrying, setIsVirtualTrying] = useState(false);
+  const [virtualTryingClothes, setVirtualTryingClothes] = useState('');
+  const [virtualTryOnImage, setVirtualTryOnImage] = useState(null);
   const idleTimeoutRef = React.useRef(null);
+  const isVirtualTryingRef = React.useRef(false);
+
+  // 在組件首次掛載時清除虛擬試穿的臨時數據（最優先執行）
+  useEffect(() => {
+    // 強制清除虛擬試穿狀態
+    setIsVirtualTrying(false);
+    isVirtualTryingRef.current = false;
+    setVirtualTryingClothes('');
+    setVirtualTryOnImage(null);
+    
+    // 清除 localStorage
+    localStorage.removeItem('virtualTryOnResult');
+    localStorage.removeItem('virtualTryOnError');
+    
+    // 如果 location.state 中仍有虛擬試穿標誌，清除路由狀態
+    if (location.state?.startedVirtualTryOn) {
+      console.log('🧹 檢測到殘留的虛擬試穿狀態，清除路由信息');
+      // 使用 replace 導航来清除 location.state，但不改變 URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
+    console.log('🧹 頁面加載：已清除所有虛擬試穿狀態');
+  }, []);
 
   // 監控 resultImage 的變化
   useEffect(() => {
@@ -41,6 +67,93 @@ const MainPage = () => {
 
     loadModelPhoto();
   }, [location.pathname]);
+
+  // 監控虛擬試穿的啟動 (來自 VirtualTryOn 頁面的導航狀態)
+  useEffect(() => {
+    if (location.state?.startedVirtualTryOn) {
+      const clothesNames = location.state.clothesInfo?.names || '選中的衣服';
+      setIsVirtualTrying(true);
+      isVirtualTryingRef.current = true;
+      setVirtualTryingClothes(clothesNames);
+      console.log('🔍 接收到虛擬試穿請求，衣服:', clothesNames);
+    } else {
+      // 如果沒有虛擬試穿的標誌，清空狀態和 localStorage
+      setIsVirtualTrying(false);
+      isVirtualTryingRef.current = false;
+      setVirtualTryingClothes('');
+      setVirtualTryOnImage(null);
+      localStorage.removeItem('virtualTryOnResult');
+      localStorage.removeItem('virtualTryOnError');
+      console.log('🔄 清除虛擬試穿狀態');
+    }
+  }, [location.state?.startedVirtualTryOn, location.pathname]);
+
+  // 監控虛擬試穿完成事件
+  useEffect(() => {
+    const handleVirtualTryOnComplete = () => {
+      // 只有當虛擬試穿仍在進行中時，才處理結果
+      if (!isVirtualTryingRef.current) {
+        console.log('⏭️ 虛擬試穿已取消，忽略 API 結果');
+        return;
+      }
+
+      console.log('📥 收到虛擬試穿完成事件');
+      
+      try {
+        const resultData = localStorage.getItem('virtualTryOnResult');
+        if (resultData) {
+          const { imageUrl } = JSON.parse(resultData);
+          console.log('✅ 更新模特照片:', imageUrl);
+          setVirtualTryOnImage(imageUrl);
+          setUserPhotoUrl(imageUrl);
+          
+          // 立即清除虛擬試穿狀態（不再延遲）
+          setIsVirtualTrying(false);
+          isVirtualTryingRef.current = false;
+          setVirtualTryingClothes('');
+          setVirtualTryOnImage(null);
+          localStorage.removeItem('virtualTryOnResult');
+        }
+      } catch (err) {
+        console.error('❌ 處理虛擬試穿結果失敗:', err);
+        setIsVirtualTrying(false);
+        isVirtualTryingRef.current = false;
+      }
+    };
+
+    const handleVirtualTryOnError = () => {
+      // 只有當虛擬試穿仍在進行中時，才處理錯誤
+      if (!isVirtualTryingRef.current) {
+        console.log('⏭️ 虛擬試穿已取消，忽略錯誤');
+        return;
+      }
+
+      console.log('❌ 收到虛擬試穿錯誤事件');
+      
+      try {
+        const errorData = localStorage.getItem('virtualTryOnError');
+        if (errorData) {
+          const { error } = JSON.parse(errorData);
+          alert('虛擬試穿失敗: ' + error);
+          localStorage.removeItem('virtualTryOnError');
+        }
+      } catch (err) {
+        console.error('❌ 處理虛擬試穿錯誤失敗:', err);
+      }
+      
+      setIsVirtualTrying(false);
+      isVirtualTryingRef.current = false;
+      setVirtualTryingClothes('');
+    };
+
+    window.addEventListener('virtualTryOnComplete', handleVirtualTryOnComplete);
+    window.addEventListener('virtualTryOnError', handleVirtualTryOnError);
+
+    return () => {
+      window.removeEventListener('virtualTryOnComplete', handleVirtualTryOnComplete);
+      window.removeEventListener('virtualTryOnError', handleVirtualTryOnError);
+    };
+  }, []);
 
   // 鼠標空閒檢測
   useEffect(() => {
@@ -88,7 +201,13 @@ const MainPage = () => {
         <div className="avatar-wrapper">
           
           {/* 模特圖 */}
-          <img src={userPhotoUrl || Images.model} alt="model" className="model-img" />
+          <img 
+            src={virtualTryOnImage || userPhotoUrl || Images.model} 
+            alt="model" 
+            className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} ${virtualTryOnImage ? 'virtual-tryon-result' : ''}`}
+            onClick={() => navigate('/virtual-tryon')}
+            style={{ cursor: 'pointer' }}
+          />
 
           {/* 模特info */}
           <img 
@@ -108,15 +227,16 @@ const MainPage = () => {
             style={{ cursor: 'pointer' }}
           />
 
-          {/* 去背後的衣服 (如果有拿到 resultImage 才顯示) */}
-          {resultImage && (
-            <img src={resultImage} alt="Try-On" className="overlay-img" />
-          )}
-
         </div>
         
         {/* --- 狀態文字顯示區 (絕對定位在中間) --- */}
-        {statusMessage && (
+        {isVirtualTrying && (
+          <div className="virtual-tryon-status-overlay">
+            <h2>正在套用 {virtualTryingClothes}...</h2>
+          </div>
+        )}
+        
+        {statusMessage && !isVirtualTrying && (
           <div className="status-overlay">
             <h2>{statusMessage}</h2>
           </div>
