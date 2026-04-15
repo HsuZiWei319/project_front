@@ -140,18 +140,94 @@ export const uploadModelPhoto = async (file) => {
     console.log("模特照片上傳成功:", response.data);
     
     // 返回用戶照片 URL
-    const user_image_url = response.data.data?.user_image_url || response.data.user_image_url;
+    // 後端 API 返回的結構：response.data.user.user_image_url
+    const user_image_url = response.data.user?.user_image_url || response.data.data?.user_image_url;
+    
+    if (!user_image_url) {
+      console.error("❌ 後端返回的用戶照片 URL 為空:", {
+        response_data: response.data,
+        user_obj: response.data.user,
+        data_obj: response.data.data,
+        user_image_url: user_image_url
+      });
+      throw new Error('後端返回的照片 URL 為空，請檢查後端响應');
+    }
     
     return {
       success: true,
       photo: {
         user_image_url: user_image_url,
-        upload_time: response.data.data?.upload_time || response.data.upload_time,
+        upload_time: response.data.user?.updated_at || response.data.data?.upload_time,
         status: 'completed'
       }
     };
   } catch (error) {
     console.error("上傳模特照片失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 獲取用戶之前上傳的模特照片
+ * @returns {Promise<Object>} - 用戶照片信息（包含 user_image_url）
+ */
+export const getModelPhoto = async () => {
+  try {
+    // 從 localStorage 取得 JWT token
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('未找到認證 token，請先登入');
+    }
+
+    const fetchUrl = `${API_URL}/picture/user/photo`;
+
+    console.log("正在獲取用戶模特照片...");
+
+    const response = await axios.get(fetchUrl, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      timeout: 30000,
+    });
+
+    console.log("獲取模特照片成功:", response.data);
+    
+    // 後端 GET 端點返回的結構：response.data.data.user_image_url
+    const user_image_url = response.data.data?.user_image_url;
+    const upload_time = response.data.data?.upload_time;
+    
+    if (!user_image_url) {
+      console.log("⚠️  用戶未設置模特照片");
+      return {
+        success: false,
+        message: '用戶未設置模特照片',
+        photo: null
+      };
+    }
+    
+    return {
+      success: true,
+      photo: {
+        user_image_url: user_image_url,
+        upload_time: upload_time,
+        status: 'completed'
+      }
+    };
+  } catch (error) {
+    // 如果是 404（照片不存在），返回 success: false
+    if (error.response?.status === 404) {
+      console.log("⚠️  用戶未設置模特照片（404）");
+      return {
+        success: false,
+        message: '用戶未設置模特照片',
+        photo: null
+      };
+    }
+    
+    console.error("獲取模特照片失敗:", error.message);
     if (error.response?.data) {
       console.error("後端錯誤訊息:", error.response.data);
     }

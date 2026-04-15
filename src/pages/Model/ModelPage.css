@@ -41,7 +41,7 @@
 
 .model-image-placeholder {
   width: 150px;
-  height: auto;
+  height: 200px;
   object-fit: contain;
 }
 
@@ -54,13 +54,12 @@
 
 .plus_square-button {
   width: 50px;
-  height: auto;
+  height: 200px;
   object-fit: contain;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-top: 70px; /* 稍微往下對齊模特兒的身軀 */
 }
 
 .plus_square-container {

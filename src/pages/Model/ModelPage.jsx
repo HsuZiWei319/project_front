@@ -6,6 +6,7 @@ import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import { getModelPhoto } from '../../services/imageService';
 import { useImageUpload } from '../../hooks/useImageUpload';
 
 const ModelPage = () => {
@@ -22,6 +23,24 @@ const ModelPage = () => {
     const fileInputRef = useRef(null);
     const nextIdRef = useRef(2);
     const { handleFileSelectedForModelUpload, resultImage, error, isLoading: hookIsLoading } = useImageUpload();
+
+    // 在組件掛載時，獲取之前上傳的模特照片
+    useEffect(() => {
+        const loadPreviousPhoto = async () => {
+            try {
+                const result = await getModelPhoto();
+                if (result.success && result.photo?.user_image_url) {
+                    setUserPhotoUrl(result.photo.user_image_url);
+                    console.log('✅ 已加載之前上傳的模特照片:', result.photo.user_image_url);
+                }
+            } catch (err) {
+                console.error('⚠️ 獲取模特照片失敗:', err);
+                // 如果獲取失敗，不影響頁面正常功能
+            }
+        };
+
+        loadPreviousPhoto();
+    }, []); // 只在組件掛載時執行一次
 
     // 監聽 hook 的 resultImage，當上傳成功時更新 userPhotoUrl
     useEffect(() => {
