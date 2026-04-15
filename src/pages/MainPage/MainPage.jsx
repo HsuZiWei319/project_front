@@ -198,13 +198,13 @@ const MainPage = () => {
         {/* 這裡放 3D 人偶圖 */}
 
         {/* 新增一個 wrapper (容器) 來包住所有圖 */}
-        <div className="avatar-wrapper">
+        <div className={`avatar-wrapper`}>
           
           {/* 模特圖 */}
           <img 
             src={virtualTryOnImage || userPhotoUrl || Images.model} 
             alt="model" 
-            className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} ${virtualTryOnImage ? 'virtual-tryon-result' : ''}`}
+            className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
             onClick={() => navigate('/virtual-tryon')}
             style={{ cursor: 'pointer' }}
           />
@@ -232,7 +232,7 @@ const MainPage = () => {
         {/* --- 狀態文字顯示區 (絕對定位在中間) --- */}
         {isVirtualTrying && (
           <div className="virtual-tryon-status-overlay">
-            <h2>正在套用 {virtualTryingClothes}...</h2>
+            <h2>試穿中...</h2>
           </div>
         )}
         

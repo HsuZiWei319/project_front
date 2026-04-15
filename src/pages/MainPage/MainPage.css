@@ -220,6 +220,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;   /* 確保圖片超出部分不溢出 */
 }
 
 /* 確保你的圖片不會被切掉或變形 */
@@ -231,14 +232,8 @@
   transition: opacity 0.3s ease-in-out;
 }
 
-/* 虛擬試穿結果圖片 - 用 cover 模式讓圖片填滿容器，裁剪透明邊緣 */
-.model-img.virtual-tryon-result {
-  object-fit: cover;
-}
-
 .model-img.trying-opacity {
   opacity: 0.5;
-  animation: fadeInOut 3s ease-in-out;
 }
 
 .info-card {
