@@ -231,9 +231,16 @@
 
 .info-card {
   position: absolute;
-  transform: translateY(-200px) translateX(100px);
+  transform: translateY(-220px) translateX(120px);
   width: 35px;
   height: auto;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.info-card.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .wardrobe-card {

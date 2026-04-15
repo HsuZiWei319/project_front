@@ -11,6 +11,8 @@ const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { statusMessage, resultImage, handleFileSelectedForClothesUpload } = useImageUpload();
+  const [isMouseIdle, setIsMouseIdle] = useState(false);
+  const idleTimeoutRef = React.useRef(null);
 
   // 監控 resultImage 的變化
   useEffect(() => {
@@ -19,6 +21,40 @@ const MainPage = () => {
       console.log("✅ 圖片 URL 已設定");
     }
   }, [resultImage]);
+
+  // 鼠標空閒檢測
+  useEffect(() => {
+    const handleMouseMove = () => {
+      // 鼠標移動時，設定為非空閒狀態
+      setIsMouseIdle(false);
+
+      // 清除之前的計時器
+      if (idleTimeoutRef.current) {
+        clearTimeout(idleTimeoutRef.current);
+      }
+
+      // 設定新的計時器：3秒後如果沒有移動就設定為空閒
+      idleTimeoutRef.current = setTimeout(() => {
+        setIsMouseIdle(true);
+      }, 3000);
+    };
+
+    // 添加鼠標移動事件監聽器
+    window.addEventListener('mousemove', handleMouseMove);
+
+    // 初始化：設定第一個計時器
+    idleTimeoutRef.current = setTimeout(() => {
+      setIsMouseIdle(true);
+    }, 3000);
+
+    // 清理函數
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (idleTimeoutRef.current) {
+        clearTimeout(idleTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="container">
@@ -38,7 +74,7 @@ const MainPage = () => {
           <img 
             src={Images.icon_info} 
             alt="icon_info" 
-            className="info-card"
+            className={`info-card ${isMouseIdle ? 'hidden' : ''}`}
             onClick={() => navigate('/model')}
             style={{ cursor: 'pointer' }}
           />
