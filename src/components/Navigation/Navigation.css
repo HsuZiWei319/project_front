@@ -1,28 +1,42 @@
-.top-nav{
-  position: absolute;   /* 絕對定位 */
-  top: 0;               /* 黏在頂部 */
+@import '../../styles/variables.css';
+
+.top-nav {
+  position: absolute;
+  top: 0;
   left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 245, 255, 0.8) 100%);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 10;
 }
 
-.bottom-nav{
-  position: absolute;   /* 絕對定位 */
-  bottom: 0;               /* 黏在頂部 */
+.bottom-nav {
+  position: absolute;
+  bottom: 0;
   left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(230, 245, 255, 0.8) 0%, rgba(255, 255, 255, 0.95) 100%);
+  border-top: 1px solid rgba(99, 102, 241, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 10;
 }
 
-/* 登入頁面頂部導覽列 - 保留容器樣式但不顯示內容 */
+/* 登入頁面頂部導覽列 */
 .top_login-nav {
-  position: absolute;   /* 絕對定位 */
-  top: 0;               /* 黏在頂部 */
+  position: absolute;
+  top: 0;
   left: 0;
-  /* 保留原有的高度和背景色 */
-  /* 容器內容會被隱藏 */
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), transparent);
+  z-index: 5;
 }
 
 .top_register-nav {
-  position: absolute;   /* 絕對定位 */
-  top: 0;               /* 黏在頂部 */
+  position: absolute;
+  top: 0;
   left: 0;
-  /* 保留原有的高度和背景色 */
-  /* 容器內容會被隱藏 */
+  width: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0), transparent);
+  z-index: 5;
 }

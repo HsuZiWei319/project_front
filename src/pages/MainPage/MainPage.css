@@ -1,128 +1,178 @@
+@import '../../styles/variables.css';
+
 /* ========== 主頁面樣式 ========== */
 
 /* 個人檔案卡片容器 */
 .profile-card {
   position: relative;
   display: flex;
-  flex-direction: column;  /* icon 在上，文字在下 */
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   z-index: 100;
   margin-top: 20px;
-  cursor: pointer;    /* 滑鼠移過去變成手指 */
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 12px;
+  border-radius: var(--radius-lg);
+}
+
+.profile-card:hover {
+  background: rgba(99, 102, 241, 0.05);
+  transform: translateY(-2px);
 }
 
 /* 個人檔案icon */
 .profile-icon {
-  width: 30px;        /* 設定圖片寬度 */
-  height: auto;       /* 高度自動，保持比例 */
-  cursor: pointer;    /* 滑鼠移過去變成手指 */
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 /* 個人檔案文字 */
 .profile-text {
-  margin-top: 8px;        /* icon 和文字之間的距離 */
-  font-size: 14px;        /* 字的大小 */
-  font-weight: bold;      /* 粗體 */
-  color: #333333;         /* 深灰色 */
-  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-  text-align: center;     /* 文字置中 */
-  white-space: nowrap;    /* 防止文字斷行 */
+  margin-top: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  text-align: center;
+  white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.profile-card:hover .profile-text {
+  color: var(--primary);
 }
 
 .like-card {
   position: relative;
   display: flex;
-  flex-direction: column;  /* icon 在上，文字在下 */
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   z-index: 100;
   margin-top: 20px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 12px;
+  border-radius: var(--radius-lg);
+}
+
+.like-card:hover {
+  background: rgba(236, 72, 153, 0.05);
+  transform: translateY(-2px);
 }
 
 /* 喜歡icon */
 .like-icon {
-  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
-  height: auto;       /* 高度自動，保持比例 */
-  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
-  
-  /* 選用：如果想要加一點陰影讓它更清楚 
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  */
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .like-text {
-  margin-top: 8px;        /* icon 和文字之間的距離 */
-  font-size: 14px;        /* 字的大小 */
-  font-weight: bold;      /* 粗體 */
-  color: #333333;         /* 深灰色 */
-  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-  text-align: center;     /* 文字置中 */
-  white-space: nowrap;    /* 防止文字斷行 */
+  margin-top: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  text-align: center;
+  white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.like-card:hover .like-text {
+  color: var(--secondary);
 }
 
 .setting-card {
   position: relative;
   display: flex;
-  flex-direction: column;  /* icon 在上，文字在下 */
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   z-index: 100;
   margin-top: 20px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 12px;
+  border-radius: var(--radius-lg);
+}
+
+.setting-card:hover {
+  background: rgba(107, 114, 128, 0.05);
+  transform: translateY(-2px);
 }
 
 /* 設定icon */
 .setting-icon {
-  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
-  height: auto;       /* 高度自動，保持比例 */
-  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
-  
-  /* 選用：如果想要加一點陰影讓它更清楚 
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  */
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  animation: spin 0.5s ease-in-out;
+}
+
+.setting-card:hover .setting-icon {
+  animation: spin 0.5s ease-in-out infinite;
 }
 
 .setting-text {
-  margin-top: 8px;        /* icon 和文字之間的距離 */
-  font-size: 14px;        /* 字的大小 */
-  font-weight: bold;      /* 粗體 */
-  color: #333333;         /* 深灰色 */
-  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-  text-align: center;     /* 文字置中 */
-  white-space: nowrap;    /* 防止文字斷行 */
+  margin-top: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  text-align: center;
+  white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.setting-card:hover .setting-text {
+  color: var(--gray-900);
 }
 
 .home-card {
   position: relative;
   display: flex;
-  flex-direction: column;  /* icon 在上，文字在下 */
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   z-index: 100;
   margin-top: -10px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 12px;
+  border-radius: var(--radius-lg);
+}
+
+.home-card:hover {
+  background: rgba(16, 185, 129, 0.05);
+  transform: translateY(-2px);
 }
 
 /* 設定icon */
 .home-icon {
-  width: 30px;        /* 設定圖片寬度 (依你的圖片大小調整) */
-  height: auto;       /* 高度自動，保持比例 */
-  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
-  
-  /* 選用：如果想要加一點陰影讓它更清楚 
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  */
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .home-text {
-  margin-top: 8px;        /* icon 和文字之間的距離 */
-  font-size: 14px;        /* 字的大小 */
-  font-weight: bold;      /* 粗體 */
-  color: #333333;         /* 深灰色 */
-  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-  text-align: center;     /* 文字置中 */
-  white-space: nowrap;    /* 防止文字斷行 */
+  margin-top: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+  text-align: center;
+  white-space: nowrap;
   height: auto;
   cursor: pointer;
+  transition: color var(--transition-base);
+}
+
+.home-card:hover .home-text {
+  color: var(--success);
 }
 
 @keyframes buttonPulse {
@@ -130,7 +180,7 @@
     transform: scale(1);
   }
   50% {
-    transform: scale(1.03);
+    transform: scale(1.05);
   }
 }
 
@@ -138,8 +188,8 @@
   position: relative;
   width: 100px;
   display: flex;
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
+  align-items: center;
+  flex: 1;
   z-index: 100;
   margin-top: -10px;
 }
@@ -147,6 +197,7 @@
 .add-button-container {
   position: relative;
   cursor: pointer;
+  animation: buttonPulse 2s ease-in-out infinite;
 }
 
 .add-button-container:hover .plus-icon {

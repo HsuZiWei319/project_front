@@ -1,37 +1,65 @@
+@import '../../styles/variables.css';
+
 /* ========== 註冊頁面樣式 ========== */
 
 /* 左上角返回箭頭 */
 .back-arrow {
-    position: absolute;
-    top: 105px;
-    left: 10px;
-    width: 14px;
-    height: auto;
-    cursor: pointer;
-    padding: 10px; /* 增加點擊範圍 */
+  position: absolute;
+  top: 105px;
+  left: 10px;
+  width: 14px;
+  height: auto;
+  cursor: pointer;
+  padding: 10px;
+  transition: all var(--transition-base);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
-/* 註冊頁專用的輸入框群組 (不需要左右圖示，但需要上方 Label) */
+.back-arrow:hover {
+  transform: translateX(-3px);
+}
+
+/* 註冊頁專用的輸入框群組 */
 .input-group-register {
   width: 300px;
-  margin-bottom: 15px;
-  text-align: left; /* 讓 label 靠左 */
+  margin-bottom: var(--spacing-lg);
+  text-align: left;
+  animation: slideUp 0.4s ease-out;
 }
+
+.input-group-register:nth-child(1) { animation-delay: 0.1s; }
+.input-group-register:nth-child(2) { animation-delay: 0.2s; }
+.input-group-register:nth-child(3) { animation-delay: 0.3s; }
+.input-group-register:nth-child(4) { animation-delay: 0.4s; }
 
 .input-group-register label {
   display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #333;
+  font-size: var(--font-base);
+  margin-bottom: var(--spacing-sm);
+  color: var(--gray-700);
+  font-weight: 600;
 }
 
 .input-group-register input {
   width: 100%;
-  padding: 10px; /* 不需要留圖示位置了 */
-  border: 1px solid #999; /* 加個邊框比較像你的設計圖 */
-  border-radius: 5px;     /* 方一點的圓角 */
-  background-color: white;
-  font-size: 14px;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  background-color: var(--white);
+  font-size: var(--font-base);
   box-sizing: border-box;
   outline: none;
+  transition: all var(--transition-base);
+  font-family: var(--font-sans);
+}
+
+.input-group-register input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background-color: rgba(99, 102, 241, 0.02);
+}
+
+.input-group-register input::placeholder {
+  color: var(--gray-400);
 }
