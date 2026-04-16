@@ -71,13 +71,13 @@
 
 .profile-label {
   font-size: var(--font-base);
-  color: var(--gray-700);
+  color: #1f2937;
   font-weight: 600;
 }
 
 .profile-value {
   font-size: var(--font-base);
-  color: var(--gray-600);
+  color: #1f2937;
   text-align: right;
 }
 

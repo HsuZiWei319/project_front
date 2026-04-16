@@ -59,7 +59,7 @@
 .measurement-input-group label {
   font-size: var(--font-base);
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--gray-800);
 }
 
 .measurement-input-group input {
@@ -82,7 +82,7 @@
 .measurement-input-group input:disabled {
   background-color: var(--gray-100);
   cursor: not-allowed;
-  color: var(--gray-500);
+  color: var(--gray-700);
   border-color: var(--gray-200);
 }
 

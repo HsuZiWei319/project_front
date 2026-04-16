@@ -17,7 +17,7 @@
 .category-group h3 {
   font-size: var(--font-xl);
   font-weight: bold;
-  color: var(--gray-900);
+  color: var(--gray-800);
   margin-bottom: var(--spacing-lg);
   padding-bottom: var(--spacing-md);
   border-bottom: 2px solid var(--primary);
@@ -85,19 +85,19 @@
   align-items: center;
   justify-content: center;
   min-height: 300px;
-  color: var(--gray-500);
+  color: var(--gray-600);
   text-align: center;
 }
 
 .empty-state-icon {
   font-size: 48px;
   margin-bottom: var(--spacing-lg);
-  opacity: 0.3;
+  opacity: 0.5;  /* 改善 */
 }
 
 .empty-state-text {
   font-size: var(--font-lg);
-  color: var(--gray-600);
+  color: var(--gray-700);
   margin-bottom: var(--spacing-lg);
 }
 

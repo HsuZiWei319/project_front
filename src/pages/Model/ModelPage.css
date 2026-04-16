@@ -94,7 +94,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all var(--transition-base);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));  /* 改善：更明顯的影子 */
 }
 
 .plus_square-container {

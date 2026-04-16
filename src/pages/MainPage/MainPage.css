@@ -27,7 +27,7 @@
   width: 30px;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 /* 個人檔案文字 */
@@ -35,7 +35,7 @@
   margin-top: 8px;
   font-size: var(--font-sm);
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--gray-800);
   text-align: center;
   white-space: nowrap;
   transition: color var(--transition-base);
@@ -69,7 +69,7 @@
   width: 30px;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .like-text {
@@ -110,7 +110,7 @@
   width: 30px;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
   animation: spin 0.5s ease-in-out;
 }
 
@@ -156,14 +156,14 @@
   width: 30px;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .home-text {
   margin-top: 8px;
   font-size: var(--font-sm);
   font-weight: 600;
-  color: var(--gray-700);
+  color: var(--gray-800);
   text-align: center;
   white-space: nowrap;
   height: auto;
@@ -214,34 +214,42 @@
 .notification-card {
   position: relative;
   display: flex;
-  flex-direction: column;  /* icon 在上，文字在下 */
-  align-items: center; /* 水平置中 */
-  flex: 1;            /* 均勻分散 */
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
   z-index: 100;
   margin-top: -10px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  padding: 12px;
+  border-radius: var(--radius-lg);
+}
+
+.notification-card:hover {
+  background: rgba(59, 130, 246, 0.05);
+  transform: translateY(-2px);
 }
 
 /* 通知icon */
 .notification-icon {
-  width: 27px;        /* 設定圖片寬度 (依你的圖片大小調整) */
-  height: auto;       /* 高度自動，保持比例 */
-  cursor: pointer;    /* 滑鼠移過去變成手指 (如果是按鈕的話) */
-  
-  /* 選用：如果想要加一點陰影讓它更清楚 
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  */
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 .notification-text {
-  margin-top: 8px;        /* icon 和文字之間的距離 */
-  font-size: 14px;        /* 字的大小 */
-  font-weight: bold;      /* 粗體 */
-  color: #333333;         /* 深灰色 */
-  font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
-  text-align: center;     /* 文字置中 */
-  white-space: nowrap;    /* 防止文字斷行 */
-  height: auto;
-  cursor: pointer;
+  margin-top: 8px;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--gray-800);
+  text-align: center;
+  white-space: nowrap;
+  transition: color var(--transition-base);
+}
+
+.notification-card:hover .notification-text {
+  color: var(--info);
 }
 
 .plus-sign {

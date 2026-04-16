@@ -25,7 +25,7 @@
 
 .app-subtitle {
   font-size: var(--font-lg);
-  color: var(--gray-600);
+  color: var(--gray-800);
   font-weight: 500;
   margin-bottom: 48px;
 }
@@ -73,7 +73,7 @@
 }
 
 .input-group input::placeholder {
-  color: var(--gray-400);
+  color: var(--gray-600);
 }
 
 /* 圖示絕對定位 */
@@ -82,7 +82,7 @@
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.5;
+  opacity: 0.7;  /* 改善：從 0.5 提升到 0.7 */
   width: 20px;
   height: auto;
 }
@@ -92,7 +92,7 @@
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
-  opacity: 0.5;
+  opacity: 0.7;  /* 改善 */
   width: 20px;
   height: auto;
   cursor: pointer;

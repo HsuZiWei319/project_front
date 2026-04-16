@@ -86,8 +86,8 @@
 .text-primary { color: var(--primary); }
 .text-secondary { color: var(--secondary); }
 .text-white { color: var(--white); }
-.text-gray-500 { color: var(--gray-500); }
-.text-gray-600 { color: var(--gray-600); }
+.text-gray-500 { color: var(--gray-700); }  /* 改為深灰色 */
+.text-gray-600 { color: var(--gray-800); }  /* 改為更深 */
 .text-error { color: var(--error); }
 .text-success { color: var(--success); }
 
@@ -201,7 +201,7 @@
 }
 
 .input-field::placeholder {
-  color: var(--gray-400);
+  color: var(--gray-600);  /* 改善：從 gray-400 提升到 gray-600 */
 }
 
 /* ===== 动画 ===== */
