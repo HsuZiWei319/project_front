@@ -17,10 +17,48 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
+
+# Docker 權限檢測變數
+DOCKER_CMD=""
+NEED_SUDO=false
 # ==========================================
+
+# 🔐 檢查 Docker 權限 (在開始前一次性檢查)
+check_docker_permission() {
+    if docker ps &>/dev/null; then
+        DOCKER_CMD="docker"
+        NEED_SUDO=false
+        return 0
+    elif sudo -n docker ps &>/dev/null 2>&1; then
+        DOCKER_CMD="sudo docker"
+        NEED_SUDO=true
+        return 0
+    else
+        DOCKER_CMD="sudo docker"
+        NEED_SUDO=true
+        return 2  # 需要用戶輸入密碼
+    fi
+}
+
+# 🐳 統一的 Docker 命令執行函數
+run_docker_cmd() {
+    $DOCKER_CMD "$@"
+}
 
 echo "🚀 [前端] 準備啟動..."
 echo "🔗 後端 API 指向: $BACKEND_URL"
+echo ""
+echo "⏳ 正在檢查 Docker 權限..."
+check_docker_permission
+if [ $NEED_SUDO = true ]; then
+    echo "⚠️  即將使用 sudo 執行 Docker 命令（可能需要輸入密碼）"
+    echo "💡 提示：建議執行以下命令一次性解決權限問題："
+    echo "   ${YELLOW}sudo usermod -aG docker \$USER && newgrp docker${NC}"
+    echo ""
+else
+    echo "✅ Docker 權限檢查完成，無需 sudo"
+    echo ""
+fi
 
 # ===== 步驟 1: 安裝 npm 依賴 =====
 echo ""
@@ -61,20 +99,20 @@ else
     IS_DEV=false
 fi
 
-echo ""
+# ===== 步驟 2: 容器管理 🐳 =====
 echo "========================================"
 echo "步驟 2: 容器管理 🐳"
 echo "========================================"
 
 # 1. 清理舊的容器 (如果有)
-# 優先嘗試使用 sudo，如果沒有權限則提示用戶
-if docker ps -aq -f name=$CONTAINER_NAME &>/dev/null; then
+if run_docker_cmd ps -aq -f name=$CONTAINER_NAME &>/dev/null; then
     echo "🧹 清除舊容器 ($CONTAINER_NAME)..."
-    docker rm -f $CONTAINER_NAME 2>/dev/null || {
-        echo "⚠️  需要 Docker 權限，嘗試使用 sudo..."
-        sudo docker rm -f $CONTAINER_NAME
-    }
-    echo "   ✓ 舊容器已清除"
+    if run_docker_cmd rm -f $CONTAINER_NAME; then
+        echo "   ✓ 舊容器已清除"
+    else
+        echo -e "   ${RED}❌ 清除舊容器失敗${NC}"
+        exit 1
+    fi
 else
     echo "✓ 沒有舊容器需要清除"
 fi
@@ -112,16 +150,9 @@ fi
 
 echo ""
 echo "   🔨 開始 Docker 構建..."
-docker build \
+if run_docker_cmd build \
   --build-arg VITE_API_URL=$BACKEND_URL \
-  -t $IMAGE_NAME . 2>/dev/null || {
-    echo "⚠️  需要 Docker 權限，嘗試使用 sudo..."
-    sudo docker build \
-      --build-arg VITE_API_URL=$BACKEND_URL \
-      -t $IMAGE_NAME .
-}
-
-if [ $? -eq 0 ]; then
+  -t $IMAGE_NAME . ; then
     echo -e "   ${GREEN}✅ Docker Image 構建成功！${NC}"
 else
     echo -e "   ${RED}❌ Docker Image 構建失敗${NC}"
@@ -137,30 +168,27 @@ echo "========================================"
 echo "🔥 啟動容器中..."
 
 # 啟動開發模式容器：使用卷掛載和 Vite dev server
-docker run -d \
+if run_docker_cmd run -d \
   -p $PORT:5173 \
   -v "$(pwd)/src:/app/src" \
   -v "$(pwd)/public:/app/public" \
   --name $CONTAINER_NAME \
-  $IMAGE_NAME npm run dev -- --host 0.0.0.0 2>/dev/null || {
-    echo "⚠️  需要 Docker 權限，嘗試使用 sudo..."
-    sudo docker run -d \
-      -p $PORT:5173 \
-      -v "$(pwd)/src:/app/src" \
-      -v "$(pwd)/public:/app/public" \
-      --name $CONTAINER_NAME \
-      $IMAGE_NAME npm run dev -- --host 0.0.0.0
-}
+  $IMAGE_NAME npm run dev -- --host 0.0.0.0 ; then
+    echo "✓ 容器啟動命令已執行"
+else
+    echo -e "${RED}❌ 容器啟動失敗${NC}"
+    exit 1
+fi
 
 # 等待容器完全啟動
 sleep 2
 
 # 檢查容器是否成功啟動
-if docker ps --filter "name=$CONTAINER_NAME" --filter "status=running" &>/dev/null; then
+if run_docker_cmd ps --filter "name=$CONTAINER_NAME" --filter "status=running" &>/dev/null; then
     echo -e "${GREEN}✅ 容器成功啟動！${NC}"
 else
     echo -e "${RED}❌ 容器啟動失敗，查看日誌：${NC}"
-    docker logs $CONTAINER_NAME
+    run_docker_cmd logs $CONTAINER_NAME
     exit 1
 fi
 
@@ -171,11 +199,26 @@ echo "========================================"
 echo -e "📝 檔案變更會自動重新載入 (${GREEN}HOT RELOAD${NC})"
 echo ""
 echo "📋 容器名稱: $CONTAINER_NAME"
-echo "💡 查看日誌: docker logs -f $CONTAINER_NAME"
-echo "⏹️  停止容器: docker stop $CONTAINER_NAME"
-echo "🗑️  刪除容器: docker rm $CONTAINER_NAME"
+echo "💡 查看日誌: docker logs -f $CONTAINER_NAME (或 sudo docker logs -f $CONTAINER_NAME)"
+echo "⏹️  停止容器: docker stop $CONTAINER_NAME (或 sudo docker stop $CONTAINER_NAME)"
+echo "🗑️  刪除容器: docker rm $CONTAINER_NAME (或 sudo docker rm $CONTAINER_NAME)"
 echo ""
-echo "💡 如果經常需要輸入密碼，建議執行以下命令一次性解決 Docker 權限問題："
-echo "   sudo usermod -aG docker \$USER"
-echo "   newgrp docker"
-echo "   系統重啟後生效"
+
+# ⚙️  Docker 權限配置建議
+if [ "$NEED_SUDO" = true ]; then
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
+    echo -e "${YELLOW}⚠️  您目前需要 sudo 權限才能使用 Docker${NC}"
+    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
+    echo ""
+    echo "💡 若要避免每次都輸入密碼，請執行以下命令一次："
+    echo ""
+    echo -e "   ${GREEN}sudo usermod -aG docker \$USER${NC}"
+    echo ""
+    echo "然後執行以下命令啟動新的 shell（或重新登錄）："
+    echo ""
+    echo -e "   ${GREEN}newgrp docker${NC}"
+    echo ""
+    echo "完成後，就可以在沒有 sudo 的情況下使用 Docker 了！✨"
+    echo ""
+fi
+echo "════════════════════════════════════════════════════════════════"
