@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Images from '../../assets';
+import './BackButton.css';
 
 const BackButton = () => {
   const navigate = useNavigate();

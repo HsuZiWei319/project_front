@@ -297,11 +297,13 @@
 
 .info-card {
   position: absolute;
-  transform: translateY(-240px) translateX(100px);
+  top: 20px;
+  right: 20px;
   width: 35px;
   height: auto;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
+  z-index: 30;
 }
 
 .info-card.hidden {
@@ -311,9 +313,13 @@
 
 .wardrobe-card {
   position: absolute;
-  transform: translateY(320px) translateX(160px);
+  bottom: 120px;
+  right: 20px;
   width: 35px;
   height: auto;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 30;
 }
 
 /* === 虛擬試穿狀態樣式 === */

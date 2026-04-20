@@ -218,16 +218,16 @@ const MainPage = () => {
             style={{ cursor: 'pointer' }}
           />
 
-          {/* 衣櫃 */}
-          <img 
-            src={Images.wardrobe} 
-            alt="wardrobe" 
-            className="wardrobe-card"
-            onClick={() => navigate('/wardrobe')}
-            style={{ cursor: 'pointer' }}
-          />
-
         </div>
+
+        {/* 衣櫃圖標 - 放在 avatar-wrapper 外面，避免被 overflow: hidden 切掉 */}
+        <img 
+          src={Images.wardrobe} 
+          alt="wardrobe" 
+          className="wardrobe-card"
+          onClick={() => navigate('/wardrobe')}
+          style={{ cursor: 'pointer' }}
+        />
         
         {/* --- 狀態文字顯示區 (絕對定位在中間) --- */}
         {isVirtualTrying && (

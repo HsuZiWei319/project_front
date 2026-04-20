@@ -1,0 +1,26 @@
+@import '../../styles/variables.css';
+
+/* BackButton 返回按鈕樣式 */
+.back-arrow {
+  position: absolute;
+  top: 110px;
+  left: 15px;
+  width: 30px;
+  height: auto;
+  cursor: pointer;
+  padding: 8px;
+  transition: all var(--transition-base);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  z-index: 50;
+  object-fit: contain;
+  display: block;
+}
+
+.back-arrow:hover {
+  transform: translateX(-3px);
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
+}
+
+.back-arrow:active {
+  transform: translateX(-1px);
+}
