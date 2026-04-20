@@ -209,6 +209,9 @@ const MainPage = () => {
             style={{ cursor: 'pointer' }}
           />
 
+          {/* 提示文字 */}
+          <div className="model-hint">點擊試穿</div>
+
           {/* 模特info */}
           <img 
             src={Images.icon_info} 
