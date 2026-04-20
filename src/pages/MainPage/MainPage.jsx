@@ -12,12 +12,10 @@ const MainPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { statusMessage, resultImage, handleFileSelectedForClothesUpload } = useImageUpload();
-  const [isMouseIdle, setIsMouseIdle] = useState(false);
   const [userPhotoUrl, setUserPhotoUrl] = useState(null);
   const [isVirtualTrying, setIsVirtualTrying] = useState(false);
   const [virtualTryingClothes, setVirtualTryingClothes] = useState('');
   const [virtualTryOnImage, setVirtualTryOnImage] = useState(null);
-  const idleTimeoutRef = React.useRef(null);
   const isVirtualTryingRef = React.useRef(false);
 
   // 在組件首次掛載時清除虛擬試穿的臨時數據（最優先執行）
@@ -155,40 +153,6 @@ const MainPage = () => {
     };
   }, []);
 
-  // 鼠標空閒檢測
-  useEffect(() => {
-    const handleMouseMove = () => {
-      // 鼠標移動時，設定為非空閒狀態
-      setIsMouseIdle(false);
-
-      // 清除之前的計時器
-      if (idleTimeoutRef.current) {
-        clearTimeout(idleTimeoutRef.current);
-      }
-
-      // 設定新的計時器：3秒後如果沒有移動就設定為空閒
-      idleTimeoutRef.current = setTimeout(() => {
-        setIsMouseIdle(true);
-      }, 3000);
-    };
-
-    // 添加鼠標移動事件監聽器
-    window.addEventListener('mousemove', handleMouseMove);
-
-    // 初始化：設定第一個計時器
-    idleTimeoutRef.current = setTimeout(() => {
-      setIsMouseIdle(true);
-    }, 3000);
-
-    // 清理函數
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      if (idleTimeoutRef.current) {
-        clearTimeout(idleTimeoutRef.current);
-      }
-    };
-  }, []);
-
   return (
     <div className="container">
       <Navigation position="top" />
@@ -211,15 +175,6 @@ const MainPage = () => {
 
           {/* 提示文字 */}
           <div className="model-hint">點擊試穿</div>
-
-          {/* 模特info */}
-          <img 
-            src={Images.icon_info} 
-            alt="icon_info" 
-            className={`info-card ${isMouseIdle ? 'hidden' : ''}`}
-            onClick={() => navigate('/model')}
-            style={{ cursor: 'pointer' }}
-          />
 
         </div>
 

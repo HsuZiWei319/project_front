@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import './ProfilePage.css';
@@ -10,6 +10,7 @@ import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import ConfirmDialog from '../../components/Dialog/ConfirmDialog';
 import { logout, deleteUser } from '../../services/authService';
 import { useImageUpload } from '../../hooks/useImageUpload';
+import { getModelPhoto } from '../../services/imageService';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,10 @@ const ProfilePage = () => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [userPhotoUrl, setUserPhotoUrl] = useState(null);
+  const [uploadError, setUploadError] = useState(null);
+  const fileInputRef = useRef(null);
+  const { handleFileSelectedForModelUpload, resultImage, error: hookError, isLoading: hookIsLoading } = useImageUpload();
 
   useEffect(() => {
     // 從 localStorage 獲取使用者資訊
@@ -27,6 +32,43 @@ const ProfilePage = () => {
     setUsername(storedUsername || 'User');
     setEmail(storedEmail || 'example@example.com');
   }, []);
+
+  // 加載用戶上傳的模特照片
+  useEffect(() => {
+    const loadModelPhoto = async () => {
+      try {
+        const result = await getModelPhoto();
+        if (result.success && result.photo?.user_image_url) {
+          setUserPhotoUrl(result.photo.user_image_url);
+          console.log('✅ 已加載用戶上傳的模特照片:', result.photo.user_image_url);
+        }
+      } catch (err) {
+        console.error('⚠️ 獲取模特照片失敗:', err);
+      }
+    };
+
+    loadModelPhoto();
+  }, []);
+
+  // 監聽 hook 的 resultImage，當上傳成功時更新 userPhotoUrl
+  useEffect(() => {
+    if (resultImage) {
+      setUserPhotoUrl(resultImage);
+      setUploadError(null);
+    }
+  }, [resultImage]);
+
+  // 監聽 hook 的 error
+  useEffect(() => {
+    if (hookError) {
+      setUploadError(hookError);
+    }
+  }, [hookError]);
+
+  // 監聽 hook 的 isLoading
+  useEffect(() => {
+    setIsLoading(hookIsLoading);
+  }, [hookIsLoading]);
 
   // 處理登出
   const handleLogout = async () => {
@@ -80,6 +122,31 @@ const ProfilePage = () => {
     }
   };
 
+  // 處理模特點擊事件
+  const handlePhotoClick = () => {
+    if (hookIsLoading) return;
+    setUploadError(null);
+    fileInputRef.current?.click();
+  };
+
+  // 處理文件選擇
+  const handleFileChange = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setUploadError(null);
+
+    try {
+      await handleFileSelectedForModelUpload(file, () => {
+        // 上傳完成後，重置文件輸入
+        event.target.value = '';
+      });
+    } catch (error) {
+      console.error('上傳錯誤:', error);
+      setUploadError(error.message || '上傳失敗，請重試');
+    }
+  };
+
     const { handleFileSelectedForClothesUpload } = useImageUpload();
 
     const handleFileSelected = (file, onComplete) => {
@@ -95,17 +162,55 @@ const ProfilePage = () => {
 
       {/* 主內容區域 */}
       <div className="profile-page">
-        {/* 個人檔案頭部 */}
-        <div className="profile-header">
-          <img src={Images.icon_profile} alt="個人檔案" className="profile-avatar" />
-        </div>
-
         {/* 個人資訊卡片 */}
         <div className="profile-info">
-          {/* 個人檔案圖片 */}
-          <div className="profile-picture">
-            <img src={Images.default_profile_pic} alt="個人檔案圖片" className="profile-pic-image" />
+          {/* 模特圖片 */}
+          <div 
+            className="profile-picture"
+            onClick={handlePhotoClick}
+            style={{ 
+              opacity: hookIsLoading ? 0.6 : 1, 
+              cursor: hookIsLoading ? 'not-allowed' : 'pointer',
+              position: 'relative'
+            }}
+          >
+            <img 
+              src={userPhotoUrl || Images.model} 
+              alt="模特照片" 
+              className="profile-pic-image" 
+            />
+            {/* 提示文字 */}
+            <div className="model-upload-hint">點擊上傳</div>
+            {hookIsLoading && (
+              <span style={{ 
+                position: 'absolute', 
+                top: '50%', 
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                color: '#999',
+                fontSize: '12px',
+                whiteSpace: 'nowrap'
+              }}>
+                上傳中...
+              </span>
+            )}
           </div>
+
+          {/* 上傳錯誤提示 */}
+          {uploadError && (
+            <div style={{
+              backgroundColor: '#fee',
+              color: '#c33',
+              padding: '8px 12px',
+              margin: '12px auto',
+              borderRadius: '4px',
+              fontSize: '12px',
+              maxWidth: '80%',
+              textAlign: 'center'
+            }}>
+              ❌ {uploadError}
+            </div>
+          )}
 
           {/* 暱稱 */}
           <div className="profile-row">
@@ -195,6 +300,15 @@ const ProfilePage = () => {
       )}
 
       <BottomNavigation onFileSelected={handleFileSelected} />
+
+      {/* 隱藏文件輸入 */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: 'none' }}
+        onChange={handleFileChange}
+      />
     </div>
   );
 };

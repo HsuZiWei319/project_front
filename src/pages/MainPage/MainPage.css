@@ -326,22 +326,6 @@
   opacity: 1;
 }
 
-.info-card {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 35px;
-  height: auto;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-  z-index: 30;
-}
-
-.info-card.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .wardrobe-card {
   position: absolute;
   bottom: 120px;
