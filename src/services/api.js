@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // 從環境變數讀取 API 網址，若沒設定就用預設值
-const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:30000";
+const API_URL = import.meta.env.VITE_API_URL || "http://35.201.135.229:30000";
 
 // 建立 axios 實例並設定基本配置
 const apiClient = axios.create({
@@ -12,13 +12,19 @@ const apiClient = axios.create({
   },
 });
 
-// 請求攔截器：自動添加認證 token
+// 請求攔截器：自動添加認證 token，並正確處理 FormData
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // 如果是 FormData，刪除 Content-Type 讓瀏覽器自動設定為 multipart/form-data
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
+    
     return config;
   },
   (error) => {

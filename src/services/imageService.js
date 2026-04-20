@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_URL } from './api';
+import apiClient from './api';
 
 /**
  * 上傳衣服圖片進行去背處理
@@ -11,21 +10,9 @@ export const uploadImageForProcessing = async (file) => {
   formData.append('image_data', file);
 
   try {
-    // 從 localStorage 取得 JWT token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
+    console.log("正在上傳衣服至:", '/picture/clothes/');
 
-    const uploadUrl = `${API_URL}/picture/clothes/`;
-
-    console.log("正在上傳衣服至:", uploadUrl);
-
-    const response = await axios.post(uploadUrl, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await apiClient.post('/picture/clothes/', formData, {
       timeout: 60000,
     });
 
@@ -54,7 +41,7 @@ export const uploadImageForProcessing = async (file) => {
  */
 export const getProcessedImages = async () => {
   try {
-    const response = await axios.get(`${API_URL}/api/processed-images`);
+    const response = await apiClient.get('/api/processed-images');
     return response.data.images || [];
   } catch (error) {
     console.error("取得圖片列表失敗:", error.message);
@@ -72,21 +59,9 @@ export const uploadClothes = async (file) => {
   formData.append('image_data', file);
 
   try {
-    // 從 localStorage 取得 JWT token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
+    console.log("正在上傳衣服至:", '/picture/clothes/');
 
-    const uploadUrl = `${API_URL}/picture/clothes/`;
-
-    console.log("正在上傳衣服至:", uploadUrl);
-
-    const response = await axios.post(uploadUrl, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await apiClient.post('/picture/clothes/', formData, {
       timeout: 60000,
     });
 
@@ -119,21 +94,9 @@ export const uploadModelPhoto = async (file) => {
   formData.append('photo_file', file);
 
   try {
-    // 從 localStorage 取得 JWT token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
+    console.log("正在上傳模特照片至:", '/picture/user/photo');
 
-    const uploadUrl = `${API_URL}/picture/user/photo`;
-
-    console.log("正在上傳模特照片至:", uploadUrl);
-
-    const response = await axios.post(uploadUrl, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await apiClient.post('/picture/user/photo', formData, {
       timeout: 60000,
     });
 
@@ -176,20 +139,9 @@ export const uploadModelPhoto = async (file) => {
  */
 export const getModelPhoto = async () => {
   try {
-    // 從 localStorage 取得 JWT token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const fetchUrl = `${API_URL}/picture/user/photo`;
-
     console.log("正在獲取用戶模特照片...");
 
-    const response = await axios.get(fetchUrl, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
+    const response = await apiClient.get('/picture/user/photo', {
       timeout: 30000,
     });
 
@@ -242,7 +194,7 @@ export const getModelPhoto = async () => {
  */
 export const deleteImage = async (imageId) => {
   try {
-    const response = await axios.delete(`${API_URL}/api/images/${imageId}`);
+    const response = await apiClient.delete(`/api/images/${imageId}`);
     return response.data;
   } catch (error) {
     console.error("刪除圖片失敗:", error.message);
@@ -265,22 +217,10 @@ export const uploadClothesWithMeasurements = async (file, measurements) => {
   formData.append('clothes_waistline', measurements.waist_circumference);
 
   try {
-    // 從 localStorage 取得 JWT token
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const uploadUrl = `${API_URL}/picture/clothes/`;
-
-    console.log("正在上傳衣服至:", uploadUrl);
+    console.log("正在上傳衣服至:", '/picture/clothes/');
     console.log("測量數據:", measurements);
 
-    const response = await axios.post(uploadUrl, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
+    const response = await apiClient.post('/picture/clothes/', formData, {
       timeout: 60000,
     });
 
@@ -310,20 +250,11 @@ export const uploadClothesWithMeasurements = async (file, measurements) => {
  */
 export const getClothesDetail = async (clothesId) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+    const url = `/picture/clothes/${clothesId}/`;
 
     console.log("正在獲取衣服詳細信息:", url);
 
-    const response = await axios.get(url, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    const response = await apiClient.get(url);
 
     console.log("獲取衣服詳細信息成功:", response.data);
     return response.data;
@@ -344,22 +275,12 @@ export const getClothesDetail = async (clothesId) => {
  */
 export const updateClothes = async (clothesId, updateData) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+    const url = `/picture/clothes/${clothesId}/`;
 
     console.log("正在更新衣服信息:", url);
     console.log("更新數據:", updateData);
 
-    const response = await axios.put(url, updateData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await apiClient.put(url, updateData);
 
     console.log("衣服更新成功:", response.data);
     return response.data;
@@ -403,11 +324,7 @@ export const updateClothesWithImage = async (clothesId, file, measurements) => {
         formData.append('clothes_category', measurements.category);
       }
 
-      const response = await axios.put(url, formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await apiClient.put(url, formData, {
         timeout: 60000,
       });
 
@@ -425,12 +342,7 @@ export const updateClothesWithImage = async (clothesId, file, measurements) => {
         updateData.clothes_category = measurements.category;
       }
 
-      const response = await axios.put(url, updateData, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await apiClient.put(url, updateData);
 
       console.log("衣服更新成功:", response.data);
       return response.data;
@@ -451,20 +363,11 @@ export const updateClothesWithImage = async (clothesId, file, measurements) => {
  */
 export const deleteClothes = async (clothesId) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const url = `${API_URL}/picture/clothes/${clothesId}/`;
+    const url = `/picture/clothes/${clothesId}/`;
 
     console.log("正在刪除衣服:", url);
 
-    const response = await axios.delete(url, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
+    const response = await apiClient.delete(url);
 
     console.log("衣服刪除成功:", response.data);
     return response.data;
