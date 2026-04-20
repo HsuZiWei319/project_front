@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // 從環境變數讀取 API 網址，若沒設定就用預設值
-const API_URL = import.meta.env.VITE_API_URL || "http://35.201.135.229:30000";
+const API_URL = import.meta.env.VITE_API_URL || "http://192.168.233.128:30000";
 
 // 建立 axios 實例並設定基本配置
 const apiClient = axios.create({
