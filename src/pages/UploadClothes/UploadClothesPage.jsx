@@ -64,7 +64,7 @@ const UploadClothesPage = () => {
     return url;
   };
 
-  // 驗證輸入的數字
+  // 驗證輸入的數字（允許空值，會自動填充為0）
   const validateInputs = () => {
     const fields = {
       '袖長': sleeveLength,
@@ -74,10 +74,11 @@ const UploadClothesPage = () => {
     };
 
     for (const [name, value] of Object.entries(fields)) {
+      // 跳過空值（會自動填充為0）
       if (!value || value.toString().trim() === '') {
-        setError(`請輸入${name}`);
-        return false;
+        continue;
       }
+      // 驗證非空值必須是非負數
       if (isNaN(value) || Number(value) < 0) {
         setError(`${name}必須是非負數`);
         return false;
@@ -98,11 +99,12 @@ const UploadClothesPage = () => {
 
     try {
       // 調用API上傳衣服和測量數據
+      // 未填寫的欄位自動填充為0
       const measurements = {
-        sleeve_length: parseFloat(sleeveLength),
-        pant_length: parseFloat(pantLength),
-        shoulder_width: parseFloat(shoulderWidth),
-        waist_circumference: parseFloat(waistCircumference),
+        sleeve_length: sleeveLength ? parseFloat(sleeveLength) : 0,
+        pant_length: pantLength ? parseFloat(pantLength) : 0,
+        shoulder_width: shoulderWidth ? parseFloat(shoulderWidth) : 0,
+        waist_circumference: waistCircumference ? parseFloat(waistCircumference) : 0,
       };
 
       const result = await uploadClothesWithMeasurements(
