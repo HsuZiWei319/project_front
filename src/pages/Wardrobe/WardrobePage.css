@@ -3,123 +3,157 @@
 /* 標題欄 */
 .title-bar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--spacing-lg);
   margin-top: 115px;
   margin-bottom: var(--spacing-xl);
   position: relative;
+  padding: 0 var(--spacing-lg);
 }
 
 .title-bar .pagetitle-label {
   font-size: var(--font-3xl);
   color: var(--gray-900);
-  font-weight: bold;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-weight: 700;
+  letter-spacing: -0.5px;
 }
 
 /* 視圖切換 - 分段控制 */
 .segmented-control {
   display: flex;
-  background-color: var(--gray-200);
-  border-radius: var(--radius-lg);
-  padding: 4px;
-  gap: 4px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-2xl);
+  padding: 6px;
+  gap: 6px;
 }
 
 .segment-btn {
-  flex: 1;
   padding: var(--spacing-sm) var(--spacing-5xl);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-xl);
   background-color: transparent;
   color: var(--gray-600);
   font-weight: 600;
   font-size: var(--font-md);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
 }
 
 .segment-btn:hover {
   color: var(--gray-900);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .segment-btn.active {
-  background-color: white;
-  color: var(--primary);
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 /* 篩選按鈕容器 */
 .filter-buttons {
   display: flex;
   gap: var(--spacing-md);
-  padding: var(--spacing-lg) var(--spacing-lg) 0;
+  padding: var(--spacing-lg);
   justify-content: center;
+  flex-wrap: wrap;
   animation: slideDown 0.3s ease-out;
 }
 
 /* 篩選按鈕 */
 .filter-btn {
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: var(--spacing-sm) var(--spacing-xl);
   border: 2px solid var(--primary);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-2xl);
   background-color: transparent;
   color: var(--primary);
   font-weight: 600;
   font-size: var(--font-md);
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  transition: left 0.3s ease;
+  z-index: -1;
 }
 
 .filter-btn:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
 }
 
 .filter-btn.active {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), #a855f7);
   color: white;
-  box-shadow: var(--shadow-lg);
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 
 /* 滾動內容區 */
 .wardrobe-content {
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-lg);
-  margin-top: -20px;
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
   animation: slideUp 0.4s ease-out;
 }
 
 /* 分類標題 */
 .category-group {
-  margin-bottom: 32px;
+  margin-bottom: 48px;
+  animation: fadeInUp 0.5s ease-out;
 }
 
-.category-group h3 {
-  font-size: var(--font-xl);
-  font-weight: bold;
-  color: var(--gray-800);
-  margin-bottom: var(--spacing-lg);
-  padding-bottom: var(--spacing-md);
-  border-bottom: 2px solid var(--primary);
-  background: linear-gradient(90deg, var(--primary) 0%, transparent 70%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.category-group h2 {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.category-group h2::before {
+  content: '';
+  width: 4px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--primary), #a855f7);
+  border-radius: 2px;
 }
 
 /* 衣服列表容器 */
 .clothes-list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-lg);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
   padding-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 1024px) {
+  .clothes-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .clothes-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
 }
 
 /* 衣服項目 */
@@ -129,26 +163,27 @@
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
-  border-radius: var(--radius-xl);
   overflow: hidden;
   cursor: pointer;
-  transition: all var(--transition-base);
-  background: transparent;
-  box-shadow: var(--shadow-lg);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: rgba(139, 141, 249, 0.1); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
 .clothes-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-2xl);
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 16px 32px rgba(99, 102, 241, 0.3);
 }
 
 .clothes-item::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), transparent);
   opacity: 0;
-  transition: opacity var(--transition-base);
+  transition: opacity 0.3s ease;
+  z-index: 1;
 }
 
 .clothes-item:hover::before {
@@ -160,9 +195,16 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: var(--radius-xl);
+  border-radius: var(--radius-2xl);
   padding: var(--spacing-md);
   box-sizing: border-box;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.clothes-item:hover .clothes-image {
+  transform: scale(1.05);
 }
 
 /* 加載中 / 空狀態 */
@@ -171,31 +213,95 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
+  min-height: 400px;
   color: var(--gray-600);
   text-align: center;
+  animation: fadeIn 0.5s ease-out;
 }
 
 .empty-state-icon {
-  font-size: 48px;
+  font-size: 64px;
   margin-bottom: var(--spacing-lg);
-  opacity: 0.5;  /* 改善 */
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
 }
 
 .empty-state-text {
   font-size: var(--font-lg);
   color: var(--gray-700);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
+  font-weight: 500;
 }
 
 /* 隱藏滾動條 */
 .wardrobe-content::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 .wardrobe-content::-webkit-scrollbar-track {
   background: var(--gray-100);
   border-radius: 10px;
+}
+
+.wardrobe-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--primary), #a855f7);
+  border-radius: 10px;
+}
+
+.wardrobe-content::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* 動畫 */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .wardrobe-content::-webkit-scrollbar-thumb {

@@ -203,22 +203,28 @@ const WardrobePage = () => {
                     <>
                         {/* 載入中 */}
                         {isLoading && (
-                            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
-                                <p>正在載入衣服...</p>
+                            <div className="empty-state">
+                                <div className="empty-state-icon">⏳</div>
+                                <p className="empty-state-text">正在載入你的衣服...</p>
                             </div>
                         )}
 
                         {/* 錯誤提示 */}
                         {error && !isLoading && (
                             <div style={{
-                                backgroundColor: '#fee',
-                                color: '#c33',
-                                padding: '12px 16px',
-                                margin: '12px 16px',
-                                borderRadius: '4px',
-                                fontSize: '14px'
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                color: '#dc2626',
+                                padding: '16px 20px',
+                                margin: '16px',
+                                borderRadius: 'var(--radius-xl)',
+                                fontSize: '14px',
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px'
                             }}>
-                                ❌ {error}
+                                <span style={{fontSize: '18px'}}>⚠️</span>
+                                <span>{error}</span>
                             </div>
                         )}
 
@@ -226,8 +232,8 @@ const WardrobePage = () => {
                         {!isLoading && Object.keys(groupedClothes).length > 0 ? (
                             Object.keys(groupedClothes).map((category) => (
                                 <section key={category} className="category-group">
-                                    <h2 className="pagetitle-label">
-                                        {category} ({groupedClothes[category].length})
+                                    <h2>
+                                        {category} <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--gray-600)'}}>({groupedClothes[category].length})</span>
                                     </h2>
                                     <div className="clothes-list">
                                         {groupedClothes[category].map((clothes) => (
@@ -257,13 +263,14 @@ const WardrobePage = () => {
                                                         top: '50%',
                                                         left: '50%',
                                                         transform: 'translate(-50%, -50%)',
-                                                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.6)',
                                                         color: 'white',
                                                         padding: '8px 12px',
-                                                        borderRadius: '4px',
+                                                        borderRadius: 'var(--radius-lg)',
                                                         fontSize: '12px',
                                                         zIndex: 10,
-                                                        pointerEvents: 'none'
+                                                        pointerEvents: 'none',
+                                                        fontWeight: '500'
                                                     }}>
                                                         🔧 開發衣服
                                                     </div>
@@ -273,7 +280,9 @@ const WardrobePage = () => {
                                                         position: 'absolute',
                                                         top: '8px',
                                                         right: '8px',
-                                                        fontSize: '18px'
+                                                        fontSize: '20px',
+                                                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
+                                                        zIndex: 5
                                                     }}>
                                                         ❤️
                                                     </span>
@@ -285,8 +294,10 @@ const WardrobePage = () => {
                             ))
                         ) : (
                             !isLoading && (
-                                <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
-                                    <p>衣櫃空空的，趕快上傳衣服吧！</p>
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">👕</div>
+                                    <p className="empty-state-text">衣櫃空空的呢</p>
+                                    <p style={{fontSize: '14px', color: 'var(--gray-600)', marginBottom: 'var(--spacing-lg)'}}>快去上傳你的衣服吧！</p>
                                 </div>
                             )
                         )}
@@ -298,8 +309,9 @@ const WardrobePage = () => {
 
                 {/* 穿搭模式 - 待實作 */}
                 {viewMode === 'outfit' && (
-                    <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
-                        <p>穿搭頁面開發中...</p>
+                    <div className="empty-state">
+                        <div className="empty-state-icon">✨</div>
+                        <p className="empty-state-text">穿搭頁面開發中</p>
                     </div>
                 )}
             </main>
