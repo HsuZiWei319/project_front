@@ -28,11 +28,58 @@ const WardrobePage = () => {
     const [groupedClothes, setGroupedClothes] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filterMode, setFilterMode] = useState('category'); // 'category' 或 'style'
+    const [allClothes, setAllClothes] = useState([]); // 保存原始衣服數據
 
     // 在組件掛載時調用 API
     useEffect(() => {
         fetchUserClothes();
     }, []);
+
+    // 當 filterMode 改變時，重新分組衣服
+    useEffect(() => {
+        if (allClothes.length > 0) {
+            regroupClothes(allClothes);
+        }
+    }, [filterMode]);
+
+    // 根據分組模式重新分組衣服
+    const regroupClothes = (clothes) => {
+        const grouped = {};
+        
+        if (filterMode === 'category') {
+            // 按類型分組
+            clothes.forEach((item) => {
+                const category = item.clothes_category;
+                if (!grouped[category]) {
+                    grouped[category] = [];
+                }
+                grouped[category].push(item);
+            });
+        } else if (filterMode === 'style') {
+            // 按風格分組
+            clothes.forEach((item) => {
+                if (item.styles && item.styles.length > 0) {
+                    // 每件衣服可能有多個風格，添加到每個風格的組中
+                    item.styles.forEach((style) => {
+                        const styleName = style.style_name;
+                        if (!grouped[styleName]) {
+                            grouped[styleName] = [];
+                        }
+                        grouped[styleName].push(item);
+                    });
+                } else {
+                    // 如果沒有風格信息，添加到"未分類"
+                    if (!grouped['未分類']) {
+                        grouped['未分類'] = [];
+                    }
+                    grouped['未分類'].push(item);
+                }
+            });
+        }
+        
+        setGroupedClothes(grouped);
+    };
 
     // 調用 /picture/clothes/my API 並分組
     const fetchUserClothes = async () => {
@@ -45,29 +92,21 @@ const WardrobePage = () => {
             
             console.log('API 返回數據:', response.data);
 
-            // 根據 clothes_category 動態分組
-            const grouped = {};
-            response.data.results.forEach((item) => {
-                const category = item.clothes_category;
-                if (!grouped[category]) {
-                    grouped[category] = [];
-                }
-                grouped[category].push(item);
-            });
-
+            // 構建完整的衣服列表（包括開發衣服）
+            const clothesList = [...response.data.results];
             // 總是添加開發衣服
-            grouped[DEV_CLOTHES.clothes_category] = [DEV_CLOTHES];
-
-            setGroupedClothes(grouped);
+            clothesList.push(DEV_CLOTHES);
+            
+            setAllClothes(clothesList);
+            regroupClothes(clothesList);
         } catch (err) {
             console.error('獲取衣服列表失敗:', err);
             console.warn('⚠️ 後端無法連線，但仍顯示開發圖片');
             setError(err.message || '無法載入衣服列表');
             
             // 當 API 失敗時，只顯示開發衣服
-            setGroupedClothes({
-                [DEV_CLOTHES.clothes_category]: [DEV_CLOTHES]
-            });
+            setAllClothes([DEV_CLOTHES]);
+            regroupClothes([DEV_CLOTHES]);
         } finally {
             setIsLoading(false);
         }
@@ -122,6 +161,22 @@ const WardrobePage = () => {
 
             <div className="title-bar">
                 <div className="pagetitle-label">衣櫃</div>
+            </div>
+
+            {/* 篩選按鈕 */}
+            <div className="filter-buttons">
+                <button 
+                    className={`filter-btn ${filterMode === 'category' ? 'active' : ''}`}
+                    onClick={() => setFilterMode('category')}
+                >
+                    按類型
+                </button>
+                <button 
+                    className={`filter-btn ${filterMode === 'style' ? 'active' : ''}`}
+                    onClick={() => setFilterMode('style')}
+                >
+                    按風格
+                </button>
             </div>
 
             {/* 主要內容區 */}
