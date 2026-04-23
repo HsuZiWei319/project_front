@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" width="200" height="300">
+  <!-- 背景 -->
+  <rect width="200" height="300" fill="#f5f5f5"/>
+  
+  <!-- T恤主体 -->
+  <path d="M 50 50 L 70 50 L 75 80 L 125 80 L 130 50 L 150 50 L 150 200 Q 150 250 100 260 Q 50 250 50 200 Z" 
+        fill="#000000" stroke="#333" stroke-width="1"/>
+  
+  <!-- 左袖子 -->
+  <ellipse cx="30" cy="80" rx="25" ry="35" fill="#000000"/>
+  
+  <!-- 右袖子 -->
+  <ellipse cx="170" cy="80" rx="25" ry="35" fill="#000000"/>
+  
+  <!-- 颈部 -->
+  <ellipse cx="100" cy="50" rx="18" ry="15" fill="#ffffff" stroke="#333" stroke-width="1"/>
+  
+  <!-- 文字 -->
+  <text x="100" y="150" font-size="14" font-family="Arial" text-anchor="middle" fill="#666">
+    开发用T恤
+  </text>
+  <text x="100" y="170" font-size="12" font-family="Arial" text-anchor="middle" fill="#999">
+    请替换为实际图片
+  </text>
+</svg>

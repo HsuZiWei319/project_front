@@ -9,6 +9,19 @@ import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import apiClient, { API_URL } from '../../services/api';
 
+// 開發用衣服配置
+const DEV_CLOTHES = {
+    clothes_uid: 'dev-clothes-001',
+    clothes_category: '開發用圖片',
+    clothes_image_url: Images.test_clothes,
+    clothes_arm_length: 0,
+    clothes_leg_length: 0,
+    clothes_shoulder_width: 0,
+    clothes_waistline: 0,
+    clothes_favorite: false,
+    is_dev_clothes: true, // 標記為開發衣服
+};
+
 const WardrobePage = () => {
     const navigate = useNavigate();
     const { handleFileSelectedForClothesUpload } = useImageUpload();
@@ -42,10 +55,19 @@ const WardrobePage = () => {
                 grouped[category].push(item);
             });
 
+            // 總是添加開發衣服
+            grouped[DEV_CLOTHES.clothes_category] = [DEV_CLOTHES];
+
             setGroupedClothes(grouped);
         } catch (err) {
             console.error('獲取衣服列表失敗:', err);
+            console.warn('⚠️ 後端無法連線，但仍顯示開發圖片');
             setError(err.message || '無法載入衣服列表');
+            
+            // 當 API 失敗時，只顯示開發衣服
+            setGroupedClothes({
+                [DEV_CLOTHES.clothes_category]: [DEV_CLOTHES]
+            });
         } finally {
             setIsLoading(false);
         }
@@ -79,9 +101,16 @@ const WardrobePage = () => {
 
     const handleClotheClick = (clothes) => {
         // 點擊衣服時導航到衣服詳細信息頁面
-        // 使用 clothes_uid (後端儲存的唯一標識符) 而不是 clothes_id
         console.log('點擊衣服:', clothes);
-        navigate(`/clothes/${clothes.clothes_uid}`);
+        
+        // 傳遞開發衣服標記給 ClothesInfoPage
+        if (clothes.is_dev_clothes) {
+            navigate(`/clothes/${clothes.clothes_uid}`, {
+                state: { isDevImage: true }
+            });
+        } else {
+            navigate(`/clothes/${clothes.clothes_uid}`);
+        }
     };
 
     return (
@@ -132,6 +161,7 @@ const WardrobePage = () => {
                                         className="clothes-item"
                                         onClick={() => handleClotheClick(clothes)}
                                         style={{ cursor: 'pointer' }}
+                                        title={clothes.is_dev_clothes ? '開發用衣服 - 點擊進入上傳頁面' : clothes.clothes_category}
                                     >
                                         <img
                                             src={getFullClothesImageUrl(clothes.clothes_image_url)}
@@ -141,11 +171,29 @@ const WardrobePage = () => {
                                                 width: '100%',
                                                 height: '100%',
                                                 objectFit: 'contain',
-                                                borderRadius: '8px'
+                                                borderRadius: '8px',
+                                                opacity: clothes.is_dev_clothes ? 0.7 : 1, // 開發衣服稍微透明
                                             }}
                                             onError={() => console.error('圖片加載失敗:', clothes.clothes_image_url)}
                                         />
-                                        {clothes.clothes_favorite && (
+                                        {clothes.is_dev_clothes && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                transform: 'translate(-50%, -50%)',
+                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                color: 'white',
+                                                padding: '8px 12px',
+                                                borderRadius: '4px',
+                                                fontSize: '12px',
+                                                zIndex: 10,
+                                                pointerEvents: 'none'
+                                            }}>
+                                                🔧 開發衣服
+                                            </div>
+                                        )}
+                                        {clothes.clothes_favorite && !clothes.is_dev_clothes && (
                                             <span style={{
                                                 position: 'absolute',
                                                 top: '8px',
