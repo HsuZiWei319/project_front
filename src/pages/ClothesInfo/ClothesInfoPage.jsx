@@ -6,7 +6,7 @@ import './ClothesInfoPage.css';
 import Navigation from '../../components/Navigation/Navigation';
 import BackButton from '../../components/Header/BackButton';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
-import { getClothesDetail, updateClothesWithImage, deleteClothes } from '../../services/imageService';
+import { getClothesDetail, updateClothesWithImage, deleteClothes, toggleClothesLike } from '../../services/imageService';
 import { API_URL } from '../../services/api';
 import * as Images from '../../assets';
 
@@ -23,6 +23,10 @@ const ClothesInfoPage = () => {
   const [pantLength, setPantLength] = useState('');
   const [shoulderWidth, setShoulderWidth] = useState('');
   const [waistCircumference, setWaistCircumference] = useState('');
+  const [clothesType, setClothesType] = useState('');
+  const [clothesStyles, setClothesStyles] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isTogglingLike, setIsTogglingLike] = useState(false);
 
   const [statusMessage, setStatusMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -64,13 +68,14 @@ const ClothesInfoPage = () => {
         const devData = {
           clothes_uid: clothesId,
           clothes_image_url: Images.test_clothes,
-          clothes_category: '開發圖片',
+          clothes_category: '開發',
           clothes_arm_length: 0,
           clothes_leg_length: 0,
           clothes_shoulder_width: 0,
           clothes_waistline: 0,
           clothes_favorite: false,
           is_dev_clothes: true,
+          styles: [{ style_name: '開發' }],
         };
         
         setClothesData(devData);
@@ -79,6 +84,9 @@ const ClothesInfoPage = () => {
         setPantLength(devData.clothes_leg_length || 0);
         setShoulderWidth(devData.clothes_shoulder_width || 0);
         setWaistCircumference(devData.clothes_waistline || 0);
+        setClothesType(devData.clothes_category || '');
+        setClothesStyles(devData.styles || []);
+        setIsFavorite(devData.clothes_favorite || false);
         setIsLoading(false);
         return;
       }
@@ -98,6 +106,9 @@ const ClothesInfoPage = () => {
       setPantLength(data.clothes_leg_length || 0);
       setShoulderWidth(data.clothes_shoulder_width || 0);
       setWaistCircumference(data.clothes_waistline || 0);
+      setClothesType(data.clothes_category || '');
+      setClothesStyles(data.styles || []);
+      setIsFavorite(data.clothes_favorite || false);
     } catch (err) {
       console.error('❌ 獲取衣服詳細信息失敗:', err);
       const errorMsg = err.message || '無法載入衣服信息';
@@ -149,7 +160,41 @@ const ClothesInfoPage = () => {
     return true;
   };
 
-  // 處理更新衣服按鈕點擊
+  // 處理切換喜歡狀態
+  const handleToggleLike = async () => {
+    // 開發衣服只在本地切換
+    if (isDevImage) {
+      console.log('📌 開發衣服 - 本地切換喜歡狀態');
+      setIsFavorite(!isFavorite);
+      return;
+    }
+
+    setIsTogglingLike(true);
+    setError('');
+
+    try {
+      const result = await toggleClothesLike(clothesId);
+      console.log('✅ 切換喜歡狀態成功:', result);
+
+      // 更新本地狀態
+      const newFavoriteStatus = result.clothes_favorite !== undefined 
+        ? result.clothes_favorite 
+        : !isFavorite;
+      setIsFavorite(newFavoriteStatus);
+
+      // 也更新 clothesData 中的狀態
+      setClothesData({
+        ...clothesData,
+        clothes_favorite: newFavoriteStatus
+      });
+    } catch (err) {
+      console.error('切換喜歡狀態失敗:', err);
+      const errorMsg = err.message || '切換喜歡狀態失敗';
+      setError(errorMsg);
+    } finally {
+      setIsTogglingLike(false);
+    }
+  };
   const handleUpdateClothes = async () => {
     if (!validateInputs()) {
       return;
@@ -349,8 +394,38 @@ const ClothesInfoPage = () => {
               alt="clothes-image"
               className="clothes-image"
             />
+            {/* 喜歡按鈕 */}
+            <button
+              className={`clothes-like-btn ${isFavorite ? 'liked' : ''}`}
+              onClick={handleToggleLike}
+              disabled={isTogglingLike || isUpdating || isDeleting}
+              title={isFavorite ? '取消喜歡' : '加入喜歡'}
+              aria-label={isFavorite ? '取消喜歡' : '加入喜歡'}
+            >
+              <span className="heart-icon">♡</span>
+            </button>
           </div>
         )}
+
+        {/* 衣服類型和風格顯示區 */}
+        <div className="clothes-info-section">
+          {/* 類型顯示 */}
+          <div className="clothes-info-group">
+            <label>衣服類型</label>
+            <div className="clothes-info-value">{clothesType}</div>
+          </div>
+
+          {/* 風格顯示 */}
+          <div className="clothes-info-group">
+            <label>風格</label>
+            <div className="clothes-info-value">
+              {clothesStyles && clothesStyles.length > 0 
+                ? clothesStyles.map(style => style.style_name).join('、')
+                : '未設定'
+              }
+            </div>
+          </div>
+        </div>
 
         {/* 測量數據輸入區 */}
         <div className="measurements-section">

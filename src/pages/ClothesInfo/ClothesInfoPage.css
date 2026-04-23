@@ -37,6 +37,86 @@
   box-shadow: var(--shadow-xl);
 }
 
+/* 喜歡按鈕 */
+.clothes-like-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-md);
+  font-size: 28px;
+}
+
+.clothes-like-btn:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+.clothes-like-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.clothes-like-btn .heart-icon {
+  display: block;
+  transition: all 0.3s ease;
+  color: var(--gray-400);
+}
+
+.clothes-like-btn.liked .heart-icon {
+  color: #ff4757;
+  text-shadow: 0 0 8px rgba(255, 71, 87, 0.3);
+}
+
+/* 衣服信息區（類型和風格） */
+.clothes-info-section {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.05));
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* 衣服信息組 */
+.clothes-info-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.clothes-info-group label {
+  font-size: var(--font-base);
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.clothes-info-value {
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-base);
+  color: var(--gray-700);
+  background-color: var(--gray-50);
+  word-wrap: break-word;
+  white-space: normal;
+}
+
 /* 測量數據輸入區 */
 .measurements-section {
   width: 100%;

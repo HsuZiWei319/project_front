@@ -379,3 +379,27 @@ export const deleteClothes = async (clothesId) => {
     throw error;
   }
 };
+
+/**
+ * 切換衣服的喜歡狀態
+ * @param {number|string} clothesId - 衣服 ID
+ * @returns {Promise<Object>} - 更新後的衣服信息（包含最新的喜歡狀態）
+ */
+export const toggleClothesLike = async (clothesId) => {
+  try {
+    const url = `/picture/clothes/${clothesId}/favorite`;
+
+    console.log("正在切換衣服喜歡狀態:", url);
+
+    const response = await apiClient.post(url);
+
+    console.log("衣服喜歡狀態更新成功:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("切換喜歡狀態失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
