@@ -43,6 +43,8 @@
   --spacing-xl: 24px;
   --spacing-2xl: 32px;
   --spacing-3xl: 48px;
+  --spacing-4xl: 64px;
+  --spacing-5xl: 80px;
   
   /* 边框圆角 */
   --radius-xs: 4px;

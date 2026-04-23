@@ -30,6 +30,7 @@ const WardrobePage = () => {
     const [error, setError] = useState(null);
     const [filterMode, setFilterMode] = useState('category'); // 'category' 或 'style'
     const [allClothes, setAllClothes] = useState([]); // 保存原始衣服數據
+    const [viewMode, setViewMode] = useState('wardrobe'); // 'wardrobe' 或 'outfit'
 
     // 在組件掛載時調用 API
     useEffect(() => {
@@ -160,119 +161,147 @@ const WardrobePage = () => {
             <BackButton />
 
             <div className="title-bar">
-                <div className="pagetitle-label">衣櫃</div>
+                <div className="pagetitle-label">{viewMode === 'wardrobe' ? '衣櫃' : '穿搭'}</div>
+                <div className="segmented-control">
+                    <button 
+                        className={`segment-btn ${viewMode === 'wardrobe' ? 'active' : ''}`}
+                        onClick={() => setViewMode('wardrobe')}
+                    >
+                        衣櫃
+                    </button>
+                    <button 
+                        className={`segment-btn ${viewMode === 'outfit' ? 'active' : ''}`}
+                        onClick={() => setViewMode('outfit')}
+                    >
+                        穿搭
+                    </button>
+                </div>
             </div>
 
-            {/* 篩選按鈕 */}
-            <div className="filter-buttons">
-                <button 
-                    className={`filter-btn ${filterMode === 'category' ? 'active' : ''}`}
-                    onClick={() => setFilterMode('category')}
-                >
-                    按類型
-                </button>
-                <button 
-                    className={`filter-btn ${filterMode === 'style' ? 'active' : ''}`}
-                    onClick={() => setFilterMode('style')}
-                >
-                    按風格
-                </button>
-            </div>
+            {/* 篩選按鈕 - 僅在衣櫃模式顯示 */}
+            {viewMode === 'wardrobe' && (
+                <div className="filter-buttons">
+                    <button 
+                        className={`filter-btn ${filterMode === 'category' ? 'active' : ''}`}
+                        onClick={() => setFilterMode('category')}
+                    >
+                        按類型
+                    </button>
+                    <button 
+                        className={`filter-btn ${filterMode === 'style' ? 'active' : ''}`}
+                        onClick={() => setFilterMode('style')}
+                    >
+                        按風格
+                    </button>
+                </div>
+            )}
 
             {/* 主要內容區 */}
             <main className="wardrobe-content">
-                {/* 載入中 */}
-                {isLoading && (
-                    <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
-                        <p>正在載入衣服...</p>
-                    </div>
-                )}
-
-                {/* 錯誤提示 */}
-                {error && !isLoading && (
-                    <div style={{
-                        backgroundColor: '#fee',
-                        color: '#c33',
-                        padding: '12px 16px',
-                        margin: '12px 16px',
-                        borderRadius: '4px',
-                        fontSize: '14px'
-                    }}>
-                        ❌ {error}
-                    </div>
-                )}
-
-                {/* 動態渲染分類和衣服 */}
-                {!isLoading && Object.keys(groupedClothes).length > 0 ? (
-                    Object.keys(groupedClothes).map((category) => (
-                        <section key={category} className="category-group">
-                            <h2 className="pagetitle-label">
-                                {category} ({groupedClothes[category].length})
-                            </h2>
-                            <div className="clothes-list">
-                                {groupedClothes[category].map((clothes) => (
-                                    <div
-                                        key={clothes.clothes_uid}
-                                        className="clothes-item"
-                                        onClick={() => handleClotheClick(clothes)}
-                                        style={{ cursor: 'pointer' }}
-                                        title={clothes.is_dev_clothes ? '開發用衣服 - 點擊進入上傳頁面' : clothes.clothes_category}
-                                    >
-                                        <img
-                                            src={clothes.is_dev_clothes ? clothes.clothes_image_url : getFullClothesImageUrl(clothes.clothes_image_url)}
-                                            alt={clothes.clothes_category}
-                                            className="clothes-image"
-                                            style={{
-                                                width: '100%',
-                                                height: '100%',
-                                                objectFit: 'contain',
-                                                borderRadius: '8px',
-                                                opacity: clothes.is_dev_clothes ? 0.7 : 1, // 開發衣服稍微透明
-                                            }}
-                                            onError={() => console.error('圖片加載失敗:', clothes.clothes_image_url)}
-                                        />
-                                        {clothes.is_dev_clothes && (
-                                            <div style={{
-                                                position: 'absolute',
-                                                top: '50%',
-                                                left: '50%',
-                                                transform: 'translate(-50%, -50%)',
-                                                backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                                                color: 'white',
-                                                padding: '8px 12px',
-                                                borderRadius: '4px',
-                                                fontSize: '12px',
-                                                zIndex: 10,
-                                                pointerEvents: 'none'
-                                            }}>
-                                                🔧 開發衣服
-                                            </div>
-                                        )}
-                                        {clothes.clothes_favorite && !clothes.is_dev_clothes && (
-                                            <span style={{
-                                                position: 'absolute',
-                                                top: '8px',
-                                                right: '8px',
-                                                fontSize: '18px'
-                                            }}>
-                                                ❤️
-                                            </span>
-                                        )}
-                                    </div>
-                                ))}
+                {/* 衣櫃模式 */}
+                {viewMode === 'wardrobe' && (
+                    <>
+                        {/* 載入中 */}
+                        {isLoading && (
+                            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
+                                <p>正在載入衣服...</p>
                             </div>
-                        </section>
-                    ))
-                ) : (
-                    !isLoading && (
-                        <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
-                            <p>衣櫃空空的，趕快上傳衣服吧！</p>
-                        </div>
-                    )
+                        )}
+
+                        {/* 錯誤提示 */}
+                        {error && !isLoading && (
+                            <div style={{
+                                backgroundColor: '#fee',
+                                color: '#c33',
+                                padding: '12px 16px',
+                                margin: '12px 16px',
+                                borderRadius: '4px',
+                                fontSize: '14px'
+                            }}>
+                                ❌ {error}
+                            </div>
+                        )}
+
+                        {/* 動態渲染分類和衣服 */}
+                        {!isLoading && Object.keys(groupedClothes).length > 0 ? (
+                            Object.keys(groupedClothes).map((category) => (
+                                <section key={category} className="category-group">
+                                    <h2 className="pagetitle-label">
+                                        {category} ({groupedClothes[category].length})
+                                    </h2>
+                                    <div className="clothes-list">
+                                        {groupedClothes[category].map((clothes) => (
+                                            <div
+                                                key={clothes.clothes_uid}
+                                                className="clothes-item"
+                                                onClick={() => handleClotheClick(clothes)}
+                                                style={{ cursor: 'pointer' }}
+                                                title={clothes.is_dev_clothes ? '開發用衣服 - 點擊進入上傳頁面' : clothes.clothes_category}
+                                            >
+                                                <img
+                                                    src={clothes.is_dev_clothes ? clothes.clothes_image_url : getFullClothesImageUrl(clothes.clothes_image_url)}
+                                                    alt={clothes.clothes_category}
+                                                    className="clothes-image"
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'contain',
+                                                        borderRadius: '8px',
+                                                        opacity: clothes.is_dev_clothes ? 0.7 : 1, // 開發衣服稍微透明
+                                                    }}
+                                                    onError={() => console.error('圖片加載失敗:', clothes.clothes_image_url)}
+                                                />
+                                                {clothes.is_dev_clothes && (
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: '50%',
+                                                        transform: 'translate(-50%, -50%)',
+                                                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                                                        color: 'white',
+                                                        padding: '8px 12px',
+                                                        borderRadius: '4px',
+                                                        fontSize: '12px',
+                                                        zIndex: 10,
+                                                        pointerEvents: 'none'
+                                                    }}>
+                                                        🔧 開發衣服
+                                                    </div>
+                                                )}
+                                                {clothes.clothes_favorite && !clothes.is_dev_clothes && (
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        top: '8px',
+                                                        right: '8px',
+                                                        fontSize: '18px'
+                                                    }}>
+                                                        ❤️
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            ))
+                        ) : (
+                            !isLoading && (
+                                <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
+                                    <p>衣櫃空空的，趕快上傳衣服吧！</p>
+                                </div>
+                            )
+                        )}
+
+                        {/* 底部留白防止遮擋 */}
+                        <div style={{ height: '80px' }}></div>
+                    </>
                 )}
 
-                {/* 底部留白防止遮擋 */}
-                <div style={{ height: '80px' }}></div>
+                {/* 穿搭模式 - 待實作 */}
+                {viewMode === 'outfit' && (
+                    <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
+                        <p>穿搭頁面開發中...</p>
+                    </div>
+                )}
             </main>
 
             <BottomNavigation onFileSelected={handleFileSelectedForClothesUpload} />
