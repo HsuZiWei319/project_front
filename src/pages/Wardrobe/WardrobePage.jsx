@@ -164,7 +164,7 @@ const WardrobePage = () => {
                                         title={clothes.is_dev_clothes ? '開發用衣服 - 點擊進入上傳頁面' : clothes.clothes_category}
                                     >
                                         <img
-                                            src={getFullClothesImageUrl(clothes.clothes_image_url)}
+                                            src={clothes.is_dev_clothes ? clothes.clothes_image_url : getFullClothesImageUrl(clothes.clothes_image_url)}
                                             alt={clothes.clothes_category}
                                             className="clothes-image"
                                             style={{

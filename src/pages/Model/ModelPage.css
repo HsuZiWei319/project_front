@@ -69,11 +69,11 @@
   box-shadow: var(--shadow-lg);
   border: 2px solid var(--gray-200);
   transition: all var(--transition-base);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05));
+  background: transparent;
 }
 
 .model-item:hover .model-image-placeholder {
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-2xl);
   transform: scale(1.05);
 }
 

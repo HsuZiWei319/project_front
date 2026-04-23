@@ -46,13 +46,13 @@
   overflow: hidden;
   cursor: pointer;
   transition: all var(--transition-base);
-  background: var(--gradient-soft);
-  box-shadow: var(--shadow-md);
+  background: transparent;
+  box-shadow: var(--shadow-lg);
 }
 
 .clothes-item:hover {
   transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-2xl);
 }
 
 .clothes-item::before {

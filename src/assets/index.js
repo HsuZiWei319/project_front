@@ -20,6 +20,7 @@ import line2 from './profile/line2.png';
 import plus_square from './modelpage/plus_square.png';
 import wardrobe from './mainpage/wardrobe.png';
 import test_clothes from './wardrobe/test_clothes.jpg';
+import icon_eye_open from './login/icon_eye_open.png';
 
 export {
     icon_profile,
@@ -42,5 +43,6 @@ export {
     line2, 
     plus_square,
     wardrobe,
-    test_clothes
+    test_clothes,
+    icon_eye_open
 };

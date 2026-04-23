@@ -24,19 +24,11 @@
 
 /* 登入頁面頂部導覽列 */
 .top_login-nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0), transparent);
+  position: relative;
   z-index: 5;
 }
 
 .top_register-nav {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0), transparent);
+  position: relative;
   z-index: 5;
 }

@@ -109,7 +109,7 @@ const LoginPage = () => {
             disabled={loading}
           />
           <img 
-            src={Images.icon_eye} 
+            src={showPassword ? Images.icon_eye_open : Images.icon_eye} 
             alt="eye" 
             className="input-icon-right"
             onClick={() => setShowPassword(!showPassword)}
