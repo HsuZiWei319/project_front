@@ -138,20 +138,20 @@
 /* 衣服列表容器 */
 .clothes-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
   padding-bottom: var(--spacing-lg);
 }
 
 @media (min-width: 1024px) {
   .clothes-list {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .clothes-list {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 }
@@ -166,7 +166,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: rgba(139, 141, 249, 0.1); /* 設定背景色 */
+  background-color: rgba(139, 141, 249, 0.2); /* 設定背景色 */
   background-blend-mode: multiply; /* 混合模式：正片疊底 */
   background-size: cover;
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);

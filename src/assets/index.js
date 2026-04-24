@@ -21,6 +21,7 @@ import plus_square from './modelpage/plus_square.png';
 import wardrobe from './mainpage/wardrobe.png';
 import test_clothes from './wardrobe/test_clothes.jpg';
 import icon_eye_open from './login/icon_eye_open.png';
+import chat from './mainpage/chat.png';
 
 export {
     icon_profile,
@@ -44,5 +45,6 @@ export {
     plus_square,
     wardrobe,
     test_clothes,
-    icon_eye_open
+    icon_eye_open,
+    chat
 };
