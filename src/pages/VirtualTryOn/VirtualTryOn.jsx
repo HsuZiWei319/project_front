@@ -194,7 +194,7 @@ const VirtualTryOn = () => {
             {/* 左上角返回箭頭 */}
             <BackButton />
 
-            <div className="title-bar">
+            <div className="tryon-title-bar">
                 <div className="pagetitle-label">選擇衣服進行虛擬試穿</div>
                 {selectedClothes.length > 0 && (
                     <div className="selection-info">已選擇 {selectedClothes.length}/2</div>

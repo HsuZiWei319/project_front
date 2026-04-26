@@ -9,11 +9,11 @@
   margin-bottom: var(--spacing-xl);
   position: relative;
   padding: 0 var(--spacing-lg);
+  background: transparent;
 }
 
 .title-bar .pagetitle-label {
   font-size: var(--font-3xl);
-  color: var(--gray-900);
   font-weight: 700;
   letter-spacing: -0.5px;
 }
@@ -183,7 +183,7 @@
   inset: 0;
   opacity: 0;
   transition: opacity 0.3s ease;
-  z-index: 1;
+  z-index: 0;
 }
 
 .clothes-item:hover::before {

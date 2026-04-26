@@ -59,15 +59,21 @@
   border-radius: var(--radius-xl);
   object-fit: contain;
   border: 2px solid var(--gray-200);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
   background: transparent;
+  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
   transition: all var(--transition-base);
   cursor: pointer;
 }
 
 .profile-picture:hover .profile-pic-image {
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-lg);
   transform: scale(1.05);
+  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
 }
 
 .profile-picture:active .profile-pic-image {
@@ -106,6 +112,9 @@
   padding: var(--spacing-lg);
   border-bottom: 1px solid var(--gray-200);
   background: transparent;
+    background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
   margin-bottom: var(--spacing-md);
   border-radius: var(--radius-lg);
   font-family: var(--font-sans);
@@ -115,6 +124,9 @@
 
 .profile-row:hover {
   background: transparent;
+  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
   transform: translateX(4px);
   box-shadow: var(--shadow-sm);
 }
@@ -134,11 +146,17 @@
 .profile-clickable {
   cursor: pointer;
   background: transparent;
+  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
   transition: all var(--transition-base);
 }
 
 .profile-clickable:active {
   background: transparent;
+  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
 }
 
 .profile-arrow {

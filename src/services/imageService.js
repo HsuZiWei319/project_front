@@ -403,3 +403,134 @@ export const toggleClothesLike = async (clothesId) => {
     throw error;
   }
 };
+
+/**
+ * 生成 AI 推薦穿搭
+ * @param {string} userInput - 用戶輸入的自然語言文字
+ * @param {number} topK - 返回的推薦數量（默認 1）
+ * @returns {Promise<Object>} - 推薦結果
+ */
+export const generateAIRecommendation = async (userInput, topK = 1) => {
+  try {
+    console.log("正在生成 AI 推薦穿搭:", userInput);
+
+    const response = await apiClient.post('/aichat_service/recommend/generate', {
+      user_input: userInput,
+      top_k: topK
+    }, {
+      timeout: 120000,
+    });
+
+    console.log("AI 推薦生成成功:", response.data);
+    return {
+      success: true,
+      data: response.data
+    };
+  } catch (error) {
+    console.error("生成 AI 推薦失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    return {
+      success: false,
+      error: error.response?.data?.message || error.message
+    };
+  }
+};
+
+/**
+ * 獲取 AI 推薦歷史
+ * @param {number} page - 分頁號（默認 1）
+ * @param {number} limit - 每頁數量（默認 20）
+ * @param {string} sort - 排序方式（newest, score_high, oldest）
+ * @returns {Promise<Object>} - 推薦歷史列表
+ */
+export const getAIRecommendationHistory = async (page = 1, limit = 20, sort = 'newest') => {
+  try {
+    console.log("正在獲取 AI 推薦歷史...");
+
+    const response = await apiClient.get('/aichat_service/recommend/history', {
+      params: {
+        page,
+        limit,
+        sort
+      },
+      timeout: 30000,
+    });
+
+    console.log("獲取推薦歷史成功:", response.data);
+    return {
+      success: true,
+      data: response.data
+    };
+  } catch (error) {
+    console.error("獲取推薦歷史失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    return {
+      success: false,
+      error: error.response?.data?.message || error.message
+    };
+  }
+};
+
+/**
+ * 獲取單筆推薦詳情
+ * @param {string} modelUid - 推薦 UID
+ * @returns {Promise<Object>} - 推薦詳情
+ */
+export const getAIRecommendationDetail = async (modelUid) => {
+  try {
+    console.log("正在獲取推薦詳情:", modelUid);
+
+    const response = await apiClient.get(`/aichat_service/recommend/${modelUid}`, {
+      timeout: 30000,
+    });
+
+    console.log("獲取推薦詳情成功:", response.data);
+    return {
+      success: true,
+      data: response.data
+    };
+  } catch (error) {
+    console.error("獲取推薦詳情失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    return {
+      success: false,
+      error: error.response?.data?.message || error.message
+    };
+  }
+};
+
+/**
+ * 刪除推薦穿搭
+ * @param {string} modelUid - 推薦 UID
+ * @returns {Promise<Object>} - 刪除結果
+ */
+export const deleteAIRecommendation = async (modelUid) => {
+  try {
+    console.log("正在刪除推薦:", modelUid);
+
+    const response = await apiClient.delete(`/aichat_service/recommend/${modelUid}`, {
+      timeout: 30000,
+    });
+
+    console.log("推薦刪除成功:", response.data);
+    return {
+      success: true,
+      data: response.data
+    };
+  } catch (error) {
+    console.error("刪除推薦失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    return {
+      success: false,
+      error: error.response?.data?.message || error.message
+    };
+  }
+};

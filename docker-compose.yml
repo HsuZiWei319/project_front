@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      target: dev
+      args:
+        VITE_API_URL: "http://140.118.122.151:30000"
+    container_name: upload-image-cont
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./src:/app/src 
+    networks:
+      - backend_app-network
+    restart: unless-stopped
+
+networks:
+  backend_app-network:
+    external: true

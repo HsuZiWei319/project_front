@@ -186,6 +186,16 @@ const MainPage = () => {
           onClick={() => navigate('/wardrobe')}
           style={{ cursor: 'pointer' }}
         />
+
+        {/* AI Chat 圖標 - 放在右上角 */}
+        <img 
+          src={Images.chat} 
+          alt="chat" 
+          className="chat-card"
+          onClick={() => navigate('/ai-chat')}
+          title="AI 穿搭助手"
+          style={{ cursor: 'pointer' }}
+        />
         
         {/* --- 狀態文字顯示區 (絕對定位在中間) --- */}
         {isVirtualTrying && (

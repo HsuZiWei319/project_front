@@ -12,23 +12,35 @@ Python (v3.9+)
 
 Docker
 
-### 1. 修改後端連線位址
-打開 `start.sh` 檔案，修改最上方的變數：
+### 1. 先啟動後端 Compose
+前端會透過共享 Docker 網路連到後端容器 `django-backend:30000`。
 
-修改這裡換成你的後端 IP
+請先在後端目錄啟動：
 
-BACKEND_URL="[http://192.168.](http://192.168.)x.x:8000"
+```bash
+cd ../backend
+docker compose up -d
+```
 
-### 2. 執行啟動腳本
-./start.sh
+### 2. 用 Docker Compose 啟動前端（Nginx）
+```bash
+docker compose up -d --build
+```
 
 ### 3. 開啟網頁
-啟動完成後，請瀏覽： http://localhost:8080
+啟動完成後，請瀏覽： `http://localhost:8080`
+
+### 4. 停止服務
+```bash
+docker compose down
+```
 
 ### 專案結構
 src/ - React 原始碼
 
-Dockerfile - 兩階段建置腳本 (Node.js Build -> Nginx Serve)
+docker-compose.yml - 一鍵啟動前端 Nginx
+
+Dockerfile - 多階段建置腳本 (Node.js Build / Nginx Prod / Vite Dev)
 
 nginx.conf - Nginx 路由設定 (SPA Support)
 

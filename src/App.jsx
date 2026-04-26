@@ -12,6 +12,7 @@ import WardrobePage from './pages/Wardrobe/WardrobePage';
 import UploadClothesPage from './pages/UploadClothes/UploadClothesPage';
 import ClothesInfoPage from './pages/ClothesInfo/ClothesInfoPage';
 import VirtualTryOn from './pages/VirtualTryOn/VirtualTryOn';
+import AIChatPage from './pages/AIChat/AIChatPage';
 
 const App = () => {
   return (
@@ -48,6 +49,9 @@ const App = () => {
 
         {/* 虛擬試穿頁面 */}
         <Route path="/virtual-tryon" element={<VirtualTryOn />} />
+
+        {/* AI 穿搭助手頁面 */}
+        <Route path="/ai-chat" element={<AIChatPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
         

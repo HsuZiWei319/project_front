@@ -1,0 +1,611 @@
+/* AI Chat Page 容器 */
+.ai-chat-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-bottom: 120px;
+}
+
+.ai-chat-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 20px;
+}
+
+/* 頁面標題 */
+.ai-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ai-chat-header h1 {
+  font-size: 28px;
+  color: #333;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+/* 警告消息 */
+.ai-chat-alert {
+  padding: 15px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease-out;
+}
+
+.ai-chat-alert-error {
+  background-color: #fee;
+  color: #c33;
+  border-left: 4px solid #c33;
+}
+
+.ai-chat-alert-success {
+  background-color: #efe;
+  color: #3c3;
+  border-left: 4px solid #3c3;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 表單區域 */
+.ai-chat-form-section {
+  margin-bottom: 40px;
+}
+
+.ai-chat-form-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-chat-form-card h2 {
+  font-size: 24px;
+  color: #333;
+  margin: 0 0 10px 0;
+}
+
+.ai-chat-form-hint {
+  color: #888;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+}
+
+/* 表單 */
+.ai-chat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ai-chat-input-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ai-chat-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #eee;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+  min-height: 120px;
+}
+
+.ai-chat-input:focus {
+  outline: none;
+  border-color: #667eea;
+  background-color: #f9f9ff;
+}
+
+.ai-chat-input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.ai-chat-input-counter {
+  font-size: 12px;
+  color: #999;
+  text-align: right;
+}
+
+/* 按鈕 */
+.ai-chat-btn-generate {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ai-chat-btn-generate:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.ai-chat-btn-generate:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ai-chat-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 歷史記錄區 */
+.ai-chat-history-section {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-chat-history-section h2 {
+  font-size: 22px;
+  color: #333;
+  margin: 0 0 25px 0;
+}
+
+/* 空狀態 */
+.ai-chat-empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.ai-chat-empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.ai-chat-empty-state p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.ai-chat-empty-hint {
+  font-size: 14px;
+  color: #bbb;
+}
+
+/* 歷史記錄網格 */
+.ai-chat-history-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.ai-chat-history-card {
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-chat-history-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.ai-chat-card-image {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.ai-chat-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ai-chat-card-score {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 165, 0, 0.9);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ai-chat-card-content {
+  padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-chat-card-context {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 10px 0;
+  line-height: 1.4;
+}
+
+.ai-chat-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.ai-chat-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ai-chat-card-date {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+  margin-top: auto;
+}
+
+.ai-chat-card-actions {
+  display: flex;
+  gap: 10px;
+  padding: 10px 15px;
+  border-top: 1px solid #eee;
+}
+
+.ai-chat-btn-view,
+.ai-chat-btn-delete {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ai-chat-btn-view {
+  background: #667eea;
+  color: white;
+}
+
+.ai-chat-btn-view:hover {
+  background: #5568d3;
+}
+
+.ai-chat-btn-delete {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.ai-chat-btn-delete:hover {
+  background: #ee7777;
+  color: white;
+}
+
+/* 分頁 */
+.ai-chat-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.ai-chat-btn-pagination {
+  padding: 10px 20px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.ai-chat-btn-pagination:hover:not(:disabled) {
+  background: #667eea;
+  color: white;
+}
+
+.ai-chat-btn-pagination:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ai-chat-page-info {
+  color: #666;
+  font-size: 14px;
+}
+
+/* 詳情頁面 */
+.ai-chat-detail-section {
+  position: relative;
+}
+
+.ai-chat-btn-back-detail {
+  padding: 10px 20px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.ai-chat-btn-back-detail:hover {
+  background: #667eea;
+  color: white;
+}
+
+.ai-chat-detail-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-chat-detail-image {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ai-chat-detail-image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ai-chat-detail-score {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.ai-chat-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.ai-chat-detail-section-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 20px;
+}
+
+.ai-chat-detail-section-item:last-child {
+  border-bottom: none;
+}
+
+.ai-chat-detail-section-item h3 {
+  font-size: 16px;
+  color: #333;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.ai-chat-detail-context,
+.ai-chat-detail-reasoning {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.ai-chat-detail-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ai-chat-tag-large {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ai-chat-clothes-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.ai-chat-clothes-item {
+  background: #f9f9f9;
+  border-radius: 10px;
+  padding: 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-chat-clothes-item img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.ai-chat-clothes-category {
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+}
+
+.ai-chat-detail-date {
+  font-size: 13px;
+  color: #999;
+  margin: 0;
+}
+
+.ai-chat-detail-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.ai-chat-btn-delete-large {
+  flex: 1;
+  padding: 12px 24px;
+  background: #ee7777;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ai-chat-btn-delete-large:hover {
+  background: #dd6666;
+  transform: translateY(-2px);
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+  .ai-chat-content {
+    padding: 15px;
+  }
+
+  .ai-chat-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .ai-chat-header h1 {
+    font-size: 22px;
+  }
+
+  .ai-chat-form-card {
+    padding: 20px;
+  }
+
+  .ai-chat-history-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-chat-detail-container {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .ai-chat-clothes-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-chat-content {
+    padding: 10px;
+  }
+
+  .ai-chat-header {
+    padding: 15px;
+  }
+
+  .ai-chat-header h1 {
+    font-size: 18px;
+  }
+
+  .ai-chat-form-card {
+    padding: 15px;
+  }
+
+  .ai-chat-form-card h2 {
+    font-size: 18px;
+  }
+
+  .ai-chat-input {
+    min-height: 100px;
+    font-size: 14px;
+  }
+
+  .ai-chat-btn-generate {
+    font-size: 14px;
+  }
+
+  .ai-chat-card-content {
+    padding: 12px;
+  }
+
+  .ai-chat-card-image {
+    height: 150px;
+  }
+
+  .ai-chat-history-section {
+    padding: 15px;
+  }
+
+  .ai-chat-detail-container {
+    padding: 15px;
+    gap: 20px;
+  }
+}
