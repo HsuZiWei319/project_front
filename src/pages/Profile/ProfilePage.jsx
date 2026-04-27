@@ -22,6 +22,7 @@ const ProfilePage = () => {
   const [error, setError] = useState('');
   const [userPhotoUrl, setUserPhotoUrl] = useState(null);
   const [uploadError, setUploadError] = useState(null);
+  const [isLoadingModel, setIsLoadingModel] = useState(true);
   const fileInputRef = useRef(null);
   const { handleFileSelectedForModelUpload, resultImage, error: hookError, isLoading: hookIsLoading } = useImageUpload();
 
@@ -36,14 +37,22 @@ const ProfilePage = () => {
   // 加載用戶上傳的模特照片
   useEffect(() => {
     const loadModelPhoto = async () => {
+      setIsLoadingModel(true);
       try {
         const result = await getModelPhoto();
         if (result.success && result.photo?.user_image_url) {
           setUserPhotoUrl(result.photo.user_image_url);
           console.log('✅ 已加載用戶上傳的模特照片:', result.photo.user_image_url);
+        } else {
+          // 後端返回失敗或沒有照片，使用預設 model
+          setUserPhotoUrl(Images.model);
         }
       } catch (err) {
         console.error('⚠️ 獲取模特照片失敗:', err);
+        // 如果獲取失敗，使用預設的模特圖
+        setUserPhotoUrl(Images.model);
+      } finally {
+        setIsLoadingModel(false);
       }
     };
 
@@ -174,25 +183,34 @@ const ProfilePage = () => {
               position: 'relative'
             }}
           >
-            <img 
-              src={userPhotoUrl || Images.model} 
-              alt="模特照片" 
-              className="profile-pic-image" 
-            />
-            {/* 提示文字 */}
-            <div className="model-upload-hint">點擊上傳</div>
-            {hookIsLoading && (
-              <span style={{ 
-                position: 'absolute', 
-                top: '50%', 
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                color: '#999',
-                fontSize: '12px',
-                whiteSpace: 'nowrap'
-              }}>
-                上傳中...
-              </span>
+            {isLoadingModel ? (
+              <div className="model-loading">
+                <div className="loading-spinner"></div>
+                <span>加載中...</span>
+              </div>
+            ) : (
+              <>
+                <img 
+                  src={userPhotoUrl || Images.model} 
+                  alt="模特照片" 
+                  className="profile-pic-image" 
+                />
+                {/* 提示文字 */}
+                <div className="model-upload-hint">點擊上傳</div>
+                {hookIsLoading && (
+                  <span style={{ 
+                    position: 'absolute', 
+                    top: '50%', 
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: '#999',
+                    fontSize: '12px',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    上傳中...
+                  </span>
+                )}
+              </>
             )}
           </div>
 

@@ -47,21 +47,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: auto;
+  width: 250px;
   height: 250px;
   cursor: pointer;
   transition: all var(--transition-base);
 }
 
 .profile-pic-image {
-  width: 100%;
-  height: 100%;
+  width: 250px;
+  height: auto;
   border-radius: var(--radius-xl);
   object-fit: contain;
   border: 2px solid var(--gray-200);
   box-shadow: var(--shadow-md);
   background: transparent;
-  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-color: rgba(139, 141, 249, 0.04); /* 設定背景色 */
   background-blend-mode: multiply; /* 混合模式：正片疊底 */
   background-size: cover;
   transition: all var(--transition-base);
@@ -103,6 +103,37 @@
 
 .profile-picture:hover .model-upload-hint {
   opacity: 1;
+}
+
+/* 模型加載狀態樣式 */
+.model-loading {
+  width: 250px;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: var(--radius-xl);
+  font-size: 14px;
+  color: #999;
+  gap: 16px;
+}
+
+/* 加載動畫旋轉效果 */
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(99, 102, 241, 0.1);
+  border-top: 4px solid rgba(99, 102, 241, 0.8);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .profile-row {

@@ -1,4 +1,4 @@
-import apiClient from './api';
+import apiClient, { API_URL } from './api';
 
 /**
  * 上傳衣服圖片進行去背處理
@@ -383,15 +383,19 @@ export const deleteClothes = async (clothesId) => {
 /**
  * 切換衣服的喜歡狀態
  * @param {number|string} clothesId - 衣服 ID
+ * @param {boolean} isFavorite - 新的喜歡狀態 (true 或 false)
  * @returns {Promise<Object>} - 更新後的衣服信息（包含最新的喜歡狀態）
  */
-export const toggleClothesLike = async (clothesId) => {
+export const toggleClothesLike = async (clothesId, isFavorite) => {
   try {
     const url = `/picture/clothes/${clothesId}/favorite`;
 
-    console.log("正在切換衣服喜歡狀態:", url);
+    console.log("正在切換衣服喜歡狀態:", url, "新狀態:", isFavorite);
 
-    const response = await apiClient.post(url);
+    // 使用 PATCH 方法並發送布林值
+    const response = await apiClient.patch(url, {
+      favorite: isFavorite
+    });
 
     console.log("衣服喜歡狀態更新成功:", response.data);
     return response.data;

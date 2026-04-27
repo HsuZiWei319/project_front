@@ -166,7 +166,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: rgba(139, 141, 249, 0.2); /* 設定背景色 */
+  background-color: rgba(139, 141, 249, 0.03); /* 設定背景色 */
   background-blend-mode: multiply; /* 混合模式：正片疊底 */
   background-size: cover;
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);

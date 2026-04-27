@@ -30,6 +30,9 @@
   box-shadow: var(--shadow-lg);
   border: 2px solid var(--gray-200);
   transition: all var(--transition-base);
+  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
+  background-blend-mode: multiply; /* 混合模式：正片疊底 */
+  background-size: cover;
 }
 
 .clothes-image:hover {
@@ -55,6 +58,7 @@
   transition: all var(--transition-base);
   box-shadow: var(--shadow-md);
   font-size: 28px;
+  z-index: 10;
 }
 
 .clothes-like-btn:hover:not(:disabled) {

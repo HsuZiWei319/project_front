@@ -173,19 +173,23 @@ const ClothesInfoPage = () => {
     setError('');
 
     try {
-      const result = await toggleClothesLike(clothesId);
+      // 計算新的喜歡狀態（取反）
+      const newFavoriteStatus = !isFavorite;
+      
+      // 使用 PATCH 方法並傳遞新的布林值狀態
+      const result = await toggleClothesLike(clothesId, newFavoriteStatus);
       console.log('✅ 切換喜歡狀態成功:', result);
 
       // 更新本地狀態
-      const newFavoriteStatus = result.clothes_favorite !== undefined 
+      const finalFavoriteStatus = result.clothes_favorite !== undefined 
         ? result.clothes_favorite 
-        : !isFavorite;
-      setIsFavorite(newFavoriteStatus);
+        : newFavoriteStatus;
+      setIsFavorite(finalFavoriteStatus);
 
       // 也更新 clothesData 中的狀態
       setClothesData({
         ...clothesData,
-        clothes_favorite: newFavoriteStatus
+        clothes_favorite: finalFavoriteStatus
       });
     } catch (err) {
       console.error('切換喜歡狀態失敗:', err);

@@ -186,7 +186,7 @@ const UploadClothesPage = () => {
               className="login-btn confirm-btn"
               onClick={handleConfirm}
             >
-              確定
+              上傳到衣櫃
             </button>
           </>
         ) : (

@@ -44,7 +44,12 @@ const BottomNavigation = ({ onFileSelected }) => {
           <div className="home-text">主畫面</div>
         </div>
         
-        <div className="add-button-container" onClick={handleAddButtonClick}>
+        <div 
+          className="add-button-container" 
+          onClick={handleAddButtonClick}
+          title="上傳衣服照片"
+          data-tooltip="上傳衣服照片"
+        >
           <img src={Images.button_plus} alt="新增" className="plus-icon"/>
         </div>
 

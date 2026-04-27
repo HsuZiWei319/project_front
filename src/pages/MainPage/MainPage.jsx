@@ -13,6 +13,7 @@ const MainPage = () => {
   const location = useLocation();
   const { statusMessage, resultImage, handleFileSelectedForClothesUpload } = useImageUpload();
   const [userPhotoUrl, setUserPhotoUrl] = useState(null);
+  const [isLoadingModel, setIsLoadingModel] = useState(true);
   const [isVirtualTrying, setIsVirtualTrying] = useState(false);
   const [virtualTryingClothes, setVirtualTryingClothes] = useState('');
   const [virtualTryOnImage, setVirtualTryOnImage] = useState(null);
@@ -51,15 +52,22 @@ const MainPage = () => {
   // 在組件掛載時，獲取之前上傳的模特照片
   useEffect(() => {
     const loadModelPhoto = async () => {
+      setIsLoadingModel(true);
       try {
         const result = await getModelPhoto();
         if (result.success && result.photo?.user_image_url) {
           setUserPhotoUrl(result.photo.user_image_url);
           console.log('✅ 已加載用戶上傳的模特照片:', result.photo.user_image_url);
+        } else {
+          // 後端返回失敗或沒有照片，使用預設 model
+          setUserPhotoUrl(Images.model);
         }
       } catch (err) {
         console.error('⚠️ 獲取模特照片失敗:', err);
         // 如果獲取失敗，使用預設的模特圖
+        setUserPhotoUrl(Images.model);
+      } finally {
+        setIsLoadingModel(false);
       }
     };
 
@@ -164,17 +172,27 @@ const MainPage = () => {
         {/* 新增一個 wrapper (容器) 來包住所有圖 */}
         <div className={`avatar-wrapper`}>
           
-          {/* 模特圖 */}
-          <img 
-            src={virtualTryOnImage || userPhotoUrl || Images.model} 
-            alt="model" 
-            className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
-            onClick={() => navigate('/virtual-tryon')}
-            style={{ cursor: 'pointer' }}
-          />
+          {/* 加載狀態 */}
+          {isLoadingModel ? (
+            <div className="model-loading">
+              <div className="loading-spinner"></div>
+              <span>加載中...</span>
+            </div>
+          ) : (
+            <>
+              {/* 模特圖 */}
+              <img 
+                src={virtualTryOnImage || userPhotoUrl || Images.model} 
+                alt="model" 
+                className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
+                onClick={() => navigate('/virtual-tryon')}
+                style={{ cursor: 'pointer' }}
+              />
 
-          {/* 提示文字 */}
-          <div className="model-hint">點擊試穿</div>
+              {/* 提示文字 */}
+              <div className="model-hint">點擊試穿</div>
+            </>
+          )}
 
         </div>
 
