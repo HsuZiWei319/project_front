@@ -2,8 +2,12 @@
 
 # ==========================================
 # 🔧 設定區 (Config)
+# 初始化 nvm (Node Version Manager)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # 請在這裡填入後端的 IP (可以是 localhost, 192.168.x.x 或 ngrok)
-# 預設值先寫 localhost，組員拿去跑的時候叫他們自己改這裡
 BACKEND_URL="http://140.118.122.151:30000"
 
 # 容器名稱與 Port
