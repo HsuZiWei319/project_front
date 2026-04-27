@@ -2,9 +2,6 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-# 1. npm 鏡像源
-#RUN npm config set registry https://registry.yarnpkg.com/
-
 # 2. 安裝依賴
 COPY package.json package-lock.json ./
 RUN npm install
@@ -35,22 +32,12 @@ WORKDIR /app
 ARG VITE_API_URL
 ENV VITE_API_URL=$VITE_API_URL
 
-# 2. 設置鏡像源
-#RUN npm config set registry https://registry.yarnpkg.com/
-
 # 3. 安裝依賴
+# 直接從 builder 階段把安裝好的 node_modules 複製過來，省去重新 npm install
+COPY --from=builder /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
-RUN npm install
-
-# 4. 複製程式碼
 COPY . .
 
-# 5. 開放 5173 port (Vite dev server 預設埠)
 EXPOSE 5173
-
-# 6. 啟動 Vite dev server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
-
-# 6. 啟動 Vite dev server
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
 

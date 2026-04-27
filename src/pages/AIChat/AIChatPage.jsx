@@ -176,14 +176,15 @@ const AIChatPage = () => {
   return (
     <div className="container">
       <Navigation position="top" />
-
+      <BackButton />
       <div className="ai-chat-content">
         {/* 返回按鈕 */}
-        <div className="ai-chat-header">
-          <BackButton />
-          <h1>✨ AI 穿搭助手</h1>
-          <div style={{ width: '50px' }}></div>
+        <div className="title-bar">
+          <div className="pagetitle-label">
+            AI 穿搭助理
+          </div>
         </div>
+        
 
         {/* 錯誤和成功訊息 */}
         {error && (

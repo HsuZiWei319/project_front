@@ -105,7 +105,7 @@ const RegisterPage = () => {
   };
 
   const handleGoHome = () => {
-    navigate('/home');
+    navigate('/');
   };
 
   return (
