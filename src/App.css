@@ -65,14 +65,6 @@
   display: block;
 }
 
-/* 分隔線樣式 */
-.divider-line {
-  width: 1.5px;
-  height: auto;
-  flex-shrink: 0;
-  z-index: 100;
-}
-
 /* 頁面標題樣式 */
 .pagetitle-label {
   font-size: var(--font-3xl);

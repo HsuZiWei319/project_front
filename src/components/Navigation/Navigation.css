@@ -2,6 +2,7 @@
 
 .top-nav {
   position: absolute;
+  align-items: flex-start; /* 讓所有子元素對齊容器的最上方 */
   top: 0;
   left: 0;
   width: 100%;
@@ -9,6 +10,15 @@
   border-bottom: 1px solid rgba(99, 102, 241, 0.1);
   backdrop-filter: blur(10px);
   z-index: 10;
+}
+
+/* 分隔線樣式 */
+.divider-line {
+  width: 1.5px;
+  height: auto;
+  flex-shrink: 0;
+  z-index: 100;
+  align-self: center; /* 只有這個元素會叛逆地跑去中間 */
 }
 
 .bottom-nav {
