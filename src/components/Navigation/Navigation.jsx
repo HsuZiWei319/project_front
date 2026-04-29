@@ -13,7 +13,7 @@ const Navigation = ({ position = 'top' }) => {
 
   const handleLikeClick = () => {
     // 未來可以導航到喜歡頁面
-    console.log('喜歡頁面 - 建設中');
+    navigate('/favorites');
   };
 
   const handleSettingClick = () => {

@@ -13,6 +13,7 @@ import UploadClothesPage from './pages/UploadClothes/UploadClothesPage';
 import ClothesInfoPage from './pages/ClothesInfo/ClothesInfoPage';
 import VirtualTryOn from './pages/VirtualTryOn/VirtualTryOn';
 import AIChatPage from './pages/AIChat/AIChatPage';
+import FavoritesPage from './pages/Favorites/FavoritesPage';
 
 const App = () => {
   return (
@@ -46,6 +47,9 @@ const App = () => {
 
         {/* 衣服詳細信息頁面 */}
         <Route path="/clothes/:clothesId" element={<ClothesInfoPage />} />
+
+        {/* 收藏頁面 */}
+        <Route path="/favorites" element={<FavoritesPage />} />
 
         {/* 虛擬試穿頁面 */}
         <Route path="/virtual-tryon" element={<VirtualTryOn />} />

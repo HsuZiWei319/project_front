@@ -456,3 +456,26 @@
     opacity: 1;
   }
 }
+
+.favorite-card {
+  position: absolute;
+  top: 220px;
+  right: 20px;
+  width: 35px;
+  height: auto;
+  opacity: 1;
+  transition: all 0.1s ease-in-out;
+  z-index: 30;
+  cursor: pointer;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  /* 防模糊 */
+  transform: translateZ(0); 
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.favorite-card:hover {
+  transform: scale(1.1) translateY(-3px);
+  filter: drop-shadow(0 6px 12px rgba(236, 72, 153, 0.5));
+  opacity: 0.95;
+}
