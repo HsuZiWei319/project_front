@@ -13,7 +13,7 @@ export const getUserInfo = async () => {
     }
 
     const response = await axios.get(
-      `${API_URL}/account/user/user_info`,
+      `${API_URL}/account/user/get_info`,
       {
         headers: {
           'Authorization': `Bearer ${token}`,

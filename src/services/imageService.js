@@ -418,7 +418,7 @@ export const generateAIRecommendation = async (userInput, topK = 1) => {
   try {
     console.log("正在生成 AI 推薦穿搭:", userInput);
 
-    const response = await apiClient.post('/aichat_service/recommend/generate', {
+    const response = await apiClient.post('/aichat_service/recommend/generate/', {
       user_input: userInput,
       top_k: topK
     }, {
@@ -453,7 +453,7 @@ export const getAIRecommendationHistory = async (page = 1, limit = 20, sort = 'n
   try {
     console.log("正在獲取 AI 推薦歷史...");
 
-    const response = await apiClient.get('/aichat_service/recommend/history', {
+    const response = await apiClient.get('/aichat_service/recommend/history/', {
       params: {
         page,
         limit,
@@ -488,7 +488,7 @@ export const getAIRecommendationDetail = async (modelUid) => {
   try {
     console.log("正在獲取推薦詳情:", modelUid);
 
-    const response = await apiClient.get(`/aichat_service/recommend/${modelUid}`, {
+    const response = await apiClient.get(`/aichat_service/recommend/${modelUid}/`, {
       timeout: 30000,
     });
 
@@ -518,7 +518,7 @@ export const deleteAIRecommendation = async (modelUid) => {
   try {
     console.log("正在刪除推薦:", modelUid);
 
-    const response = await apiClient.delete(`/aichat_service/recommend/${modelUid}`, {
+    const response = await apiClient.delete(`/aichat_service/recommend/${modelUid}/`, {
       timeout: 30000,
     });
 
