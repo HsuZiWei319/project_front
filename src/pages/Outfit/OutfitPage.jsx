@@ -223,16 +223,17 @@ const OutfitPage = () => {
                         <div className="outfit-detail-section">
                             <h2 className="outfit-detail-subtitle">穿搭資訊</h2>
                             <div className="outfit-info-box">
-                                <div className="info-row">
+                                {/*<div className="info-row">
                                     <span className="info-label">狀態：</span>
+                                    
                                     <span className="info-value">
                                         {outfit.status === 'completed' ? '✅ 已完成' : '⏳ 處理中'}
                                     </span>
-                                </div>
+                                </div>*/}
                                 <div className="info-row">
                                     <span className="info-label">建立時間：</span>
                                     <span className="info-value">
-                                        {outfit.created_at ? new Date(outfit.created_at).toLocaleDateString('zh-TW', {
+                                        {(outfit.model_created_time || outfit.created_at) ? new Date(outfit.model_created_time || outfit.created_at).toLocaleDateString('zh-TW', {
                                             year: 'numeric',
                                             month: '2-digit',
                                             day: '2-digit',

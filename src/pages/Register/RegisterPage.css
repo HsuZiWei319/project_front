@@ -2,6 +2,11 @@
 
 /* ========== 註冊頁面樣式 ========== */
 
+/* 註冊頁專用的 Header 樣式 */
+.register-header {
+  margin-top: 50px; /* 往下移一點 (預設為 100px) */
+}
+
 /* 左上角返回箭頭 */
 .back-arrow {
   position: absolute;

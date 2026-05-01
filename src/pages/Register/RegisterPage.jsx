@@ -115,7 +115,7 @@ const RegisterPage = () => {
         {/* 左上角返回箭頭 */}
         <BackButton />
 
-        <AppHeader />
+        <AppHeader className="register-header" />
 
         {isSuccess ? (
           /* 成功訊息 */

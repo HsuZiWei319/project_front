@@ -436,13 +436,13 @@ const WardrobePage = () => {
                                             {/* 底部資訊 */}
                                             <div className="outfit-info">
                                                 <span className="outfit-date">
-                                                    📅 {outfit.created_at ? new Date(outfit.created_at).toLocaleDateString('zh-TW', {
+                                                    {(outfit.model_created_time || outfit.created_at) ? new Date(outfit.model_created_time || outfit.created_at).toLocaleDateString('zh-TW', {
                                                         year: 'numeric',
                                                         month: '2-digit',
                                                         day: '2-digit'
                                                     }) : '日期未知'}
                                                 </span>
-                                                <span className="outfit-status">{outfit.status === 'completed' ? '✅ 已完成' : '⏳ 處理中'}</span>
+                                                {/*<span className="outfit-status">{outfit.status === 'completed' ? '✅ 已完成' : '⏳ 處理中'}</span>*/}
                                             </div>
                                             
                                         </div>
