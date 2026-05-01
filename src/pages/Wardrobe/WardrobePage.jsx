@@ -30,7 +30,14 @@ const WardrobePage = () => {
     const [error, setError] = useState(null);
     const [filterMode, setFilterMode] = useState('category'); // 'category' 或 'style'
     const [allClothes, setAllClothes] = useState([]); // 保存原始衣服數據
-    const [viewMode, setViewMode] = useState('wardrobe'); // 'wardrobe' 或 'outfit'
+    // 從 localStorage 初始化 viewMode，若無則預設為 'wardrobe'
+    const [viewMode, setViewMode] = useState(() => {
+        const savedViewMode = localStorage.getItem('wardrobeViewMode');
+        return savedViewMode || 'wardrobe';
+    });
+    const [outfitHistory, setOutfitHistory] = useState([]); // 穿搭歷史
+    const [outfitLoading, setOutfitLoading] = useState(false); // 穿搭加載狀態
+    const [outfitError, setOutfitError] = useState(null); // 穿搭錯誤信息
 
     // 在組件掛載時調用 API
     useEffect(() => {
@@ -43,6 +50,42 @@ const WardrobePage = () => {
             regroupClothes(allClothes);
         }
     }, [filterMode]);
+
+    // 當 viewMode 改變時，保存到 localStorage 並調用歷史 API
+    useEffect(() => {
+        // 保存 viewMode 到 localStorage
+        localStorage.setItem('wardrobeViewMode', viewMode);
+        
+        // 如果切換到穿搭模式則調用歷史 API
+        if (viewMode === 'outfit') {
+            fetchVirtualTryOnHistory();
+        }
+    }, [viewMode]);
+
+    // 調用 /combine/user/virtual-try-on-history API 並獲取穿搭歷史
+    const fetchVirtualTryOnHistory = async () => {
+        try {
+            setOutfitLoading(true);
+            setOutfitError(null);
+
+            // 調用 API 獲取虛擬試穿歷史，預設取得第一頁，每頁 20 筆
+            const response = await apiClient.get('/combine/user/virtual-try-on-history', {
+                params: {
+                    page: 1,
+                    limit: 20
+                }
+            });
+
+            console.log('穿搭歷史 API 返回數據:', response.data);
+            setOutfitHistory(response.data.results || []);
+        } catch (err) {
+            console.error('獲取虛擬試穿歷史失敗:', err);
+            setOutfitError(err.message || '無法載入穿搭歷史');
+            setOutfitHistory([]);
+        } finally {
+            setOutfitLoading(false);
+        }
+    };
 
     // 根據分組模式重新分組衣服
     const regroupClothes = (clothes) => {
@@ -307,12 +350,118 @@ const WardrobePage = () => {
                     </>
                 )}
 
-                {/* 穿搭模式 - 待實作 */}
+                {/* 穿搭模式 - 虛擬試穿歷史 */}
                 {viewMode === 'outfit' && (
-                    <div className="empty-state">
-                        <div className="empty-state-icon">✨</div>
-                        <p className="empty-state-text">穿搭頁面開發中</p>
-                    </div>
+                    <>
+                        {/* 載入中 */}
+                        {outfitLoading && (
+                            <div className="empty-state">
+                                <div className="empty-state-icon">⏳</div>
+                                <p className="empty-state-text">正在載入穿搭歷史...</p>
+                            </div>
+                        )}
+
+                        {/* 錯誤提示 */}
+                        {outfitError && !outfitLoading && (
+                            <div style={{
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                color: '#dc2626',
+                                padding: '16px 20px',
+                                margin: '16px',
+                                borderRadius: 'var(--radius-xl)',
+                                fontSize: '14px',
+                                border: '1px solid rgba(239, 68, 68, 0.2)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px'
+                            }}>
+                                <span style={{fontSize: '18px'}}>⚠️</span>
+                                <span>{outfitError}</span>
+                            </div>
+                        )}
+
+                        {/* 穿搭歷史列表 */}
+                        {!outfitLoading && outfitHistory.length > 0 ? (
+                            <div className="outfit-history-container">
+                                <h2 style={{
+                                    fontSize: 'var(--font-2xl)',
+                                    fontWeight: '700',
+                                    color: 'var(--gray-900)',
+                                    marginBottom: '24px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 'var(--spacing-md)'
+                                }}>
+                                    <span style={{
+                                        display: 'inline-block',
+                                        width: '4px',
+                                        height: '28px',
+                                        background: 'linear-gradient(180deg, var(--primary), #a855f7)',
+                                        borderRadius: '2px'
+                                    }}></span>
+                                    我的穿搭 <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--gray-600)'}}>(共 {outfitHistory.length} 組)</span>
+                                </h2>
+                                <div className="outfit-history-list">
+                                    {outfitHistory.map((outfit) => (
+                                        <div 
+                                            key={outfit.model_uid} 
+                                            className="outfit-item"
+                                            onClick={() => navigate(`/outfit/${outfit.model_uid}`)}
+                                            style={{ cursor: 'pointer' }}
+                                        >
+                                            {/* 頂部：模特風格標籤 */}
+                                            <div className="outfit-styles">
+                                                {outfit.model_style && outfit.model_style.length > 0 ? (
+                                                    outfit.model_style.map((style, index) => (
+                                                        <span key={index} className="style-tag">{style}</span>
+                                                    ))
+                                                ) : (
+                                                    <span className="style-tag">未分類</span>
+                                                )}
+                                            </div>
+
+                                            {/* 中部：模特照片（大） */}
+                                            <div className="outfit-model-section">
+                                                <img
+                                                    src={getFullClothesImageUrl(outfit.model_picture)}
+                                                    alt="模特穿搭"
+                                                    className="outfit-model-image"
+                                                    onError={(e) => {
+                                                        console.error('模特照片加載失敗:', outfit.model_picture);
+                                                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300"%3E%3Crect fill="%23f0f0f0" width="200" height="300"/%3E%3Ctext x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23999" font-size="14"%3E圖片加載失敗%3C/text%3E%3C/svg%3E';
+                                                    }}
+                                                />
+                                            </div>
+
+                                            {/* 底部資訊 */}
+                                            <div className="outfit-info">
+                                                <span className="outfit-date">
+                                                    📅 {outfit.created_at ? new Date(outfit.created_at).toLocaleDateString('zh-TW', {
+                                                        year: 'numeric',
+                                                        month: '2-digit',
+                                                        day: '2-digit'
+                                                    }) : '日期未知'}
+                                                </span>
+                                                <span className="outfit-status">{outfit.status === 'completed' ? '✅ 已完成' : '⏳ 處理中'}</span>
+                                            </div>
+                                            
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ) : (
+                            !outfitLoading && (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">✨</div>
+                                    <p className="empty-state-text">還沒有穿搭紀錄</p>
+                                    <p style={{fontSize: '14px', color: 'var(--gray-600)', marginBottom: 'var(--spacing-lg)'}}>快去虛擬試穿你喜歡的衣服組合吧！</p>
+                                </div>
+                            )
+                        )}
+
+                        {/* 底部留白防止遮擋 */}
+                        <div style={{ height: '80px' }}></div>
+                    </>
                 )}
             </main>
 

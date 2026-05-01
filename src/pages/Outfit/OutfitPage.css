@@ -1,0 +1,364 @@
+@import '../../styles/variables.css';
+
+/* 穿搭詳情頁面內容 */
+.outfit-detail-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+    animation: slideUp 0.4s ease-out;
+    margin-top: 115px;
+}
+
+/* 穿搭詳情容器 */
+.outfit-detail-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 標題 */
+.outfit-detail-title {
+    font-size: var(--font-3xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-2xl);
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+/* 副標題 */
+.outfit-detail-subtitle {
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    position: relative;
+    padding-bottom: var(--spacing-md);
+}
+
+.outfit-detail-subtitle::before {
+    content: '';
+    width: 4px;
+    height: 28px;
+    background: linear-gradient(180deg, var(--primary), #a855f7);
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+
+/* 風格標籤容器 */
+.styles-tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.detail-style-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, var(--primary), #a855f7);
+    color: white;
+    border-radius: var(--radius-full);
+    font-size: var(--font-md);
+    font-weight: 600;
+    animation: slideDown 0.3s ease-out;
+}
+
+/* 模特風格區段 */
+.outfit-detail-styles {
+    margin-bottom: var(--spacing-3xl);
+    padding-top: var(--spacing-2xl);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* 區段 */
+.outfit-detail-section {
+    margin-bottom: var(--spacing-2xl);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* 圖片容器 */
+.outfit-detail-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.08));
+    border: 2px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    min-height: 320px;
+}
+
+.outfit-detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.outfit-detail-image-container:hover .outfit-detail-image {
+    transform: scale(1.05);
+}
+
+/* 衣服網格 */
+.clothes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* 衣服詳情項目 */
+.clothes-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05));
+    border: 2px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius-xl);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: center;
+}
+
+.clothes-detail-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* 衣服圖片容器 */
+.clothes-detail-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    aspect-ratio: 1;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.clothes-detail-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: var(--spacing-md);
+    transition: transform 0.3s ease;
+}
+
+.clothes-detail-item:hover .clothes-detail-image {
+    transform: scale(1.05);
+}
+
+/* 衣服分類 */
+.clothes-detail-category {
+    font-size: var(--font-sm);
+    font-weight: 600;
+    color: var(--primary);
+    margin: 0;
+}
+
+/* 穿搭信息框 */
+.outfit-info-box {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.08));
+    border: 2px solid rgba(99, 102, 241, 0.15);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: var(--font-md);
+}
+
+.info-value {
+    color: var(--gray-600);
+    font-size: var(--font-md);
+}
+
+/* 操作按鈕區域 */
+.outfit-detail-actions {
+    display: flex;
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-2xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* 刪除按鈕 */
+.btn-delete {
+    flex: 1;
+    padding: var(--spacing-lg) var(--spacing-xl);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    border-radius: var(--radius-xl);
+    font-size: var(--font-lg);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btn-delete:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(239, 68, 68, 0.4);
+}
+
+.btn-delete:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-delete:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 空狀態 */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: var(--gray-600);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: var(--spacing-lg);
+    opacity: 0.6;
+    animation: float 3s ease-in-out infinite;
+}
+
+.empty-state-text {
+    font-size: var(--font-lg);
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-md);
+    font-weight: 500;
+}
+
+/* 隱藏滾動條 */
+.outfit-detail-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.outfit-detail-content::-webkit-scrollbar-track {
+    background: var(--gray-100);
+    border-radius: 10px;
+}
+
+.outfit-detail-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary), #a855f7);
+    border-radius: 10px;
+}
+
+.outfit-detail-content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+/* 動畫 */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .outfit-detail-content {
+        padding: 0 var(--spacing-md) var(--spacing-lg);
+        margin-top: 100px;
+    }
+
+    .outfit-detail-title {
+        font-size: var(--font-2xl);
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .outfit-detail-subtitle {
+        font-size: var(--font-xl);
+    }
+
+    .clothes-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: var(--spacing-md);
+    }
+
+    .outfit-detail-image-container {
+        min-height: 240px;
+    }
+
+    .btn-delete {
+        padding: var(--spacing-md) var(--spacing-lg);
+        font-size: var(--font-md);
+    }
+}

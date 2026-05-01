@@ -312,3 +312,168 @@
 .wardrobe-content::-webkit-scrollbar-thumb:hover {
   background: var(--primary-dark);
 }
+
+/* ========== 穿搭歷史樣式 ========== */
+
+/* 穿搭歷史容器 */
+.outfit-history-container {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* 穿搭歷史列表 */
+.outfit-history-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 1024px) {
+  .outfit-history-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .outfit-history-list {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* 穿搭項目卡片 */
+.outfit-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05));
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.outfit-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 32px rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* 風格標籤區域 */
+.outfit-styles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.style-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, var(--primary), #a855f7);
+  color: white;
+  border-radius: var(--radius-full);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  white-space: nowrap;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* 模特照片區域 */
+.outfit-model-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 280px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.1));
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+}
+
+.outfit-model-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.outfit-item:hover .outfit-model-image {
+  transform: scale(1.05);
+}
+
+/* 衣服照片區域 */
+.outfit-clothes-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.outfit-clothes-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.08));
+  border: 2px solid rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  padding: var(--spacing-md);
+}
+
+.outfit-clothes-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.outfit-item:hover .outfit-clothes-item {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.12));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.outfit-item:hover .outfit-clothes-image {
+  transform: scale(1.05);
+}
+
+.outfit-clothes-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.08));
+  border: 2px dashed rgba(99, 102, 241, 0.2);
+  border-radius: var(--radius-lg);
+  transition: all 0.3s ease;
+  padding: var(--spacing-md);
+}
+
+.outfit-item:hover .outfit-clothes-placeholder {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(168, 85, 247, 0.12));
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* 穿搭資訊區域 */
+.outfit-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(99, 102, 241, 0.1);
+  font-size: var(--font-sm);
+  color: var(--gray-600);
+}
+
+.outfit-date,
+.outfit-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}

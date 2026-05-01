@@ -14,6 +14,7 @@ import ClothesInfoPage from './pages/ClothesInfo/ClothesInfoPage';
 import VirtualTryOn from './pages/VirtualTryOn/VirtualTryOn';
 import AIChatPage from './pages/AIChat/AIChatPage';
 import FavoritesPage from './pages/Favorites/FavoritesPage';
+import OutfitPage from './pages/Outfit/OutfitPage';
 
 const App = () => {
   return (
@@ -41,6 +42,9 @@ const App = () => {
 
         {/* 衣櫃頁面 */}
         <Route path="/wardrobe" element={<WardrobePage />} />
+
+        {/* 穿搭詳情頁面 */}
+        <Route path="/outfit/:modelId" element={<OutfitPage />} />
 
         {/* 上傳衣服頁面 */}
         <Route path="/upload-clothes" element={<UploadClothesPage />} />

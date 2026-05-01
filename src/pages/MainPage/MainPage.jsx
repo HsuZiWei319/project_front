@@ -167,8 +167,27 @@ const MainPage = () => {
 
       {/* 中間主要區塊 (Avatar 與 訊息顯示區) */}
       <div className="main-content">
-        {/* 這裡放 3D 人偶圖 */}
 
+        {/* 衣櫃圖標 - 放在 avatar-wrapper 外面，避免被 overflow: hidden 切掉 */}
+        <img 
+          src={Images.wardrobe} 
+          alt="wardrobe" 
+          className="wardrobe-card"
+          onClick={() => navigate('/wardrobe')}
+          style={{ cursor: 'pointer' }}
+        />
+
+        {/* AI Chat 圖標 - 放在右上角 */}
+        <img 
+          src={Images.chat} 
+          alt="chat" 
+          className="chat-card"
+          onClick={() => navigate('/ai-chat')}
+          title="AI 穿搭助手"
+          style={{ cursor: 'pointer' }}
+        />
+        
+        {/* 這裡放 3D 人偶圖 */}
         {/* 新增一個 wrapper (容器) 來包住所有圖 */}
         <div className={`avatar-wrapper`}>
           
@@ -195,25 +214,6 @@ const MainPage = () => {
           )}
 
         </div>
-
-        {/* 衣櫃圖標 - 放在 avatar-wrapper 外面，避免被 overflow: hidden 切掉 */}
-        <img 
-          src={Images.wardrobe} 
-          alt="wardrobe" 
-          className="wardrobe-card"
-          onClick={() => navigate('/wardrobe')}
-          style={{ cursor: 'pointer' }}
-        />
-
-        {/* AI Chat 圖標 - 放在右上角 */}
-        <img 
-          src={Images.chat} 
-          alt="chat" 
-          className="chat-card"
-          onClick={() => navigate('/ai-chat')}
-          title="AI 穿搭助手"
-          style={{ cursor: 'pointer' }}
-        />
         
         {/* --- 狀態文字顯示區 (絕對定位在中間) --- */}
         {isVirtualTrying && (
