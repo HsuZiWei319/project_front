@@ -16,6 +16,7 @@ const UploadClothesPage = () => {
   // 狀態管理
   const [uploadedImage, setUploadedImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
+  const [isResultImageLoaded, setIsResultImageLoaded] = useState(false);
   const [sleeveLength, setSleeveLength] = useState('');
   const [pantLength, setPantLength] = useState('');
   const [shoulderWidth, setShoulderWidth] = useState('');
@@ -120,6 +121,8 @@ const UploadClothesPage = () => {
       if (result.processed_url) {
         const fullUrl = getFullImageUrl(result.processed_url);
         console.log('📸 完整圖片 URL:', fullUrl);
+        // 重置圖片加載狀態，切換到結果頁面
+        setIsResultImageLoaded(false);
         setResultImage(fullUrl);
       }
     } catch (err) {
@@ -165,12 +168,27 @@ const UploadClothesPage = () => {
           <>
             {/* 結果圖片區域 */}
             <div className="result-image-section">
+              {/* 加載中狀態 */}
+              {!isResultImageLoaded && (
+                <div className="result-image-loading">
+                  <div className="loading-spinner"></div>
+                  <p>正在處理圖片...</p>
+                </div>
+              )}
+              
               <img 
                 src={resultImage} 
                 alt="processed-clothes" 
                 className="result-image"
-                onLoad={() => console.log('✅ 圖片加載成功:', resultImage)}
-                onError={() => console.error('❌ 圖片加載失敗:', resultImage)}
+                style={{ display: isResultImageLoaded ? 'block' : 'none' }}
+                onLoad={() => {
+                  console.log('✅ 圖片加載成功:', resultImage);
+                  setIsResultImageLoaded(true);
+                }}
+                onError={() => {
+                  console.error('❌ 圖片加載失敗:', resultImage);
+                  setIsResultImageLoaded(true);
+                }}
               />
             </div>
 
@@ -185,8 +203,10 @@ const UploadClothesPage = () => {
             <button
               className="login-btn confirm-btn"
               onClick={handleConfirm}
+              disabled={!isResultImageLoaded}
+              style={{ opacity: isResultImageLoaded ? 1 : 0.6, cursor: isResultImageLoaded ? 'pointer' : 'not-allowed' }}
             >
-              上傳到衣櫃
+              {isResultImageLoaded ? '上傳到衣櫃' : '處理中...'}
             </button>
           </>
         ) : (
