@@ -1,0 +1,178 @@
+.setting-content {
+  flex: 1;
+  padding: 180px 20px 100px; /* 增加頂部間距以容納固定的標題 */
+  overflow-y: auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.setting-header-fixed {
+  flex:0.5;
+  position: absolute;
+  top: 115px; /* 與衣櫃頁面標題列的高度一致 */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.setting-header-fixed .pagetitle-label {
+  margin-bottom: 0;
+  pointer-events: auto;
+}
+
+.setting-header {
+  margin-bottom: 24px;
+}
+
+.setting-title {
+  display: none; /* 已被 .pagetitle-label 取代 */
+}
+
+.setting-subtitle {
+  font-size: 14px;
+  color: #666;
+  text-align: left;
+}
+
+.setting-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #8e8e93;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  margin-left: 4px;
+}
+
+.section-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.setting-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f2f2f2;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.setting-item:hover {
+  background-color: #f0f7ff; /* 輕微的淡藍色 hover 背景 */
+  transform: translateX(4px); /* 滑鼠靠近時向右微移，增加動態感 */
+}
+
+.setting-item:hover .item-icon-wrapper {
+  background-color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+.setting-item:hover .item-arrow {
+  color: #007aff; /* iOS 風格的藍色 */
+  transform: translateX(2px);
+}
+
+.setting-item:active {
+  background-color: #e5efff;
+  transform: scale(0.98);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.item-icon-wrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.item-icon-wrapper svg {
+  width: 20px;
+  height: 20px;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.item-description {
+  font-size: 12px;
+  color: #8e8e93;
+  margin-top: 2px;
+}
+
+.item-arrow {
+  color: #c7c7cc;
+}
+
+.item-arrow svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* 危險動作樣式 (如登出) */
+.setting-item.danger .item-icon-wrapper {
+  background-color: #fff1f0;
+  color: #ff4d4f;
+}
+
+.setting-item.danger .item-title {
+  color: #ff4d4f;
+  font-weight: 600;
+}
+
+.setting-footer {
+  margin-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.setting-footer p {
+  font-size: 12px;
+  color: #c7c7cc;
+}
+
+/* 適配移動端 */
+@media (max-width: 480px) {
+  .setting-content {
+    padding-top: 80px;
+  }
+  
+  .setting-title {
+    font-size: 24px;
+  }
+}

@@ -203,7 +203,7 @@ const WardrobePage = () => {
             {/* 左上角返回箭頭 */}
             <BackButton />
 
-            <div className="title-bar">
+            <div className="wardrobe-title-bar">
                 <div className="pagetitle-label">{viewMode === 'wardrobe' ? '衣櫃' : '穿搭'}</div>
                 <div className="segmented-control">
                     <button 

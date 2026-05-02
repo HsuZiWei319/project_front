@@ -1,15 +1,16 @@
 @import '../../styles/variables.css';
 
 /* 標題欄 */
-.title-bar {
+.wardrobe-title-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 115px;
+  margin-top: 125px;
   margin-bottom: var(--spacing-xl);
   position: relative;
-  padding: 10px;
   background: transparent;
+  flex-direction: column;
+  text-align: center;
 }
 
 .title-bar .pagetitle-label {

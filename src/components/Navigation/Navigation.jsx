@@ -17,8 +17,7 @@ const Navigation = ({ position = 'top' }) => {
   };
 
   const handleSettingClick = () => {
-    // 未來可以導航到設定頁面
-    console.log('設定頁面 - 建設中');
+    navigate('/settings');
   };
 
   // 頂部導航的固定內容

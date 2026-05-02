@@ -15,6 +15,7 @@ import VirtualTryOn from './pages/VirtualTryOn/VirtualTryOn';
 import AIChatPage from './pages/AIChat/AIChatPage';
 import FavoritesPage from './pages/Favorites/FavoritesPage';
 import OutfitPage from './pages/Outfit/OutfitPage';
+import SettingPage from './pages/Setting/SettingPage';
 
 const App = () => {
   return (
@@ -60,6 +61,9 @@ const App = () => {
 
         {/* AI 穿搭助手頁面 */}
         <Route path="/ai-chat" element={<AIChatPage />} />
+
+        {/* 設定頁面 */}
+        <Route path="/settings" element={<SettingPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
         
