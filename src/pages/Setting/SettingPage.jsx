@@ -112,12 +112,10 @@ const SettingPage = () => {
       <Navigation position="top" />
       <BackButton />
       
-      <div className="setting-header-fixed">
-        <h1 className="pagetitle-label">設定</h1>
-      </div>
-      
       <div className="setting-content">
-        {/* 移除原本的 header，因為標題已經固定在上方 */}
+        <div className="setting-header-scroll">
+          <h1 className="pagetitle-label">設定</h1>
+        </div>
         
         {settingSections.map((section, idx) => (
           <div key={idx} className="setting-section">

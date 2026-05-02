@@ -1,26 +1,20 @@
 .setting-content {
   flex: 1;
-  padding: 180px 20px 100px; /* 增加頂部間距以容納固定的標題 */
+  padding: 120px 20px 100px; /* 減小頂部間距，因為標題不再固定 */
   overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
 }
 
-.setting-header-fixed {
-  flex:0.5;
-  position: absolute;
-  top: 115px; /* 與衣櫃頁面標題列的高度一致 */
-  left: 0;
+.setting-header-scroll {
   width: 100%;
   display: flex;
   justify-content: center;
-  z-index: 5;
-  pointer-events: none;
+  margin-bottom: 30px;
 }
 
-.setting-header-fixed .pagetitle-label {
+.setting-header-scroll .pagetitle-label {
   margin-bottom: 0;
-  pointer-events: auto;
 }
 
 .setting-header {

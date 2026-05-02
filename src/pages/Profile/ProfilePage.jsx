@@ -2,12 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../App.css';
 import './ProfilePage.css';
-import '../../components/Dialog/Dialog.css';
 import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
-import ConfirmDialog from '../../components/Dialog/ConfirmDialog';
 import { logout, deleteUser } from '../../services/authService';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import { getModelPhoto } from '../../services/imageService';
@@ -16,25 +14,23 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [userPhotoUrl, setUserPhotoUrl] = useState(null);
-  const [uploadError, setUploadError] = useState(null);
   const [isLoadingModel, setIsLoadingModel] = useState(true);
   const fileInputRef = useRef(null);
   const { handleFileSelectedForModelUpload, resultImage, error: hookError, isLoading: hookIsLoading } = useImageUpload();
 
   useEffect(() => {
-    // 從 localStorage 獲取使用者資訊
     const storedUsername = localStorage.getItem('username');
     const storedEmail = localStorage.getItem('email');
     setUsername(storedUsername || 'User');
     setEmail(storedEmail || 'example@example.com');
   }, []);
 
-  // 加載用戶上傳的模特照片
   useEffect(() => {
     const loadModelPhoto = async () => {
       setIsLoadingModel(true);
@@ -42,82 +38,60 @@ const ProfilePage = () => {
         const result = await getModelPhoto();
         if (result.success && result.photo?.user_image_url) {
           setUserPhotoUrl(result.photo.user_image_url);
-          console.log('✅ 已加載用戶上傳的模特照片:', result.photo.user_image_url);
         } else {
-          // 後端返回失敗或沒有照片，使用預設 model
           setUserPhotoUrl(Images.model);
         }
       } catch (err) {
         console.error('⚠️ 獲取模特照片失敗:', err);
-        // 如果獲取失敗，使用預設的模特圖
         setUserPhotoUrl(Images.model);
       } finally {
         setIsLoadingModel(false);
       }
     };
-
     loadModelPhoto();
   }, []);
 
-  // 監聽 hook 的 resultImage，當上傳成功時更新 userPhotoUrl
   useEffect(() => {
     if (resultImage) {
       setUserPhotoUrl(resultImage);
-      setUploadError(null);
     }
   }, [resultImage]);
 
-  // 監聽 hook 的 error
-  useEffect(() => {
-    if (hookError) {
-      setUploadError(hookError);
-    }
-  }, [hookError]);
-
-  // 監聽 hook 的 isLoading
   useEffect(() => {
     setIsLoading(hookIsLoading);
   }, [hookIsLoading]);
 
-  // 處理登出
   const handleLogout = async () => {
     setIsLoading(true);
     setError('');
     try {
       await logout();
-      // 清除 localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('email');
-      // 導向登入頁面
-      navigate('/');
     } catch (err) {
       console.error('登出失敗:', err);
-      // 即使登出API失敗，也清除本地存儲並返回登入頁面
+    } finally {
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('username');
       localStorage.removeItem('email');
-      navigate('/');
-    } finally {
       setIsLoading(false);
-      setShowLogoutDialog(false);
+      setShowLogoutModal(false);
+      navigate('/');
     }
   };
 
-  // 處理刪除帳號
-  const handleDeleteAccount = async (password) => {
+  const handleDeleteAccount = async () => {
+    if (!deletePassword) {
+      setError('請輸入密碼以確認刪除');
+      return;
+    }
     setIsLoading(true);
     setError('');
     try {
-      await deleteUser(password);
-      // 清除 localStorage
+      await deleteUser(deletePassword);
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
       localStorage.removeItem('username');
       localStorage.removeItem('email');
-      // 導向登入頁面
       navigate('/');
     } catch (err) {
       console.error('刪除帳號失敗:', err);
@@ -127,66 +101,45 @@ const ProfilePage = () => {
       setError(errorMessage);
     } finally {
       setIsLoading(false);
-      setShowDeleteDialog(false);
+      setShowDeleteModal(false);
     }
   };
 
-  // 處理模特點擊事件
   const handlePhotoClick = () => {
     if (hookIsLoading) return;
-    setUploadError(null);
     fileInputRef.current?.click();
   };
 
-  // 處理文件選擇
   const handleFileChange = async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
-    setUploadError(null);
-
     try {
       await handleFileSelectedForModelUpload(file, () => {
-        // 上傳完成後，重置文件輸入
         event.target.value = '';
       });
     } catch (error) {
       console.error('上傳錯誤:', error);
-      setUploadError(error.message || '上傳失敗，請重試');
     }
   };
 
-    const { handleFileSelectedForClothesUpload } = useImageUpload();
-
-    const handleFileSelected = (file, onComplete) => {
-        handleFileSelectedForClothesUpload(file, onComplete);
-    };
+  const { handleFileSelectedForClothesUpload } = useImageUpload();
 
   return (
     <div className="container">
       <Navigation position="top" />
-
-      {/* 左上角返回箭頭 */}
       <BackButton />
 
-      {/* 主內容區域 */}
       <div className="profile-page">
-        {/* 個人資訊卡片 */}
-        <div className="profile-info">
-          {/* 模特圖片 */}
-          <div 
-            className="profile-picture"
-            onClick={handlePhotoClick}
-            style={{ 
-              opacity: hookIsLoading ? 0.6 : 1, 
-              cursor: hookIsLoading ? 'not-allowed' : 'pointer',
-              position: 'relative'
-            }}
-          >
-            {isLoadingModel ? (
+        <div className="profile-header-scroll">
+          <h1 className="pagetitle-label">個人檔案</h1>
+        </div>
+
+        {/* 模特圖片區域 */}
+        <div className="profile-picture-container">
+          <div className="profile-picture" onClick={handlePhotoClick}>
+            {isLoadingModel || hookIsLoading ? (
               <div className="model-loading">
                 <div className="loading-spinner"></div>
-                <span>加載中...</span>
               </div>
             ) : (
               <>
@@ -195,131 +148,193 @@ const ProfilePage = () => {
                   alt="模特照片" 
                   className="profile-pic-image" 
                 />
-                {/* 提示文字 */}
-                <div className="model-upload-hint">點擊上傳</div>
-                {hookIsLoading && (
-                  <span style={{ 
-                    position: 'absolute', 
-                    top: '50%', 
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: '#999',
-                    fontSize: '12px',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    上傳中...
-                  </span>
-                )}
+                <div className="model-upload-hint">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                    <circle cx="12" cy="13" r="4"></circle>
+                  </svg>
+                </div>
               </>
             )}
           </div>
+        </div>
 
-          {/* 上傳錯誤提示 */}
-          {uploadError && (
-            <div style={{
-              backgroundColor: '#fee',
-              color: '#c33',
-              padding: '8px 12px',
-              margin: '12px auto',
-              borderRadius: '4px',
-              fontSize: '12px',
-              maxWidth: '80%',
-              textAlign: 'center'
-            }}>
-              ❌ {uploadError}
+        {/* 基本資料 Section */}
+        <div className="profile-section">
+          <h2 className="section-title">基本資料</h2>
+          <div className="section-card">
+            <div className="profile-item no-click">
+              <div className="item-left">
+                <div className="item-icon-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div className="item-info">
+                  <span className="item-title">暱稱</span>
+                  <span className="item-value">{username}</span>
+                </div>
+              </div>
             </div>
-          )}
-
-          {/* 暱稱 */}
-          <div className="profile-row">
-            <div className="profile-label">暱稱</div>
-            <div className="profile-value">{username}</div>
-          </div>
-
-          {/* 電子郵件 */}
-          <div className="profile-row">
-            <div className="profile-label">電子郵件</div>
-            <div className="profile-value">{email}</div>
-          </div>
-
-          {/* 電話 */}
-          {/*<div className="profile-row">
-            <div className="profile-label">電話</div>
-            <div className="profile-value">新增電話</div>
-          </div> */}
-
-          {/* 變更密碼 */}
-          <div className="profile-row profile-clickable">
-            <div className="profile-label">變更密碼</div>
-            <div className="profile-arrow">&gt;</div>
-          </div>
-
-          {/* 變更身體數據 */}
-          <div 
-            className="profile-row profile-clickable"
-            onClick={() => navigate('/user-info')}
-          >
-            <div className="profile-label">變更身體數據</div>
-            <div className="profile-arrow">&gt;</div>
-          </div>
-
-          {/* 登出按鈕 */}
-          <div 
-            className="profile-row profile-action logout-row"
-            onClick={() => setShowLogoutDialog(true)}
-          >
-            <div className="profile-label logout-text">登出</div>
-          </div>
-
-          {/* 刪除帳號按鈕 */}
-          <div 
-            className="profile-row profile-action delete-row"
-            onClick={() => setShowDeleteDialog(true)}
-          >
-            <div className="profile-label delete-text">刪除帳號</div>
+            <div className="profile-item no-click">
+              <div className="item-left">
+                <div className="item-icon-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                  </svg>
+                </div>
+                <div className="item-info">
+                  <span className="item-title">電子郵件</span>
+                  <span className="item-value">{email}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* 錯誤訊息 */}
-        {error && (
-          <div className="error-message profile-error-message">
-            {error}
+        {/* 帳號管理 Section */}
+        <div className="profile-section">
+          <h2 className="section-title">帳號管理</h2>
+          <div className="section-card">
+            <div className="profile-item">
+              <div className="item-left">
+                <div className="item-icon-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                  </svg>
+                </div>
+                <div className="item-info">
+                  <span className="item-title">變更密碼</span>
+                </div>
+              </div>
+              <div className="item-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div className="profile-item" onClick={() => navigate('/user-info')}>
+              <div className="item-left">
+                <div className="item-icon-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                  </svg>
+                </div>
+                <div className="item-info">
+                  <span className="item-title">變更身體數據</span>
+                </div>
+              </div>
+              <div className="item-arrow">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </div>
+            </div>
           </div>
-        )}
+        </div>
+
+        {/* 登出與刪除帳號 Section */}
+        <div className="profile-section">
+          <h2 className="section-title">危險區域</h2>
+          <div className="section-card">
+            <div className="profile-item danger" onClick={() => setShowLogoutModal(true)}>
+              <div className="item-left">
+                <div className="item-icon-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
+                </div>
+                <div className="item-info">
+                  <span className="item-title">登出帳號</span>
+                </div>
+              </div>
+            </div>
+            <div className="profile-item danger" onClick={() => setShowDeleteModal(true)}>
+              <div className="item-left">
+                <div className="item-icon-wrapper">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                </div>
+                <div className="item-info">
+                  <span className="item-title">刪除帳號</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {error && <div className="profile-error-message">{error}</div>}
       </div>
 
-      {/* 登出確認對話框 */}
-      {showLogoutDialog && (
-        <ConfirmDialog
-          title="登出你的帳號？"
-          message=""
-          confirmText="登出"
-          cancelText="取消"
-          onConfirm={handleLogout}
-          onCancel={() => setShowLogoutDialog(false)}
-          isLoading={isLoading}
-          confirmButtonColor="#FF4444"
-        />
+      {/* Redesigned Logout Modal */}
+      {showLogoutModal && (
+        <div className="modal-overlay">
+          <div className="confirm-modal">
+            <div className="modal-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+            </div>
+            <h3 className="modal-title">登出帳號</h3>
+            <p className="modal-message">確定要登出您的帳號嗎？您隨時可以再次登入來管理您的虛擬衣櫃。</p>
+            <div className="modal-buttons">
+              <button className="modal-btn confirm" onClick={handleLogout} disabled={isLoading}>
+                {isLoading ? '處理中...' : '確認登出'}
+              </button>
+              <button className="modal-btn cancel" onClick={() => setShowLogoutModal(false)} disabled={isLoading}>
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
-      {/* 刪除帳號確認對話框 */}
-      {showDeleteDialog && (
-        <ConfirmDialog
-          title="永久刪除你的帳號？"
-          message=""
-          confirmText="刪除"
-          cancelText="取消"
-          onConfirm={handleDeleteAccount}
-          onCancel={() => setShowDeleteDialog(false)}
-          isLoading={isLoading}
-          requirePassword={true}
-          confirmButtonColor="#FF4444"
-        />
+      {/* Redesigned Delete Modal */}
+      {showDeleteModal && (
+        <div className="modal-overlay">
+          <div className="confirm-modal">
+            <div className="modal-icon-wrapper">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <h3 className="modal-title">永久刪除帳號</h3>
+            <p className="modal-message">這項操作無法復原。您的所有資料、虛擬衣櫃及身體數據將被永久刪除。</p>
+            <div className="password-input-wrapper">
+              <label>請輸入密碼以確認</label>
+              <input 
+                type="password" 
+                placeholder="您的密碼" 
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="modal-buttons">
+              <button className="modal-btn confirm" onClick={handleDeleteAccount} disabled={isLoading}>
+                {isLoading ? '處理中...' : '確定永久刪除'}
+              </button>
+              <button className="modal-btn cancel" onClick={() => setShowDeleteModal(false)} disabled={isLoading}>
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
-      <BottomNavigation onFileSelected={handleFileSelected} />
+      <BottomNavigation onFileSelected={handleFileSelectedForClothesUpload} />
 
-      {/* 隱藏文件輸入 */}
       <input
         ref={fileInputRef}
         type="file"
