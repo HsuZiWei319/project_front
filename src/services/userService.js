@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_URL } from './api';
+import apiClient from './api';
 
 /**
  * 獲取用戶身體數據
@@ -7,23 +6,11 @@ import { API_URL } from './api';
  */
 export const getUserInfo = async () => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const response = await axios.get(
-      `${API_URL}/account/user/get_info`,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await apiClient.get('/account/user/get_info');
 
     console.log('✅ 獲取用戶身體數據成功:', response.data);
-    return response.data;
+    // 回傳嵌套在 user 鍵中的數據
+    return response.data.user || response.data;
   } catch (error) {
     console.error('❌ 獲取用戶身體數據失敗:', error.message);
     throw error;
@@ -43,28 +30,14 @@ export const getUserInfo = async () => {
  */
 export const updateUserInfo = async (userInfo) => {
   try {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      throw new Error('未找到認證 token，請先登入');
-    }
-
-    const response = await axios.post(
-      `${API_URL}/account/user/user_info`,
-      {
-        user_height: parseFloat(userInfo.user_height),
-        user_weight: parseFloat(userInfo.user_weight),
-        user_arm_length: parseFloat(userInfo.user_arm_length),
-        user_shoulder_width: parseFloat(userInfo.user_shoulder_width),
-        user_waistline: parseFloat(userInfo.user_waistline),
-        user_leg_length: parseFloat(userInfo.user_leg_length),
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await apiClient.post('/account/user/user_info', {
+      user_height: parseFloat(userInfo.user_height),
+      user_weight: parseFloat(userInfo.user_weight),
+      user_arm_length: parseFloat(userInfo.user_arm_length),
+      user_shoulder_width: parseFloat(userInfo.user_shoulder_width),
+      user_waistline: parseFloat(userInfo.user_waistline),
+      user_leg_length: parseFloat(userInfo.user_leg_length),
+    });
 
     console.log('✅ 更新用戶身體數據成功:', response.data);
     return response.data;
