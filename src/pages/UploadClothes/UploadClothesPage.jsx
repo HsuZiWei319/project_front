@@ -199,15 +199,16 @@ const UploadClothesPage = () => {
               </div>
             )}
 
-            {/* 確定按鈕 */}
-            <button
-              className="confirm-btn"
-              onClick={handleConfirm}
-              disabled={!isResultImageLoaded}
-              style={{ opacity: isResultImageLoaded ? 1 : 0.6, cursor: isResultImageLoaded ? 'pointer' : 'not-allowed' }}
-            >
-              {isResultImageLoaded ? '✓ 上傳到衣櫃' : '⏳ 處理中...'}
-            </button>
+            {/* 按鈕組 */}
+            <div className="button-group">
+              <button
+                className="confirm-btn"
+                onClick={handleConfirm}
+                disabled={!isResultImageLoaded}
+              >
+                {isResultImageLoaded ? '✓ 上傳到衣櫃' : '⏳ 處理中...'}
+              </button>
+            </div>
           </>
         ) : (
           <>
@@ -220,77 +221,87 @@ const UploadClothesPage = () => {
 
             {/* 測量數據輸入區 */}
             <div className="measurements-section">
-          {/* 袖長 */}
-          <div className="measurement-input-group">
-            <label>袖長(cm)</label>
-            <input
-              type="number"
-              value={sleeveLength}
-              onChange={(e) => setSleeveLength(e.target.value)}
-              placeholder="輸入數字"
-              disabled={isLoading}
-            />
-          </div>
+              {/* 袖長 */}
+              <div className="measurement-input-group">
+                <label>袖長(cm)</label>
+                <input
+                  type="number"
+                  value={sleeveLength}
+                  onChange={(e) => setSleeveLength(e.target.value)}
+                  placeholder="輸入數字"
+                  disabled={isLoading}
+                />
+              </div>
 
-          {/* 褲長 */}
-          <div className="measurement-input-group">
-            <label>褲長(cm)</label>
-            <input
-              type="number"
-              value={pantLength}
-              onChange={(e) => setPantLength(e.target.value)}
-              placeholder="輸入數字"
-              disabled={isLoading}
-            />
-          </div>
+              {/* 褲長 */}
+              <div className="measurement-input-group">
+                <label>褲長(cm)</label>
+                <input
+                  type="number"
+                  value={pantLength}
+                  onChange={(e) => setPantLength(e.target.value)}
+                  placeholder="輸入數字"
+                  disabled={isLoading}
+                />
+              </div>
 
-          {/* 肩寬 */}
-          <div className="measurement-input-group">
-            <label>肩寬(cm)</label>
-            <input
-              type="number"
-              value={shoulderWidth}
-              onChange={(e) => setShoulderWidth(e.target.value)}
-              placeholder="輸入數字"
-              disabled={isLoading}
-            />
-          </div>
+              {/* 肩寬 */}
+              <div className="measurement-input-group">
+                <label>肩寬(cm)</label>
+                <input
+                  type="number"
+                  value={shoulderWidth}
+                  onChange={(e) => setShoulderWidth(e.target.value)}
+                  placeholder="輸入數字"
+                  disabled={isLoading}
+                />
+              </div>
 
-          {/* 腰圍 */}
-          <div className="measurement-input-group">
-            <label>腰圍(cm)</label>
-            <input
-              type="number"
-              value={waistCircumference}
-              onChange={(e) => setWaistCircumference(e.target.value)}
-              placeholder="輸入數字"
-              disabled={isLoading}
-            />
+              {/* 腰圍 */}
+              <div className="measurement-input-group">
+                <label>腰圍(cm)</label>
+                <input
+                  type="number"
+                  value={waistCircumference}
+                  onChange={(e) => setWaistCircumference(e.target.value)}
+                  placeholder="輸入數字"
+                  disabled={isLoading}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* 錯誤信息顯示 */}
-          {error && (
-            <div className="error-message">
-              ❌ {error}
+            {/* 錯誤信息顯示 */}
+            {error && (
+              <div className="error-message">
+                ❌ {error}
+              </div>
+            )}
+
+            {/* 狀態信息顯示 */}
+            {statusMessage && (
+              <div className="status-message">
+                {statusMessage}
+              </div>
+            )}
+
+            {/* 按鈕組 */}
+            <div className="button-group">
+              <button
+                className="upload-clothes-btn"
+                onClick={handleUploadClothes}
+                disabled={isLoading}
+              >
+                {isLoading ? '上傳中...' : '上傳衣服'}
+              </button>
+              
+              <button
+                className="cancel-btn"
+                onClick={() => navigate('/wardrobe')}
+                disabled={isLoading}
+              >
+                取消
+              </button>
             </div>
-          )}
-
-          {/* 狀態信息顯示 */}
-          {statusMessage && (
-            <div className="status-message">
-              {statusMessage}
-            </div>
-          )}
-
-          {/* 上傳衣服按鈕 */}
-          <button
-            className="upload-clothes-btn"
-            onClick={handleUploadClothes}
-            disabled={isLoading}
-          >
-            {isLoading ? '⏳ 上傳中...' : '📤 上傳衣服'}
-          </button>
           </>
         )}
       </div>

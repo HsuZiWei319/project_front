@@ -107,8 +107,8 @@ const VirtualTryOn = () => {
 
     // 處理虛擬試穿
     const handleVirtualTryOn = async () => {
-        if (selectedClothes.length !== 2) {
-            alert('請選擇2件衣服');
+        if (selectedClothes.length === 0) {
+            alert('請至少選擇1件衣服');
             return;
         }
 
@@ -274,8 +274,8 @@ const VirtualTryOn = () => {
             {/* 試穿結果顯示區 - 當有結果時替換上面的衣服列表 */}
             {/* 已移除：結果現在在 MainPage 顯示 */}
 
-            {/* 試穿按鈕 - 只有選擇 2 張時才顯示 */}
-            {selectedClothes.length === 2 && (
+            {/* 試穿按鈕 - 當有選擇衣服時顯示 */}
+            {selectedClothes.length > 0 && (
                 <div className="try-on-button-container">
                     <button 
                         className="try-on-button"
