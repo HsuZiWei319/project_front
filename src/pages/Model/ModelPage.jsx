@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useSWR, { mutate } from 'swr';
 import '../../App.css';
 import './ModelPage.css';
 import * as Images from '../../assets';
@@ -19,35 +20,28 @@ const ModelPage = () => {
     
     const [isLoading, setIsLoading] = useState(false);
     const [uploadError, setUploadError] = useState(null);
-    const [userPhotoUrl, setUserPhotoUrl] = useState(null); // 用戶上傳的模特照片
     const fileInputRef = useRef(null);
-    const nextIdRef = useRef(2);
-    const { handleFileSelectedForModelUpload, resultImage, error, isLoading: hookIsLoading } = useImageUpload();
+    const { handleFileSelectedForModelUpload, error, isLoading: hookIsLoading } = useImageUpload();
 
-    // 在組件掛載時，獲取之前上傳的模特照片
-    useEffect(() => {
-        const loadPreviousPhoto = async () => {
-            try {
-                const result = await getModelPhoto();
-                if (result.success && result.photo?.user_image_url) {
-                    setUserPhotoUrl(result.photo.user_image_url);
-                    console.log('✅ 已加載之前上傳的模特照片:', result.photo.user_image_url);
-                }
-            } catch (err) {
-                console.error('⚠️ 獲取模特照片失敗:', err);
-                // 如果獲取失敗，不影響頁面正常功能
+    // SWR fetcher for model photo
+    const fetchModelPhoto = async () => {
+        try {
+            const result = await getModelPhoto();
+            if (result.success && result.photo?.user_image_url) {
+                return result.photo.user_image_url;
             }
-        };
-
-        loadPreviousPhoto();
-    }, []); // 只在組件掛載時執行一次
-
-    // 監聽 hook 的 resultImage，當上傳成功時更新 userPhotoUrl
-    useEffect(() => {
-        if (resultImage) {
-            setUserPhotoUrl(resultImage);
+            return null;
+        } catch (err) {
+            console.error('⚠️ 獲取模特照片失敗:', err);
+            return null;
         }
-    }, [resultImage]);
+    };
+
+    // Use SWR to manage model photo data
+    const { data: userPhotoUrl, isLoading: isLoadingModel } = useSWR('modelPhoto', fetchModelPhoto, {
+        revalidateOnFocus: false,
+        dedupingInterval: 60000,
+    });
 
     // 監聽 hook 的 error，當上傳失敗時更新 uploadError
     useEffect(() => {
@@ -62,7 +56,11 @@ const ModelPage = () => {
     }, [hookIsLoading]);
 
     const handleFileSelected = (file, onComplete) => {
-        handleFileSelectedForModelUpload(file, onComplete);
+        handleFileSelectedForModelUpload(file, () => {
+            onComplete();
+            // 上傳成功後，通知 SWR 重新獲取數據
+            mutate('modelPhoto');
+        });
     };
 
     // 處理 plus_square 點擊事件
@@ -138,7 +136,11 @@ const ModelPage = () => {
                 ))}
 
                 {/* 顯示用戶上傳的模特照片或藍色加號 */}
-                {userPhotoUrl ? (
+                {(isLoadingModel && !userPhotoUrl) ? (
+                    <div className="plus_square-container">
+                        <div className="loading-spinner"></div>
+                    </div>
+                ) : userPhotoUrl ? (
                     // 已上傳照片：顯示用戶上傳的照片，可點擊重新上傳
                     <div 
                         className="model-item" 

@@ -9,7 +9,8 @@ services:
     ports:
       - "5173:5173"
     volumes:
-      - ./src:/app/src 
+      - .:/app
+      - /app/node_modules
     networks:
       - app-network
     restart: unless-stopped

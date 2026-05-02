@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useSWR, { mutate } from 'swr';
 import '../../App.css';
 import './ProfilePage.css';
 import * as Images from '../../assets';
@@ -19,10 +20,29 @@ const ProfilePage = () => {
   const [deletePassword, setDeletePassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [userPhotoUrl, setUserPhotoUrl] = useState(null);
-  const [isLoadingModel, setIsLoadingModel] = useState(true);
+  
   const fileInputRef = useRef(null);
-  const { handleFileSelectedForModelUpload, resultImage, error: hookError, isLoading: hookIsLoading } = useImageUpload();
+  const { handleFileSelectedForModelUpload, error: hookError, isLoading: hookIsLoading } = useImageUpload();
+
+  // SWR fetcher for model photo
+  const fetchModelPhoto = async () => {
+    try {
+      const result = await getModelPhoto();
+      if (result.success && result.photo?.user_image_url) {
+        return result.photo.user_image_url;
+      }
+      return Images.model;
+    } catch (err) {
+      console.error('⚠️ 獲取模特照片失敗:', err);
+      return Images.model;
+    }
+  };
+
+  // Use SWR to manage model photo data
+  const { data: userPhotoUrl, isLoading: isLoadingModel } = useSWR('modelPhoto', fetchModelPhoto, {
+    revalidateOnFocus: false,
+    dedupingInterval: 60000,
+  });
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -30,32 +50,6 @@ const ProfilePage = () => {
     setUsername(storedUsername || 'User');
     setEmail(storedEmail || 'example@example.com');
   }, []);
-
-  useEffect(() => {
-    const loadModelPhoto = async () => {
-      setIsLoadingModel(true);
-      try {
-        const result = await getModelPhoto();
-        if (result.success && result.photo?.user_image_url) {
-          setUserPhotoUrl(result.photo.user_image_url);
-        } else {
-          setUserPhotoUrl(Images.model);
-        }
-      } catch (err) {
-        console.error('⚠️ 獲取模特照片失敗:', err);
-        setUserPhotoUrl(Images.model);
-      } finally {
-        setIsLoadingModel(false);
-      }
-    };
-    loadModelPhoto();
-  }, []);
-
-  useEffect(() => {
-    if (resultImage) {
-      setUserPhotoUrl(resultImage);
-    }
-  }, [resultImage]);
 
   useEffect(() => {
     setIsLoading(hookIsLoading);
@@ -116,6 +110,8 @@ const ProfilePage = () => {
     try {
       await handleFileSelectedForModelUpload(file, () => {
         event.target.value = '';
+        // 上傳成功後，通知 SWR 重新獲取數據
+        mutate('modelPhoto');
       });
     } catch (error) {
       console.error('上傳錯誤:', error);
