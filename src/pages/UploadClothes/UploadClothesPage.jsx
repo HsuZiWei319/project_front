@@ -201,12 +201,12 @@ const UploadClothesPage = () => {
 
             {/* 確定按鈕 */}
             <button
-              className="login-btn confirm-btn"
+              className="confirm-btn"
               onClick={handleConfirm}
               disabled={!isResultImageLoaded}
               style={{ opacity: isResultImageLoaded ? 1 : 0.6, cursor: isResultImageLoaded ? 'pointer' : 'not-allowed' }}
             >
-              {isResultImageLoaded ? '上傳到衣櫃' : '處理中...'}
+              {isResultImageLoaded ? '✓ 上傳到衣櫃' : '⏳ 處理中...'}
             </button>
           </>
         ) : (
@@ -285,11 +285,11 @@ const UploadClothesPage = () => {
 
           {/* 上傳衣服按鈕 */}
           <button
-            className="login-btn upload-clothes-btn"
+            className="upload-clothes-btn"
             onClick={handleUploadClothes}
             disabled={isLoading}
           >
-            {isLoading ? '上傳中...' : '上傳衣服'}
+            {isLoading ? '⏳ 上傳中...' : '📤 上傳衣服'}
           </button>
           </>
         )}

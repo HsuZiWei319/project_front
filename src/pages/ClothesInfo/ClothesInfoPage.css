@@ -1,5 +1,12 @@
 @import '../../styles/variables.css';
 
+/* 定義新的漸變色 */
+:root {
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  --gradient-danger: linear-gradient(135deg, #eb3b5a 0%, #ff6348 100%);
+}
+
 /* ClothesInfoPage 主容器 */
 .clothes-info-content {
   display: flex;
@@ -8,245 +15,285 @@
   justify-content: flex-start;
   flex: 1;
   overflow-y: auto;
-  padding: var(--spacing-lg);
-  animation: slideUp 0.4s ease-out;
+  padding: 20px;
+  animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* 灰白色背景 視情況採用
+  background: linear-gradient(to bottom, #f8f9ff 0%, #ffffff 100%);*/
 }
 
-/* 衣服圖片區域 */
+/* 衣服圖片區域 - 優化設計 */
 .clothes-image-section {
   position: relative;
   width: 100%;
+  max-width: 320px;
   display: flex;
   justify-content: center;
   margin-top: 120px;
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: 30px;
+  perspective: 1000px;
 }
 
 .clothes-image {
-  max-width: 280px;
-  max-height: 380px;
+  width: 100%;
+  max-width: 300px;
+  max-height: 400px;
   object-fit: contain;
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
-  border: 2px solid var(--gray-200);
-  transition: all var(--transition-base);
-  background-color: rgba(139, 141, 249, 0.073); /* 設定背景色 */
-  background-blend-mode: multiply; /* 混合模式：正片疊底 */
-  background-size: cover;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.25);
+  border: none;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
+  padding: 8px;
 }
 
 .clothes-image:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 30px 80px rgba(102, 126, 234, 0.35);
 }
 
-/* 喜歡按鈕 */
+/* 喜歡按鈕 - 動畫優化 */
 .clothes-like-btn {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 50px;
-  height: 50px;
+  top: 16px;
+  right: 16px;
+  width: 56px;
+  height: 56px;
   border: none;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
+  background: white;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all var(--transition-base);
-  box-shadow: var(--shadow-md);
-  font-size: 28px;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
   z-index: 10;
+  font-size: 28px;
+  border: 2px solid transparent;
 }
 
 .clothes-like-btn:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 1);
-  transform: scale(1.1);
-  box-shadow: var(--shadow-lg);
+  transform: scale(1.15) rotate(15deg);
+  box-shadow: 0 12px 32px rgba(255, 71, 87, 0.3);
+  background: #fff5f7;
+}
+
+.clothes-like-btn:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .clothes-like-btn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
 .clothes-like-btn .heart-icon {
   display: block;
   transition: all 0.3s ease;
-  color: var(--gray-400);
+  color: #cbd5e0;
 }
 
 .clothes-like-btn.liked .heart-icon {
   color: #ff4757;
-  text-shadow: 0 0 8px rgba(255, 71, 87, 0.3);
+  animation: heartBeat 0.6s ease;
+  text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);
 }
 
-/* 衣服信息區（類型和風格） */
+/* 衣服信息卡片 */
 .clothes-info-section {
   width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg);
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.05));
-  border-radius: var(--radius-xl);
-  border: 1px solid rgba(59, 130, 246, 0.1);
-  margin-bottom: var(--spacing-lg);
+  max-width: 360px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 /* 衣服信息組 */
 .clothes-info-group {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 8px;
 }
 
 .clothes-info-group label {
-  font-size: var(--font-base);
+  font-size: 13px;
   font-weight: 600;
-  color: var(--gray-800);
+  color: #667eea;
+  letter-spacing: 0.5px;
 }
 
 .clothes-info-value {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-base);
-  color: var(--gray-700);
-  background-color: var(--gray-50);
+  padding: 12px 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  color: #2d3748;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.03));
   word-wrap: break-word;
   white-space: normal;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-left: 3px solid #667eea;
+}
+
+.clothes-info-value:hover {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.08));
 }
 
 /* 測量數據輸入區 */
 .measurements-section {
   width: 100%;
-  max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-  padding: var(--spacing-lg);
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(168, 85, 247, 0.05));
-  border-radius: var(--radius-xl);
-  border: 1px solid rgba(99, 102, 241, 0.1);
+  max-width: 360px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 24px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  backdrop-filter: blur(10px);
+  margin-bottom: 24px;
 }
 
 /* 單個測量輸入組 */
 .measurement-input-group {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: 8px;
 }
 
 .measurement-input-group label {
-  font-size: var(--font-base);
+  font-size: 13px;
   font-weight: 600;
-  color: var(--gray-800);
+  color: #667eea;
+  letter-spacing: 0.5px;
 }
 
 .measurement-input-group input {
-  padding: var(--spacing-md) var(--spacing-lg);
-  border: 2px solid var(--gray-200);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-base);
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
   font-family: var(--font-sans);
-  transition: all var(--transition-base);
-  background-color: var(--white);
+  transition: all 0.3s ease;
+  background-color: #f7fafc;
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.measurement-input-group input::placeholder {
+  color: #a0aec0;
 }
 
 .measurement-input-group input:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-  background-color: rgba(99, 102, 241, 0.02);
+  border-color: #667eea;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+  background-color: white;
+  transform: translateY(-2px);
 }
 
 .measurement-input-group input:disabled {
-  background-color: var(--gray-100);
+  background-color: #edf2f7;
   cursor: not-allowed;
-  color: var(--gray-800);
-  border-color: var(--gray-200);
+  color: #a0aec0;
+  border-color: #cbd5e0;
 }
 
 /* 錯誤信息 */
 .error-message {
   width: 100%;
-  max-width: 400px;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.05));
-  color: var(--error);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-sm);
+  max-width: 360px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(235, 59, 90, 0.08), rgba(255, 99, 72, 0.04));
+  color: #eb3b5a;
+  border-radius: 12px;
+  font-size: 14px;
   text-align: center;
-  margin-top: var(--spacing-md);
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  animation: slideUp 0.3s ease-out;
+  margin-bottom: 16px;
+  border: 1px solid rgba(235, 59, 90, 0.2);
+  animation: slideIn 0.3s ease-out;
+  font-weight: 500;
+  border-left: 4px solid #eb3b5a;
 }
 
 /* 狀態信息 */
 .status-message {
   width: 100%;
-  max-width: 400px;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.05));
-  color: var(--success);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-sm);
+  max-width: 360px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(17, 153, 142, 0.08), rgba(56, 239, 125, 0.04));
+  color: #11998e;
+  border-radius: 12px;
+  font-size: 14px;
   text-align: center;
-  margin-top: var(--spacing-md);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  animation: slideUp 0.3s ease-out;
-}
-
-/* 滾動條 */
-.clothes-info-content::-webkit-scrollbar {
-  width: 6px;
-}
-
-.clothes-info-content::-webkit-scrollbar-track {
-  background: var(--gray-100);
-  border-radius: 10px;
-}
-
-.clothes-info-content::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 10px;
-}
-
-.clothes-info-content::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+  margin-bottom: 16px;
+  border: 1px solid rgba(17, 153, 142, 0.2);
+  animation: slideIn 0.3s ease-out;
+  font-weight: 500;
+  border-left: 4px solid #11998e;
 }
 
 /* 按鈕組 */
 .button-group {
   width: 100%;
-  max-width: 400px;
+  max-width: 360px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 20px;
-  margin-bottom: 100px;
+  margin-top: 16px;
+  margin-bottom: 120px;
 }
 
 /* 更新按鈕 */
 .update-btn {
   width: 100%;
-  height: 44px;
+  height: 48px;
   font-size: 16px;
-  font-weight: 500;
-  background-color: #000;
+  font-weight: 600;
+  background: var(--gradient-primary);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.update-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: left 0.3s ease;
 }
 
 .update-btn:hover:not(:disabled) {
-  background-color: #333;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+.update-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.update-btn:active:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .update-btn:disabled {
@@ -257,19 +304,44 @@
 /* 刪除按鈕 */
 .delete-btn {
   width: 100%;
-  height: 44px;
+  height: 48px;
   font-size: 16px;
-  font-weight: 500;
-  background-color: #d32f2f;
+  font-weight: 600;
+  background: var(--gradient-danger);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 6px 20px rgba(235, 59, 90, 0.25);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.delete-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: left 0.3s ease;
 }
 
 .delete-btn:hover:not(:disabled) {
-  background-color: #b71c1c;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(235, 59, 90, 0.35);
+}
+
+.delete-btn:hover:not(:disabled)::before {
+  left: 100%;
+}
+
+.delete-btn:active:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .delete-btn:disabled {
@@ -280,19 +352,47 @@
 /* 取消按鈕 */
 .cancel-btn {
   width: 100%;
-  height: 44px;
+  height: 48px;
   font-size: 16px;
-  font-weight: 500;
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  font-weight: 600;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 12px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.12);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cancel-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: -1;
 }
 
 .cancel-btn:hover:not(:disabled) {
-  background-color: #e0e0e0;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+  border-color: #764ba2;
+}
+
+.cancel-btn:hover:not(:disabled)::before {
+  transform: translateX(0);
+}
+
+.cancel-btn:active:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .cancel-btn:disabled {
@@ -300,33 +400,109 @@
   cursor: not-allowed;
 }
 
+/* 滾動條美化 */
+.clothes-info-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.clothes-info-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.clothes-info-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #667eea, #764ba2);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.clothes-info-content::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #764ba2, #667eea);
+  background-clip: padding-box;
+}
+
+/* 動畫定義 */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.3);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.3);
+  }
+  60% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 600px) {
   .clothes-info-content {
-    padding: 15px;
-    gap: 15px;
+    padding: 16px;
   }
 
-  .measurements-section {
-    padding: 15px;
+  .clothes-image-section {
+    max-width: 100%;
+    margin-top: 100px;
   }
 
   .clothes-image {
     max-width: 280px;
-    max-height: 380px;
+    max-height: 360px;
+  }
+
+  .clothes-info-section,
+  .measurements-section {
+    max-width: 100%;
+    grid-template-columns: 1fr;
+    padding: 16px;
   }
 
   .measurement-input-group input {
-    font-size: 16px; /* iOS 自動縮放時的最小字體大小 */
+    font-size: 16px;
   }
 
   .button-group {
-    gap: 10px;
+    max-width: 100%;
+    margin-bottom: 100px;
   }
 
   .update-btn,
   .delete-btn,
   .cancel-btn {
     height: 48px;
-    font-size: 15px;
+    font-size: 14px;
   }
 }

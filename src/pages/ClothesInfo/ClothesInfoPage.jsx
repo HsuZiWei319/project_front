@@ -259,7 +259,8 @@ const ClothesInfoPage = () => {
 
   // 處理刪除衣服按鈕點擊
   const handleDeleteClothes = async () => {
-    if (!window.confirm('確定要刪除此衣服嗎？此操作無法撤銷')) {
+    const confirmed = window.confirm('⚠️ 確認要刪除此衣服嗎？\n\n此操作無法撤銷，衣服將永久刪除。');
+    if (!confirmed) {
       return;
     }
 
@@ -327,8 +328,25 @@ const ClothesInfoPage = () => {
       <div className="container">
         <Navigation position="top" />
         <BackButton />
-        <div style={{ textAlign: 'center', padding: '40px 20px', color: '#888' }}>
-          <p>正在載入衣服信息...</p>
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: 'column',
+          alignItems: 'center', 
+          justifyContent: 'center',
+          flex: 1,
+          padding: '40px 20px', 
+          color: '#667eea',
+          gap: '16px'
+        }}>
+          <div style={{
+            width: '50px',
+            height: '50px',
+            border: '4px solid rgba(102, 126, 234, 0.15)',
+            borderTop: '4px solid #667eea',
+            borderRadius: '50%',
+            animation: 'spin 1.2s linear infinite'
+          }}></div>
+          <p style={{ fontSize: '16px', fontWeight: '600', margin: 0 }}>正在載入衣服信息...</p>
         </div>
         <BottomNavigation onFileSelected={handleFileSelected} />
       </div>
@@ -343,23 +361,66 @@ const ClothesInfoPage = () => {
         <Navigation position="top" />
         <BackButton />
         <div style={{
-          backgroundColor: '#fee',
-          color: '#c33',
-          padding: '12px 16px',
-          margin: '12px 16px',
-          borderRadius: '4px',
-          fontSize: '14px'
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flex: 1,
+          padding: '40px 20px',
+          gap: '20px'
         }}>
-          ❌ {error}
+          <div style={{
+            width: '80px',
+            height: '80px',
+            backgroundColor: 'rgba(235, 59, 90, 0.1)',
+            borderRadius: '16px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '40px'
+          }}>
+            ⚠️
+          </div>
+          <div style={{
+            backgroundColor: 'rgba(235, 59, 90, 0.08)',
+            color: '#eb3b5a',
+            padding: '16px 20px',
+            margin: '12px 16px',
+            borderRadius: '12px',
+            fontSize: '14px',
+            textAlign: 'center',
+            fontWeight: 600,
+            border: '1px solid rgba(235, 59, 90, 0.2)',
+            borderLeft: '4px solid #eb3b5a'
+          }}>
+            {error}
+          </div>
+          <button
+            onClick={() => navigate('/wardrobe')}
+            style={{
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '12px',
+              fontSize: '16px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(102, 126, 234, 0.3)',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-3px)';
+              e.target.style.boxShadow = '0 10px 30px rgba(102, 126, 234, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.3)';
+            }}
+          >
+            返回衣櫃
+          </button>
         </div>
-        <button
-          className="login-btn"
-          onClick={() => navigate('/wardrobe')}
-          style={{ marginTop: '200px', marginLeft: '60px' }}
-        >
-          返回衣櫃
-        </button>
-
         <BottomNavigation onFileSelected={handleFileSelected} />
       </div>
     );
@@ -375,16 +436,21 @@ const ClothesInfoPage = () => {
         {/* 開發衣服提示 */}
         {isDevImage && (
           <div style={{
-            backgroundColor: '#fff3cd',
-            color: '#856404',
-            padding: '12px 16px',
-            margin: '12px 16px',
-            borderRadius: '4px',
+            width: '100%',
+            maxWidth: '360px',
+            backgroundColor: 'rgba(255, 193, 7, 0.08)',
+            color: '#f57f17',
+            padding: '14px 16px',
+            marginBottom: '16px',
+            borderRadius: '12px',
             fontSize: '14px',
             textAlign: 'center',
-            fontWeight: 'bold'
+            fontWeight: 600,
+            border: '1px solid rgba(255, 193, 7, 0.2)',
+            borderLeft: '4px solid #ffc107',
+            animation: 'slideIn 0.3s ease-out'
           }}>
-            🔧 這是開發衣服（本地測試模式）
+            🔧 這是開發模式 - 本地測試數據
           </div>
         )}
 
@@ -503,6 +569,7 @@ const ClothesInfoPage = () => {
             className="update-btn"
             onClick={handleUpdateClothes}
             disabled={isUpdating || isDeleting || !hasChanges}
+            title={hasChanges ? '點擊更新衣服信息' : '沒有未保存的更改'}
           >
             {isUpdating ? '更新中...' : '更新衣服'}
           </button>
@@ -512,6 +579,7 @@ const ClothesInfoPage = () => {
             className="delete-btn"
             onClick={handleDeleteClothes}
             disabled={isUpdating || isDeleting}
+            title="永久刪除此衣服"
           >
             {isDeleting ? '刪除中...' : '刪除衣服'}
           </button>
@@ -521,8 +589,9 @@ const ClothesInfoPage = () => {
             className="cancel-btn"
             onClick={handleCancel}
             disabled={isUpdating || isDeleting}
+            title="返回衣櫃"
           >
-            取消
+            返回衣櫃
           </button>
         </div>
       </div>
