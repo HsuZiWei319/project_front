@@ -175,6 +175,7 @@ const MainPage = () => {
           className="wardrobe-card"
           onClick={() => navigate('/wardrobe')}
           style={{ cursor: 'pointer' }}
+          title="我的衣櫃"
         />
 
         {/* AI Chat 圖標 - 放在右上角 */}

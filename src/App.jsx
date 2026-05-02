@@ -16,6 +16,7 @@ import AIChatPage from './pages/AIChat/AIChatPage';
 import FavoritesPage from './pages/Favorites/FavoritesPage';
 import OutfitPage from './pages/Outfit/OutfitPage';
 import SettingPage from './pages/Setting/SettingPage';
+import NotificationPage from './pages/Notification/NotificationPage';
 
 const App = () => {
   return (
@@ -64,6 +65,9 @@ const App = () => {
 
         {/* 設定頁面 */}
         <Route path="/settings" element={<SettingPage />} />
+
+        {/* 通知頁面 */}
+        <Route path="/notifications" element={<NotificationPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
         

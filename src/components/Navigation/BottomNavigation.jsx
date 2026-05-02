@@ -19,6 +19,10 @@ const BottomNavigation = ({ onFileSelected }) => {
     navigate('/home');
   };
 
+  const handleNotificationClick = () => {
+    navigate('/notifications');
+  };
+
   const handleFileChange = (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -53,7 +57,7 @@ const BottomNavigation = ({ onFileSelected }) => {
           <img src={Images.button_plus} alt="新增" className="plus-icon"/>
         </div>
 
-        <div className="notification-card"> 
+        <div className="notification-card" onClick={handleNotificationClick} style={{ cursor: 'pointer' }}> 
           <img src={Images.icon_notification} alt="通知" className="notification-icon"/>
           <div className="notification-text">通知</div>
         </div>
