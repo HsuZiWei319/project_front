@@ -129,3 +129,6 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
+
+// SWR 擷取器
+export const fetcher = (url) => apiClient.get(url).then((res) => res.data);
