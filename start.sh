@@ -9,11 +9,13 @@ export NVM_DIR="$HOME/.nvm"
 
 # 請在這裡填入後端的 IP (可以是 localhost, 192.168.x.x 或 ngrok)
 BACKEND_URL="http://140.118.122.151:30000"
+AI_API_URL="http://localhost:8000"
 
 # 容器名稱與 Port
 CONTAINER_NAME="upload-image-cont"
 IMAGE_NAME="upload-image-img"
-PORT=8080
+PORT=5173
+AI_PORT=8000
 DEV_MODE=${1:-dev}  # 預設為開發模式，可以傳入其他值改為生產模式
 
 # 顯示顏色輸出
@@ -51,16 +53,17 @@ run_docker_cmd() {
 
 echo "🚀 [前端] 準備啟動..."
 echo "🔗 後端 API 指向: $BACKEND_URL"
+echo "🤖 AI API 指向: $AI_API_URL"
 echo ""
 echo "⏳ 正在檢查 Docker 權限..."
 check_docker_permission
 if [ $NEED_SUDO = true ]; then
     echo "⚠️  即將使用 sudo 執行 Docker 命令（可能需要輸入密碼）"
     echo "💡 提示：建議執行以下命令一次性解決權限問題："
-    echo "   ${YELLOW}sudo usermod -aG docker \$USER && newgrp docker${NC}"
+    echo "   ${YELLOW}sudo usermod -aG docker $USER && newgrp docker${NC}"
     echo ""
 else
-    echo "✅ Docker 權限檢查完成，無需 sudo"
+    echo "✅ Docker 檢查完成，無需 sudo"
     echo ""
 fi
 
@@ -129,7 +132,7 @@ echo "📦 正在打包 Docker Image..."
 # 驗證關鍵文件是否存在
 echo "   ✓ 檢查項目文件..."
 if [ ! -f "package.json" ]; then
-    echo "   ❌ 找不到 package.json，請確保在正確的目錄中運行此腳本"
+    echo "   ❌ 找不到 package.json"
     exit 1
 fi
 
@@ -143,22 +146,26 @@ if [ ! -f "Dockerfile" ]; then
     exit 1
 fi
 
-echo "   ✅ 所有關鍵文件都存在"
-echo "   ✓ 檢查樣式文件..."
-if [ -f "src/styles/variables.css" ]; then
-    echo "      ✓ src/styles/variables.css (設計系統)"
+if [ ! -d "ai_api" ]; then
+    echo "   ❌ 找不到 ai_api 目錄"
+    exit 1
 fi
-if [ -f "src/styles/global.css" ]; then
-    echo "      ✓ src/styles/global.css (全局樣式)"
-fi
-
 echo ""
 echo "   🔨 開始 Docker 構建..."
+if [ "$IS_DEV" = true ]; then
+    BUILD_TARGET="dev"
+else
+    BUILD_TARGET="prod"
+fi
+
 if run_docker_cmd build \
-  --build-arg VITE_API_URL=$BACKEND_URL \
-  -t $IMAGE_NAME . ; then
+   --target $BUILD_TARGET \
+   --build-arg VITE_API_URL=$BACKEND_URL \
+   --build-arg VITE_AI_API_URL=$AI_API_URL \
+   -t $IMAGE_NAME . ; then
     echo -e "   ${GREEN}✅ Docker Image 構建成功！${NC}"
 else
+
     echo -e "   ${RED}❌ Docker Image 構建失敗${NC}"
     exit 1
 fi
@@ -171,17 +178,22 @@ echo "步驟 3: 啟動應用 🚀"
 echo "========================================"
 echo "🔥 啟動容器中..."
 
-# 啟動開發模式容器：使用卷掛載和 Vite dev server
-if run_docker_cmd run -d \
-  -p $PORT:5173 \
-  -v "$(pwd)/src:/app/src" \
-  -v "$(pwd)/public:/app/public" \
-  --name $CONTAINER_NAME \
-  $IMAGE_NAME npm run dev -- --host 0.0.0.0 ; then
-    echo "✓ 容器啟動命令已執行"
+# 啟動開發模式容器
+if [ "$IS_DEV" = true ]; then
+    if run_docker_cmd run -d       -p $PORT:5173       -p $AI_PORT:8000       -v "$(pwd)/src:/app/src"       -v "$(pwd)/public:/app/public"       -v "$(pwd)/ai_api:/app/ai_api"       --name $CONTAINER_NAME       $IMAGE_NAME; then
+        echo "✓ 容器啟動命令已執行"
+    else
+        echo -e "${RED}❌ 容器啟動失敗${NC}"
+        exit 1
+    fi
 else
-    echo -e "${RED}❌ 容器啟動失敗${NC}"
-    exit 1
+    # 生產模式
+    if run_docker_cmd run -d       -p $PORT:80       -p $AI_PORT:8000       --name $CONTAINER_NAME       $IMAGE_NAME; then
+        echo "✓ 容器啟動命令已執行"
+    else
+        echo -e "${RED}❌ 容器啟動失敗${NC}"
+        exit 1
+    fi
 fi
 
 # 等待容器完全啟動
@@ -198,31 +210,10 @@ fi
 
 echo ""
 echo "========================================"
-echo -e "${GREEN}🎉 前端開發模式運行在: http://localhost:$PORT${NC}"
+echo -e "${GREEN}🎉 前端模式運行在: http://localhost:$PORT${NC}"
+echo -e "${GREEN}🤖 AI API 運行在: http://localhost:$AI_PORT${NC}"
 echo "========================================"
-echo -e "📝 檔案變更會自動重新載入 (${GREEN}HOT RELOAD${NC})"
 echo ""
 echo "📋 容器名稱: $CONTAINER_NAME"
-echo "💡 查看日誌: docker logs -f $CONTAINER_NAME (或 sudo docker logs -f $CONTAINER_NAME)"
-echo "⏹️  停止容器: docker stop $CONTAINER_NAME (或 sudo docker stop $CONTAINER_NAME)"
-echo "🗑️  刪除容器: docker rm $CONTAINER_NAME (或 sudo docker rm $CONTAINER_NAME)"
+echo "💡 查看日誌: docker logs -f $CONTAINER_NAME"
 echo ""
-
-# ⚙️  Docker 權限配置建議
-if [ "$NEED_SUDO" = true ]; then
-    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
-    echo -e "${YELLOW}⚠️  您目前需要 sudo 權限才能使用 Docker${NC}"
-    echo -e "${YELLOW}═══════════════════════════════════════════════════════════════${NC}"
-    echo ""
-    echo "💡 若要避免每次都輸入密碼，請執行以下命令一次："
-    echo ""
-    echo -e "   ${GREEN}sudo usermod -aG docker \$USER${NC}"
-    echo ""
-    echo "然後執行以下命令啟動新的 shell（或重新登錄）："
-    echo ""
-    echo -e "   ${GREEN}newgrp docker${NC}"
-    echo ""
-    echo "完成後，就可以在沒有 sudo 的情況下使用 Docker 了！✨"
-    echo ""
-fi
-echo "════════════════════════════════════════════════════════════════"
