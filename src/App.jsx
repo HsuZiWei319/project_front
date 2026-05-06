@@ -17,6 +17,7 @@ import FavoritesPage from './pages/Favorites/FavoritesPage';
 import OutfitPage from './pages/Outfit/OutfitPage';
 import SettingPage from './pages/Setting/SettingPage';
 import NotificationPage from './pages/Notification/NotificationPage';
+import CrawlerPage from './pages/Crawler/CrawlerPage';
 
 const App = () => {
   return (
@@ -62,6 +63,9 @@ const App = () => {
 
         {/* AI 穿搭助手頁面 */}
         <Route path="/ai-chat" element={<AIChatPage />} />
+
+        {/* AI 購物助手頁面 (Crawler) */}
+        <Route path="/crawler" element={<CrawlerPage />} />
 
         {/* 設定頁面 */}
         <Route path="/settings" element={<SettingPage />} />

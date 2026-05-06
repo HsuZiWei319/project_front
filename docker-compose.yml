@@ -8,6 +8,7 @@ services:
     container_name: upload-image-cont
     ports:
       - "5173:5173"
+      - "8000:8000"
     volumes:
       - .:/app
       - /app/node_modules
