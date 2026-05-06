@@ -158,6 +158,14 @@ else
     BUILD_TARGET="prod"
 fi
 
+# 在 build 階段必須宣告這些 ARG
+ARG VITE_API_URL
+ARG VITE_AI_API_URL
+
+# 將 ARG 轉為 ENV，Vite 打包時才會把變數塞進去
+ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_AI_API_URL=$VITE_AI_API_URL
+
 if run_docker_cmd build \
    --target $BUILD_TARGET \
    --build-arg VITE_API_URL=$BACKEND_URL \
@@ -169,6 +177,8 @@ else
     echo -e "   ${RED}❌ Docker Image 構建失敗${NC}"
     exit 1
 fi
+
+RUN npm run build
 
 echo ""
 
@@ -197,7 +207,7 @@ else
 fi
 
 # 等待容器完全啟動
-sleep 2
+sleep 5
 
 # 檢查容器是否成功啟動
 if run_docker_cmd ps --filter "name=$CONTAINER_NAME" --filter "status=running" &>/dev/null; then

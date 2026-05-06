@@ -20,7 +20,7 @@ export default defineConfig({
     // API 代理配置 - 將 /api 前綴的請求轉發到後端
     proxy: {
       '/api': {
-        target: 'http://backend:30000',
+        target: 'http://localhost:30000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
