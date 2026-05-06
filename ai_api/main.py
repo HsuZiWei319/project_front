@@ -53,6 +53,33 @@ class AIFilterResponse(BaseModel):
     selected_items: List[AIFilterResult]
     error: Optional[str] = None
 
+class RefinedQuery(BaseModel):
+    search_keywords: str
+    price_constraint: str  # 例如 "1000元以下", "越便宜越好", "無"
+
+async def extract_keywords(user_input: str) -> RefinedQuery:
+    """
+    將使用者的自然語言轉換為精簡的搜尋關鍵字
+    """
+    prompt = f"""
+    你是一個購物的需求分析專家。請分析使用者的描述："{user_input}"
+    
+    請提取兩個欄位：
+    1. search_keywords: 2-5個核心商品關鍵字（去除預算、心情等形容詞）。
+    2. price_constraint: 使用者提到的價格限制或預算偏好（若無則寫"無"）。
+    """
+    
+    # 這裡呼叫 Gemini 進行提煉
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+        config=types.GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=RefinedQuery,
+        )
+    )
+    return response.parsed
+
 # --- 新增：Serper.dev 搜尋函數 ---
 async def fetch_serper_shopping(query: str):
     """使用 Serper.dev 的 Shopping 搜尋介面"""
@@ -84,7 +111,11 @@ async def search_clothes(search_query: SearchQuery):
         raise HTTPException(status_code=500, detail="API keys not configured.")
 
     original_query = search_query.query
-    enhanced_query = f"{original_query} 服飾 衣服"
+    # --- 先請 AI 幫忙提煉關鍵字 ---
+    refined = await extract_keywords(original_query)
+    print(f"DEBUG - 原始需求: {original_query}")
+    print(f"DEBUG - 提煉出的關鍵字: {refined.search_keywords}, 價格限制: {refined.price_constraint}")
+    enhanced_query = f"{refined.search_keywords} 服飾 衣服"
 
     # 第一步：先從 Serper 抓取實時購物資料
     serper_data = await fetch_serper_shopping(enhanced_query)
@@ -101,7 +132,7 @@ async def search_clothes(search_query: SearchQuery):
         return SearchResponse(results=[], error=f"Serper API 有回傳但找不到 shopping 資料。回傳 Keys 為: {list(serper_data.keys()) if serper_data else 'None'}")
 
     # 提取 Serper 的原始搜尋結果做為 Context
-    raw_results = serper_data.get("shopping", [])[:4] # 取前 4 筆
+    raw_results = serper_data.get("shopping", [])[:8] # 取前 8 筆
 
     # 【關鍵架構】將龐大資料留在 Python (original_data_map)
     # 只把乾淨、輕量的文字 (ai_context) 送給 Gemini
@@ -123,7 +154,7 @@ async def search_clothes(search_query: SearchQuery):
     # 第二步：把搜尋結果餵給 Gemini 進行整理
     prompt = f"""
       你是一個專業的時尚衣服購物助手。
-      使用者正在尋找："{enhanced_query}" 的穿搭商品。
+      使用者正在尋找："{enhanced_query}" 的穿搭商品。特別注意使用者的價格偏好："{refined.price_constraint}"。
       
       以下是從搜尋引擎取得的原始資料：
       {json.dumps(ai_context, ensure_ascii=False)}
