@@ -552,3 +552,60 @@ export const deleteAIRecommendation = async (modelUid) => {
     };
   }
 };
+
+/**
+ * 切換虛擬試穿結果的喜歡狀態
+ * @param {string} modelUuid - 試穿結果 UUID
+ * @param {boolean} isFavorite - 新的喜歡狀態 (true 或 false)
+ * @returns {Promise<Object>} - 更新後的試穿結果信息
+ */
+export const toggleOutfitLike = async (modelUuid, isFavorite) => {
+  try {
+    const url = `/combine/user/virtual-try-on-favorite/${modelUuid}`;
+
+    console.log("正在切換試穿結果喜歡狀態:", url, "新狀態:", isFavorite);
+
+    // 使用 PATCH 方法並發送布林值
+    const response = await apiClient.patch(url, {
+      favorite: isFavorite
+    });
+
+    console.log("試穿結果喜歡狀態更新成功:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("切換試穿結果喜歡狀態失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};
+
+/**
+ * 獲取收藏的虛擬試穿結果列表
+ * @param {number} page - 分頁號（默認 1）
+ * @param {number} limit - 每頁數量（默認 20）
+ * @returns {Promise<Object>} - 收藏的試穿結果列表
+ */
+export const getOutfitFavorites = async (page = 1, limit = 20) => {
+  try {
+    console.log("正在獲取收藏的試穿結果列表");
+
+    const response = await apiClient.get('/combine/user/virtual-try-on-favorites', {
+      params: {
+        page,
+        limit
+      },
+      timeout: 30000,
+    });
+
+    console.log("獲取收藏試穿結果成功:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("獲取收藏試穿結果失敗:", error.message);
+    if (error.response?.data) {
+      console.error("後端錯誤訊息:", error.response.data);
+    }
+    throw error;
+  }
+};

@@ -6,6 +6,7 @@ import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { useImageUpload } from '../../hooks/useImageUpload';
+import { toggleOutfitLike } from '../../services/imageService';
 import apiClient, { API_URL } from '../../services/api';
 
 const OutfitPage = () => {
@@ -17,6 +18,8 @@ const OutfitPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [isTogglingLike, setIsTogglingLike] = useState(false);
 
     // 組件掛載時調用 API
     useEffect(() => {
@@ -37,8 +40,10 @@ const OutfitPage = () => {
             // API 返回的數據結構：{ success, message, data: { actual outfit data } }
             if (response.data.success && response.data.data) {
                 setOutfit(response.data.data);
+                setIsFavorite(response.data.data.is_favorite || false);
             } else {
                 setOutfit(response.data);
+                setIsFavorite(response.data.is_favorite || false);
             }
         } catch (err) {
             console.error('獲取穿搭詳情失敗:', err);
@@ -67,6 +72,39 @@ const OutfitPage = () => {
             return `${API_URL}${url}`;
         }
         return url;
+    };
+
+    // 處理切換喜歡狀態
+    const handleToggleLike = async () => {
+        setIsTogglingLike(true);
+        setError('');
+
+        try {
+            // 計算新的喜歡狀態（取反）
+            const newFavoriteStatus = !isFavorite;
+            
+            // 使用 PATCH 方法並傳遞新的布林值狀態
+            const result = await toggleOutfitLike(modelId, newFavoriteStatus);
+            console.log('✅ 切換喜歡狀態成功:', result);
+
+            // 更新本地狀態
+            const finalFavoriteStatus = result.is_favorite !== undefined 
+                ? result.is_favorite 
+                : newFavoriteStatus;
+            setIsFavorite(finalFavoriteStatus);
+
+            // 也更新 outfit 中的狀態
+            setOutfit({
+                ...outfit,
+                is_favorite: finalFavoriteStatus
+            });
+        } catch (err) {
+            console.error('切換喜歡狀態失敗:', err);
+            const errorMsg = err.message || '切換喜歡狀態失敗';
+            setError(errorMsg);
+        } finally {
+            setIsTogglingLike(false);
+        }
     };
 
     // 刪除穿搭
@@ -242,11 +280,36 @@ const OutfitPage = () => {
                                         }) : '日期未知'}
                                     </span>
                                 </div>
+                                <div className="info-row">
+                                    <span className="info-label">喜歡：</span>
+                                    <span className="info-value">
+                                        {isFavorite ? '❤️ 已收藏' : '🤍 未收藏'}
+                                    </span>
+                                </div>
                             </div>
                         </div> 
 
-                        {/* 刪除按鈕 */}
+                        {/* 操作按鈕 */}
                         <div className="outfit-detail-actions">
+                            <button
+                                className={`btn-like ${isFavorite ? 'liked' : ''}`}
+                                onClick={handleToggleLike}
+                                disabled={isTogglingLike}
+                                style={{
+                                    backgroundColor: isFavorite ? 'rgba(236, 72, 153, 0.1)' : 'rgba(102, 126, 234, 0.1)',
+                                    color: isFavorite ? '#ec4899' : '#667eea',
+                                    border: `2px solid ${isFavorite ? '#ec4899' : '#667eea'}`,
+                                    borderRadius: '12px',
+                                    padding: '12px 24px',
+                                    fontSize: '16px',
+                                    fontWeight: '600',
+                                    cursor: isTogglingLike ? 'not-allowed' : 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    opacity: isTogglingLike ? 0.6 : 1
+                                }}
+                            >
+                                {isTogglingLike ? '更新中...' : (isFavorite ? '❤️ 取消收藏' : '🤍 收藏穿搭')}
+                            </button>
                             <button
                                 className="btn-delete"
                                 onClick={handleDeleteOutfit}
