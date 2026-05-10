@@ -55,7 +55,8 @@ class AIFilterResponse(BaseModel):
 
 class RefinedQuery(BaseModel):
     search_keywords: str
-    price_constraint: str  # 例如 "1000元以下", "越便宜越好", "無"
+    min_price: Optional[int] = None  # 最低價 (數字)
+    max_price: Optional[int] = None  # 最高價 (數字)
 
 async def extract_keywords(user_input: str) -> RefinedQuery:
     """
@@ -64,9 +65,15 @@ async def extract_keywords(user_input: str) -> RefinedQuery:
     prompt = f"""
     你是一個購物的需求分析專家。請分析使用者的描述："{user_input}"
     
-    請提取兩個欄位：
+    請提取以下欄位並轉為 JSON：
     1. search_keywords: 2-5個核心商品關鍵字（去除預算、心情等形容詞）。
-    2. price_constraint: 使用者提到的價格限制或預算偏好（若無則寫"無"）。
+    2. min_price: 使用者提到的最低價格數字。若沒提到則填 null。
+    3. max_price: 使用者提到的最高價格數字。若沒提到則填 null。
+
+    範例轉換：
+    - "500到1000元的洋裝" -> {{ "search_keywords": "洋裝", "min_price": 500, "max_price": 1000 }}
+    - "一千元以內的藍色襯衫" -> {{ "search_keywords": "藍色 襯衫", "min_price": null, "max_price": 1000 }}
+    - "超過2000元的長褲" -> {{ "search_keywords": "長褲", "min_price": 2000, "max_price": null }}
     """
     
     # 這裡呼叫 Gemini 進行提煉
@@ -81,14 +88,20 @@ async def extract_keywords(user_input: str) -> RefinedQuery:
     return response.parsed
 
 # --- 新增：Serper.dev 搜尋函數 ---
-async def fetch_serper_shopping(query: str):
+async def fetch_serper_shopping(query: str, tbs: Optional[str] = None):
     """使用 Serper.dev 的 Shopping 搜尋介面"""
     url = "https://google.serper.dev/shopping"
-    payload = json.dumps({
-        "q": f"{query}", # 限定搜尋蝦皮
-        "gl": "tw", # 地區：台灣
-        "hl": "zh-tw" # 語言：繁體中文
-    })
+    # 基本 payload
+    payload_dict = {
+        "q": query,
+        "gl": "tw",
+        "hl": "zh-tw"
+    }
+
+    # 如果有價格條件，加入 tbs
+    if tbs:
+        payload_dict["tbs"] = tbs
+
     headers = {
         'X-API-KEY': serper_api_key,
         'Content-Type': 'application/json'
@@ -96,7 +109,7 @@ async def fetch_serper_shopping(query: str):
 
     async with httpx.AsyncClient(timeout=30.0) as http_client:
         try:
-            response = await http_client.post(url, headers=headers, content=payload)
+            response = await http_client.post(url, headers=headers, content=json.dumps(payload_dict))
             response.raise_for_status()
             return response.json()
         except Exception as e:
@@ -113,12 +126,20 @@ async def search_clothes(search_query: SearchQuery):
     original_query = search_query.query
     # --- 先請 AI 幫忙提煉關鍵字 ---
     refined = await extract_keywords(original_query)
+    # 構建 tbs 字串
+    tbs_parts = ["mr:1", "price:1"]
+    if refined.min_price is not None:
+        tbs_parts.append(f"ppr_min:{refined.min_price}")
+    if refined.max_price is not None:
+        tbs_parts.append(f"ppr_max:{refined.max_price}")
+    # 只有當真的有 min 或 max 時，才組合 tbs，否則設為 None
+    tbs_query = ",".join(tbs_parts) if len(tbs_parts) > 2 else None
     print(f"DEBUG - 原始需求: {original_query}")
-    print(f"DEBUG - 提煉出的關鍵字: {refined.search_keywords}, 價格限制: {refined.price_constraint}")
-    enhanced_query = f"{refined.search_keywords} 服飾 衣服"
+    print(f"DEBUG - 關鍵字: {refined.search_keywords}, TBS: {tbs_query}")
+    enhanced_query = f"{refined.search_keywords} 服飾"
 
     # 第一步：先從 Serper 抓取實時購物資料
-    serper_data = await fetch_serper_shopping(enhanced_query)
+    serper_data = await fetch_serper_shopping(enhanced_query, tbs=tbs_query)
 
     '''
     # 【修改點】安全地列印除錯資訊 (只印前 500 個字元，避免終端機崩潰)
@@ -132,7 +153,7 @@ async def search_clothes(search_query: SearchQuery):
         return SearchResponse(results=[], error=f"Serper API 有回傳但找不到 shopping 資料。回傳 Keys 為: {list(serper_data.keys()) if serper_data else 'None'}")
 
     # 提取 Serper 的原始搜尋結果做為 Context
-    raw_results = serper_data.get("shopping", [])[:8] # 取前 8 筆
+    raw_results = serper_data.get("shopping", [])[:20] # 取前 20 筆
 
     # 【關鍵架構】將龐大資料留在 Python (original_data_map)
     # 只把乾淨、輕量的文字 (ai_context) 送給 Gemini
@@ -154,16 +175,17 @@ async def search_clothes(search_query: SearchQuery):
     # 第二步：把搜尋結果餵給 Gemini 進行整理
     prompt = f"""
       你是一個專業的時尚衣服購物助手。
-      使用者正在尋找："{enhanced_query}" 的穿搭商品。特別注意使用者的價格偏好："{refined.price_constraint}"。
+      使用者正在尋找："{enhanced_query}" 的服飾商品。
+      ⚠️ 預算限制：{refined.min_price if refined.min_price else 0} 到 {refined.max_price if refined.max_price else '無上限'} 元。
       
       以下是從搜尋引擎取得的原始資料：
       {json.dumps(ai_context, ensure_ascii=False)}
 
       任務：
-        1. 請從上方資料中，挑選出「最接近」使用者需求的商品。
+        1. 請從上方資料中，挑選出符合或接近使用者需求的商品，並嚴格套用預算限制。
         2. 排除任何非穿著類的商品。
         3. 針對挑選的商品，務必正確填入對應的 item_id。 
-        4. 根據標題(title)，為該商品寫一句約 15 字以內、吸引人的 Description。
+        4. 根據標題(title)，為該商品寫一句約 30 字以內、吸引人的 Description。
         5. 如果Serper 給的資料你無法分析，請在 error 欄位說明。
     """
 

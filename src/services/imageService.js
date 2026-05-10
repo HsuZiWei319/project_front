@@ -86,6 +86,7 @@ export const uploadClothes = async (file) => {
 
 /**
  * 上傳模特照片至 /picture/user/photo API
+ * 第一次上傳使用 POST，之後的上傳使用 PUT
  * @param {File} file - 圖片檔案
  * @returns {Promise<Object>} - 上傳結果 (包含 user_image_url 等)
  */
@@ -94,11 +95,23 @@ export const uploadModelPhoto = async (file) => {
   formData.append('photo_file', file);
 
   try {
-    console.log("正在上傳模特照片至:", '/picture/user/photo');
+    console.log("正在檢查用戶是否已有模特照片...");
+    
+    // 先檢查用戶是否已有現有照片
+    const existingPhoto = await getModelPhoto();
+    const isFirstUpload = !existingPhoto.success;
+    const method = isFirstUpload ? 'POST' : 'PUT';
+    
+    console.log(`用戶是否首次上傳: ${isFirstUpload}，使用方法: ${method}`);
+    console.log(`正在以 ${method} 方式上傳模特照片至: /picture/user/photo`);
 
-    const response = await apiClient.post('/picture/user/photo', formData, {
-      timeout: 60000,
-    });
+    const response = await apiClient[method.toLowerCase()](
+      '/picture/user/photo',
+      formData,
+      {
+        timeout: 60000,
+      }
+    );
 
     console.log("模特照片上傳成功:", response.data);
     
@@ -121,7 +134,8 @@ export const uploadModelPhoto = async (file) => {
       photo: {
         user_image_url: user_image_url,
         upload_time: response.data.user?.updated_at || response.data.data?.upload_time,
-        status: 'completed'
+        status: 'completed',
+        method: method
       }
     };
   } catch (error) {

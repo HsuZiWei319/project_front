@@ -68,7 +68,7 @@ const CrawlerPage = () => {
                   rel="noopener noreferrer" 
                   className="result-link"
                 >
-                  <img src={item.ImageUrl} alt={item.Name} className="result-image" />
+                  <img src={item.ImageUrl} alt={item.Name} className="crawler-result-image" />
                   <div className="result-info">
                     <h3>{item.Name}</h3>
                     <p className="price">{item.Price}</p>

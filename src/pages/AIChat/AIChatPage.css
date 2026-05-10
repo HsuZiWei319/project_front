@@ -244,7 +244,6 @@
 .ai-chat-card-image {
   position: relative;
   width: 100%;
-  height: 200px;
   overflow: hidden;
   background: #f0f0f0;
 }
@@ -401,13 +400,13 @@
 }
 
 .ai-chat-detail-container {
-  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
   background: white;
   border-radius: 15px;
   padding: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 0 20px;
 }
 
 .ai-chat-detail-image {
@@ -440,7 +439,7 @@
 
 .ai-chat-detail-section-item {
   border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 20px;
+  padding: 20px;
 }
 
 .ai-chat-detail-section-item:last-child {
@@ -496,7 +495,7 @@
 .ai-chat-clothes-item img {
   width: 100%;
   height: 100px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 6px;
 }
 

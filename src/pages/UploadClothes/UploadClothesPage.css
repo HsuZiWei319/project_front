@@ -161,8 +161,7 @@
 }
 
 .result-image {
-  width: 100%;
-  max-width: 300px;
+  max-width: 400px;
   max-height: 400px;
   object-fit: contain;
   border-radius: 20px;

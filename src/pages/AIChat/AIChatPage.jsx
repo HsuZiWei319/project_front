@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 import './AIChatPage.css';
 import Navigation from '../../components/Navigation/Navigation';
 import BackButton from '../../components/Header/BackButton';
@@ -17,20 +18,36 @@ const AIChatPage = () => {
   // 狀態管理
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [recommendations, setRecommendations] = useState([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState(null);
   const [showHistory, setShowHistory] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [successMessage, setSuccessMessage] = useState('');
 
-  // 頁面載入時獲取推薦歷史
-  useEffect(() => {
-    fetchRecommendationHistory();
-  }, []);
+  // SWR Fetcher
+  const fetcher = async (url) => {
+    const result = await getAIRecommendationHistory(currentPage, 20, 'newest');
+    if (!result.success) {
+      throw new Error(result.error || '獲取推薦歷史失敗');
+    }
+    return result.data;
+  };
 
-  // 清除訊息（3秒後）
+  // 使用 SWR 獲取推薦歷史
+  const { data, error: swrError, isLoading: swrIsLoading, mutate } = useSWR(
+    showHistory ? ['aichat_recommend_history', currentPage] : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      dedupingInterval: 60000, // 60秒內不重複請求
+      focusThrottleInterval: 300000, // 5分鐘
+    }
+  );
+
+  const recommendations = data?.results || [];
+  const totalPages = data?.total_pages || 1;
+
+  // 清除訊息（5秒後）
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(null), 5000);
@@ -45,26 +62,18 @@ const AIChatPage = () => {
     }
   }, [successMessage]);
 
-  /**
-   * 獲取推薦歷史
-   */
-  const fetchRecommendationHistory = async (page = 1) => {
-    try {
-      setError(null);
-      const result = await getAIRecommendationHistory(page, 20, 'newest');
-      
-      if (result.success) {
-        setRecommendations(result.data.results || []);
-        setCurrentPage(result.data.current_page || 1);
-        setTotalPages(result.data.total_pages || 1);
-        setShowHistory(true);
-        setSelectedRecommendation(null);
-      } else {
-        setError(result.error || '獲取推薦歷史失敗');
-      }
-    } catch (err) {
-      setError('無法連接到服務器，請檢查網路連接');
+  // 如果 SWR 有錯誤，更新狀態
+  useEffect(() => {
+    if (swrError) {
+      setError(swrError.message);
     }
+  }, [swrError]);
+
+  /**
+   * 刷新推薦歷史
+   */
+  const refreshRecommendationHistory = async () => {
+    await mutate();
   };
 
   /**
@@ -100,10 +109,31 @@ const AIChatPage = () => {
         setSuccessMessage('✨ 推薦穿搭已生成！');
         setUserInput('');
         
-        // 稍微延遲後刷新歷史
-        setTimeout(() => {
-          fetchRecommendationHistory(1);
-        }, 1000);
+        // 直接顯示推薦詳情，而不是重新加載歷史
+        const recommendation = result.data.recommendations?.[0];
+        if (recommendation) {
+          // 轉換後端返回的結構為詳情頁面所需的格式
+          const detailData = {
+            model_uid: recommendation.model_uid,
+            model_picture: recommendation.model_picture,
+            recommendation_score: recommendation.recommendation_score,
+            recommendation_context: recommendation.recommendation_context || userInput,
+            model_style: recommendation.model_style || [],
+            ai_reasoning: recommendation.ai_reasoning,
+            // 為了兼容現有的詳情頁邏輯
+            recommendation_keywords: {
+              reasoning: recommendation.ai_reasoning
+            },
+            clothes_list: recommendation.clothes_info ? [
+              recommendation.clothes_info.top,
+              recommendation.clothes_info.bottom
+            ] : [],
+            created_at: new Date().toISOString()
+          };
+          
+          setSelectedRecommendation(detailData);
+          setShowHistory(false);
+        }
       } else {
         setError(result.error || '生成推薦失敗，請稍後重試');
       }
@@ -148,7 +178,8 @@ const AIChatPage = () => {
       if (result.success) {
         setSuccessMessage('✓ 推薦已刪除');
         setSelectedRecommendation(null);
-        fetchRecommendationHistory(1);
+        setCurrentPage(1);
+        await refreshRecommendationHistory();
       } else {
         setError(result.error || '刪除失敗');
       }
@@ -160,9 +191,11 @@ const AIChatPage = () => {
   /**
    * 返回歷史列表
    */
-  const handleBackToHistory = () => {
+  const handleBackToHistory = async () => {
     setShowHistory(true);
     setSelectedRecommendation(null);
+    // 刷新數據
+    await refreshRecommendationHistory();
   };
 
   /**
@@ -176,9 +209,8 @@ const AIChatPage = () => {
   return (
     <div className="container">
       <Navigation position="top" />
-      <BackButton />
+      <BackButton onCustomBack={!showHistory ? handleBackToHistory : undefined} />
       <div className="ai-chat-content">
-        {/* 返回按鈕 */}
         <div className="title-bar">
           <div className="pagetitle-label">
             AI 穿搭助理
@@ -244,7 +276,12 @@ const AIChatPage = () => {
             <div className="ai-chat-history-section">
               <h2>推薦歷史</h2>
               
-              {recommendations.length === 0 ? (
+              {swrIsLoading ? (
+                <div className="ai-chat-empty-state">
+                  <div className="ai-chat-empty-icon">⏳</div>
+                  <p>加載中...</p>
+                </div>
+              ) : recommendations.length === 0 ? (
                 <div className="ai-chat-empty-state">
                   <div className="ai-chat-empty-icon">📝</div>
                   <p>還沒有推薦記錄</p>
@@ -315,8 +352,8 @@ const AIChatPage = () => {
               {totalPages > 1 && (
                 <div className="ai-chat-pagination">
                   <button
-                    disabled={currentPage === 1}
-                    onClick={() => fetchRecommendationHistory(currentPage - 1)}
+                    disabled={currentPage === 1 || swrIsLoading}
+                    onClick={() => setCurrentPage(currentPage - 1)}
                     className="ai-chat-btn-pagination"
                   >
                     ← 上一頁
@@ -325,8 +362,8 @@ const AIChatPage = () => {
                     第 {currentPage} / {totalPages} 頁
                   </span>
                   <button
-                    disabled={currentPage === totalPages}
-                    onClick={() => fetchRecommendationHistory(currentPage + 1)}
+                    disabled={currentPage === totalPages || swrIsLoading}
+                    onClick={() => setCurrentPage(currentPage + 1)}
                     className="ai-chat-btn-pagination"
                   >
                     下一頁 →
@@ -340,13 +377,6 @@ const AIChatPage = () => {
             {/* 推薦詳情頁 */}
             {selectedRecommendation && (
               <div className="ai-chat-detail-section">
-                <button
-                  className="ai-chat-btn-back-detail"
-                  onClick={handleBackToHistory}
-                >
-                  ← 返回
-                </button>
-
                 <div className="ai-chat-detail-container">
                   {/* 左側 - 推薦圖片 */}
                   <div className="ai-chat-detail-image">
@@ -370,7 +400,7 @@ const AIChatPage = () => {
                   <div className="ai-chat-detail-info">
                     {/* 用戶需求 */}
                     <div className="ai-chat-detail-section-item">
-                      <h3>📝 你的需求</h3>
+                      <h3>你的需求</h3>
                       <p className="ai-chat-detail-context">
                         {selectedRecommendation.recommendation_context}
                       </p>
@@ -379,7 +409,7 @@ const AIChatPage = () => {
                     {/* AI 推理 */}
                     {selectedRecommendation.recommendation_keywords?.reasoning && (
                       <div className="ai-chat-detail-section-item">
-                        <h3>🤖 AI 分析</h3>
+                        <h3>AI 分析</h3>
                         <p className="ai-chat-detail-reasoning">
                           {selectedRecommendation.recommendation_keywords.reasoning}
                         </p>
@@ -389,7 +419,7 @@ const AIChatPage = () => {
                     {/* 推薦風格 */}
                     {selectedRecommendation.model_style && selectedRecommendation.model_style.length > 0 && (
                       <div className="ai-chat-detail-section-item">
-                        <h3>🎨 風格標籤</h3>
+                        <h3>風格標籤</h3>
                         <div className="ai-chat-detail-tags">
                           {selectedRecommendation.model_style.map((tag, idx) => (
                             <span key={idx} className="ai-chat-tag-large">
@@ -403,7 +433,7 @@ const AIChatPage = () => {
                     {/* 推薦衣服 */}
                     {selectedRecommendation.clothes_list && selectedRecommendation.clothes_list.length > 0 && (
                       <div className="ai-chat-detail-section-item">
-                        <h3>👕 推薦衣服</h3>
+                        <h3>推薦衣服</h3>
                         <div className="ai-chat-clothes-list">
                           {selectedRecommendation.clothes_list.map((clothes, idx) => (
                             <div key={idx} className="ai-chat-clothes-item">
@@ -438,7 +468,7 @@ const AIChatPage = () => {
                         className="ai-chat-btn-delete-large"
                         onClick={() => handleDeleteRecommendation(selectedRecommendation.model_uid)}
                       >
-                        🗑️ 刪除推薦
+                        刪除推薦
                       </button>
                     </div>
                   </div>
