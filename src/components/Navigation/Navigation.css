@@ -9,7 +9,7 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 245, 255, 0.8) 100%);
   border-bottom: 1px solid rgba(99, 102, 241, 0.1);
   backdrop-filter: blur(10px);
-  z-index: 10;
+  z-index: 100;
 }
 
 /* 分隔線樣式 */
@@ -29,7 +29,7 @@
   background: linear-gradient(180deg, rgba(230, 245, 255, 0.8) 0%, rgba(255, 255, 255, 0.95) 100%);
   border-top: 1px solid rgba(99, 102, 241, 0.1);
   backdrop-filter: blur(10px);
-  z-index: 10;
+  z-index: 100;
 }
 
 /* 登入頁面頂部導覽列 */

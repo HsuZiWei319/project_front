@@ -17,12 +17,16 @@ export default defineConfig({
     middlewareMode: false,
     // 監聽所有網絡介面
     host: '0.0.0.0',
-    // API 代理配置 - 將 /api 前綴的請求轉發到後端
+    // API 代理配置 - 將請求轉發到後端
     proxy: {
       '/api': {
         target: 'http://localhost:30000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+      '/media': {
+        target: 'http://localhost:8002',
+        changeOrigin: true,
       },
     },
   },

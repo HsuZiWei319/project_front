@@ -75,26 +75,24 @@ echo "========================================"
 
 if command -v npm &> /dev/null; then
     echo "✓ npm 已找到"
-    echo "📦 正在安裝/更新 npm 依賴..."
     
     # 檢查 node_modules 是否已存在
-    if [ -d "node_modules" ]; then
-        echo "   ✅ node_modules 已存在，執行增量更新..."
-    else
+    if [ ! -d "node_modules" ]; then
         echo "   📥 node_modules 不存在，開始完整安裝..."
-    fi
-    
-    # 執行 npm install，並檢查是否成功
-    if npm install; then
-        echo -e "   ${GREEN}✨ npm 依賴安裝成功！${NC}"
+        npm install
     else
-        echo -e "   ${RED}❌ npm 依賴安裝失敗，請檢查網路連接或 npm 配置${NC}"
-        echo "   💡 您可以手動執行: npm install"
-        exit 1
+        echo "   ✅ node_modules 已存在"
     fi
+
+    # 檢查是否已安裝 React Three Fiber 相關套件
+    if ! grep -q "@react-three/fiber" package.json; then
+        echo "   📦 偵測到缺少 React Three Fiber，正在安裝..."
+        npm install @react-three/fiber @react-three/drei three
+    fi
+
+    echo -e "   ${GREEN}✨ npm 依賴檢查/安裝完成！${NC}"
 else
-    echo "⚠️  npm 未安裝在本機，Docker 容器內會自動安裝依賴"
-    echo "   如果要本機開發，請先安裝 Node.js"
+    echo "⚠️  npm 未安裝在本機，將由 Docker 容器內部處理依賴安裝"
 fi
 
 # 檢查是否為開發模式
@@ -158,14 +156,6 @@ else
     BUILD_TARGET="prod"
 fi
 
-# 在 build 階段必須宣告這些 ARG
-ARG VITE_API_URL
-ARG VITE_AI_API_URL
-
-# 將 ARG 轉為 ENV，Vite 打包時才會把變數塞進去
-ENV VITE_API_URL=$VITE_API_URL
-ENV VITE_AI_API_URL=$VITE_AI_API_URL
-
 if run_docker_cmd build \
    --target $BUILD_TARGET \
    --build-arg VITE_API_URL=$BACKEND_URL \
@@ -173,12 +163,9 @@ if run_docker_cmd build \
    -t $IMAGE_NAME . ; then
     echo -e "   ${GREEN}✅ Docker Image 構建成功！${NC}"
 else
-
     echo -e "   ${RED}❌ Docker Image 構建失敗${NC}"
     exit 1
 fi
-
-RUN npm run build
 
 echo ""
 
@@ -190,7 +177,14 @@ echo "🔥 啟動容器中..."
 
 # 啟動開發模式容器
 if [ "$IS_DEV" = true ]; then
-    if run_docker_cmd run -d       -p $PORT:5173       -p $AI_PORT:8000       -v "$(pwd)/src:/app/src"       -v "$(pwd)/public:/app/public"       -v "$(pwd)/ai_api:/app/ai_api"       --name $CONTAINER_NAME       $IMAGE_NAME; then
+    if run_docker_cmd run -d \
+       -p "$PORT:5173" \
+       -p "$AI_PORT:8000" \
+       -v "$(pwd)/src:/app/src" \
+       -v "$(pwd)/public:/app/public" \
+       -v "$(pwd)/ai_api:/app/ai_api" \
+       --name "$CONTAINER_NAME" \
+       "$IMAGE_NAME"; then
         echo "✓ 容器啟動命令已執行"
     else
         echo -e "${RED}❌ 容器啟動失敗${NC}"
@@ -198,7 +192,11 @@ if [ "$IS_DEV" = true ]; then
     fi
 else
     # 生產模式
-    if run_docker_cmd run -d       -p $PORT:80       -p $AI_PORT:8000       --name $CONTAINER_NAME       $IMAGE_NAME; then
+    if run_docker_cmd run -d \
+       -p "$PORT:80" \
+       -p "$AI_PORT:8000" \
+       --name "$CONTAINER_NAME" \
+       "$IMAGE_NAME"; then
         echo "✓ 容器啟動命令已執行"
     else
         echo -e "${RED}❌ 容器啟動失敗${NC}"

@@ -8,6 +8,7 @@ import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import { getModelPhoto } from '../../services/imageService';
+import ModelViewer from '../../components/3D/ModelViewer';
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const MainPage = () => {
   const [isVirtualTrying, setIsVirtualTrying] = useState(false);
   const [virtualTryingClothes, setVirtualTryingClothes] = useState('');
   const [virtualTryOnImage, setVirtualTryOnImage] = useState(null);
+  const [show3DModel, setShow3DModel] = useState(false);
   const isVirtualTryingRef = useRef(false);
 
   // SWR fetcher for model photo
@@ -163,25 +165,43 @@ const MainPage = () => {
           style={{ cursor: 'pointer' }}
         />
         
-        <div className={`avatar-wrapper`}>
-          {isLoadingModel ? (
-            <div className="model-loading">
-              <div className="loading-spinner"></div>
-              <span>加載中...</span>
-            </div>
-          ) : (
-            <>
-              <img 
-                src={virtualTryOnImage || userPhotoUrl || Images.model} 
-                alt="model" 
-                className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
-                onClick={() => navigate('/virtual-tryon')}
-                style={{ cursor: 'pointer' }}
-              />
-              <div className="model-hint">點擊試穿</div>
-            </>
-          )}
-        </div>
+        {show3DModel ? (
+          <div className="model-3d-container">
+            <ModelViewer
+              modelPath="/3D/model3d_f532a1cf.glb"
+              onClose={() => setShow3DModel(false)}
+            />
+          </div>
+        ) : (
+          <div className={`avatar-wrapper`}>
+            {isLoadingModel ? (
+              <div className="model-loading">
+                <div className="loading-spinner"></div>
+                <span>加載中...</span>
+              </div>
+            ) : (
+              <>
+                <img 
+                  src={virtualTryOnImage || userPhotoUrl || Images.model} 
+                  alt="model" 
+                  className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
+                  onClick={() => navigate('/virtual-tryon')}
+                  style={{ cursor: 'pointer' }}
+                />
+                <div className="model-hint">點擊試穿</div>
+                
+              </>
+            )}
+          </div>
+        )}
+
+        <button
+                onClick={() => setShow3DModel(!show3DModel)}
+                className="toggle-3d-button"
+                title={show3DModel ? "關閉 3D 模型" : "查看 3D 模型"}
+              >
+                3D
+              </button>
         
         {isVirtualTrying && (
           <div className="virtual-tryon-status-overlay">

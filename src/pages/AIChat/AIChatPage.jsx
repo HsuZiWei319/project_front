@@ -30,6 +30,7 @@ const AIChatPage = () => {
     if (!result.success) {
       throw new Error(result.error || '獲取推薦歷史失敗');
     }
+    console.log('推薦歷史數據:', result.data.results);
     return result.data;
   };
 
@@ -309,10 +310,25 @@ const AIChatPage = () => {
 
                       {/* 推薦信息 */}
                       <div className="ai-chat-card-content">
-                        <p className="ai-chat-card-context">
-                          {rec.recommendation_context?.substring(0, 60)}...
-                        </p>
+                        {/* 用戶需求區塊 */}
+                        <div className="ai-chat-card-section">
+                          <h4 className="ai-chat-card-section-title">💬 你的需求</h4>
+                          <p className="ai-chat-card-context ai-chat-context-full">
+                            {rec.recommendation_context}
+                          </p>
+                        </div>
                         
+                        {/* AI 分析區塊 */}
+                        {rec.ai_analysis && (
+                          <div className="ai-chat-card-section">
+                            <h4 className="ai-chat-card-section-title">🤖 AI 分析</h4>
+                            <p className="ai-chat-card-reasoning">
+                              {rec.ai_analysis}
+                            </p>
+                          </div>
+                        )}
+                        
+                        {/* 風格標籤 */}
                         {rec.model_style && rec.model_style.length > 0 && (
                           <div className="ai-chat-card-tags">
                             {rec.model_style.slice(0, 3).map((tag, idx) => (
@@ -407,11 +423,11 @@ const AIChatPage = () => {
                     </div>
 
                     {/* AI 推理 */}
-                    {selectedRecommendation.recommendation_keywords?.reasoning && (
+                    {(selectedRecommendation.ai_analysis || selectedRecommendation.recommendation_keywords?.reasoning) && (
                       <div className="ai-chat-detail-section-item">
                         <h3>AI 分析</h3>
                         <p className="ai-chat-detail-reasoning">
-                          {selectedRecommendation.recommendation_keywords.reasoning}
+                          {selectedRecommendation.ai_analysis || selectedRecommendation.recommendation_keywords?.reasoning}
                         </p>
                       </div>
                     )}

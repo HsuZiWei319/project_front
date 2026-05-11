@@ -18,6 +18,7 @@ import OutfitPage from './pages/Outfit/OutfitPage';
 import SettingPage from './pages/Setting/SettingPage';
 import NotificationPage from './pages/Notification/NotificationPage';
 import CrawlerPage from './pages/Crawler/CrawlerPage';
+import Test3D from './components/3D/Test3D';
 
 const App = () => {
   return (
@@ -25,6 +26,9 @@ const App = () => {
       <Routes>
         {/* 設定路徑規則 */}
         
+        {/* 測試 3D 頁面 */}
+        <Route path="/test3D" element={<Test3D />} />
+
         {/* 首頁 */}
         <Route path="/" element={<LoginPage />} />
 
