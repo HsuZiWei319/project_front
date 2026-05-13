@@ -40,10 +40,10 @@ const OutfitPage = () => {
             // API 返回的數據結構：{ success, message, data: { actual outfit data } }
             if (response.data.success && response.data.data) {
                 setOutfit(response.data.data);
-                setIsFavorite(response.data.data.is_favorite || false);
+                setIsFavorite(response.data.data.is_favorite || response.data.data.model_favorite || false);
             } else {
                 setOutfit(response.data);
-                setIsFavorite(response.data.is_favorite || false);
+                setIsFavorite(response.data.is_favorite || response.data.model_favorite || false);
             }
         } catch (err) {
             console.error('獲取穿搭詳情失敗:', err);

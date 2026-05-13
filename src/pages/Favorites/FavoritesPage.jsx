@@ -135,7 +135,7 @@ const FavoritesPage = () => {
 
     const handleOutfitClick = (outfit) => {
         console.log('點擊穿搭:', outfit);
-        const modelUuid = outfit.model_uuid || outfit.id;
+        const modelUuid = outfit.model_uid || outfit.model_uuid || outfit.id;
         navigate(`/outfit/${modelUuid}`);
     };
 

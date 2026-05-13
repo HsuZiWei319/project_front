@@ -364,6 +364,18 @@ const WardrobePage = () => {
                                                         e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300"%3E%3Crect fill="%23f0f0f0" width="200" height="300"/%3E%3Ctext x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23999" font-size="14"%3E圖片加載失敗%3C/text%3E%3C/svg%3E';
                                                     }}
                                                 />
+                                                {outfit.model_favorite && (
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        top: '8px',
+                                                        right: '8px',
+                                                        fontSize: '20px',
+                                                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
+                                                        zIndex: 5
+                                                    }}>
+                                                        ❤️
+                                                    </span>
+                                                )}
                                             </div>
 
                                             <div className="outfit-info">
