@@ -7,7 +7,8 @@ import * as Images from '../../assets';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { useImageUpload } from '../../hooks/useImageUpload';
-import { getModelPhoto } from '../../services/imageService';
+import { getModelPhoto, detectVirtualTryOnFileType } from '../../services/imageService';
+import { debugVirtualTryOn } from '../../utils/debugVirtualTryOn';
 import ModelViewer from '../../components/3D/ModelViewer';
 
 const MainPage = () => {
@@ -17,6 +18,7 @@ const MainPage = () => {
   const [isVirtualTrying, setIsVirtualTrying] = useState(false);
   const [virtualTryingClothes, setVirtualTryingClothes] = useState('');
   const [virtualTryOnImage, setVirtualTryOnImage] = useState(null);
+  const [virtualTryOnModel, setVirtualTryOnModel] = useState(null); // GLB 模型 URL
   const [show3DModel, setShow3DModel] = useState(false);
   const isVirtualTryingRef = useRef(false);
 
@@ -46,6 +48,7 @@ const MainPage = () => {
     isVirtualTryingRef.current = false;
     setVirtualTryingClothes('');
     setVirtualTryOnImage(null);
+    setVirtualTryOnModel(null);
     
     localStorage.removeItem('virtualTryOnResult');
     localStorage.removeItem('virtualTryOnError');
@@ -71,6 +74,7 @@ const MainPage = () => {
       isVirtualTryingRef.current = false;
       setVirtualTryingClothes('');
       setVirtualTryOnImage(null);
+      setVirtualTryOnModel(null);
       localStorage.removeItem('virtualTryOnResult');
       localStorage.removeItem('virtualTryOnError');
     }
@@ -89,17 +93,43 @@ const MainPage = () => {
       try {
         const resultData = localStorage.getItem('virtualTryOnResult');
         if (resultData) {
-          const { imageUrl } = JSON.parse(resultData);
-          console.log('✅ 更新模特照片 (via SWR mutate):', imageUrl);
-          setVirtualTryOnImage(imageUrl);
-          
-          // 使用 SWR mutate 更新緩存
-          mutate('modelPhoto', imageUrl, false);
+          const { url, fileType } = JSON.parse(resultData);
+          console.log('✅ 虛擬試穿結果:', { url, fileType, timestamp: new Date().toISOString() });
+
+          // 🔍 記錄到歷史，用於調試
+          const history = JSON.parse(sessionStorage.getItem('virtualTryOnHistory') || '[]');
+          history.push({
+            timestamp: new Date().toISOString(),
+            url: url,
+            fileType: fileType
+          });
+          sessionStorage.setItem('virtualTryOnHistory', JSON.stringify(history));
+          console.log('📋 試穿歷史已更新，總數:', history.length);
+
+          // 根據文件類型處理結果
+          if (fileType === 'glb') {
+            console.log('🎭 檢測到 GLB 模型，使用 3D 渲染');
+            // 先清除舊的模型，強制重新加載
+            setVirtualTryOnModel(null);
+            setVirtualTryOnImage(null);
+            setShow3DModel(false);
+            // 異步設置新模型，確保舊模型已清除
+            setTimeout(() => {
+              setVirtualTryOnModel(url);
+              setShow3DModel(true);
+            }, 100);
+          } else {
+            console.log('🖼️ 檢測到 PNG 圖片，使用 2D 渲染');
+            setVirtualTryOnModel(null);
+            setVirtualTryOnImage(url);
+            setShow3DModel(false);
+            // 使用 SWR mutate 更新緩存
+            mutate('modelPhoto', url, false);
+          }
           
           setIsVirtualTrying(false);
           isVirtualTryingRef.current = false;
           setVirtualTryingClothes('');
-          setVirtualTryOnImage(null);
           localStorage.removeItem('virtualTryOnResult');
         }
       } catch (err) {
@@ -167,10 +197,20 @@ const MainPage = () => {
         
         {show3DModel ? (
           <div className="model-3d-container">
-            <ModelViewer
-              modelPath="/3D/model3d_f532a1cf.glb"
-              onClose={() => setShow3DModel(false)}
-            />
+            {virtualTryOnModel ? (
+              <ModelViewer
+                modelPath={virtualTryOnModel}
+                onClose={() => {
+                  setShow3DModel(false);
+                  setVirtualTryOnModel(null);
+                }}
+              />
+            ) : (
+              <ModelViewer
+                modelPath="/3D/model3d_f532a1cf.glb"
+                onClose={() => setShow3DModel(false)}
+              />
+            )}
           </div>
         ) : (
           <div className={`avatar-wrapper`}>

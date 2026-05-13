@@ -5,6 +5,7 @@ import './OutfitPage.css';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import OutfitDisplay from '../../components/OutfitDisplay/OutfitDisplay';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import { toggleOutfitLike } from '../../services/imageService';
 import apiClient, { API_URL } from '../../services/api';
@@ -218,13 +219,22 @@ const OutfitPage = () => {
                         <div className="outfit-detail-section">
                             <h2 className="outfit-detail-subtitle">模特穿搭照片</h2>
                             <div className="outfit-detail-image-container">
-                                <img
-                                    src={getFullClothesImageUrl(outfit.model_picture)}
+                                <OutfitDisplay
+                                    url={getFullClothesImageUrl(outfit.model_picture)}
                                     alt="模特穿搭"
                                     className="outfit-detail-image"
-                                    onError={(e) => {
-                                        console.error('模特照片加載失敗:', outfit.model_picture);
-                                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="400"%3E%3Crect fill="%23f0f0f0" width="300" height="400"/%3E%3Ctext x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23999" font-size="16"%3E圖片加載失敗%3C/text%3E%3C/svg%3E';
+                                    style={{ borderRadius: '8px' }}
+                                    containerStyle={{ 
+                                        width: '100%',
+                                        height: '400px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        borderRadius: '8px'
+                                    }}
+                                    cameraConfig={{
+                                        position: [0, 0.5, 1.5],
+                                        fov: 50
                                     }}
                                 />
                             </div>

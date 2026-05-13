@@ -146,17 +146,30 @@ const VirtualTryOn = () => {
 
             console.log('虛擬試穿 API 回應:', response.data);
 
-            // 提取結果圖片URL
-            const resultImageUrl = response.data.model_data?.model_picture;
+            // 提取結果 URL（可能是 GLB 或 PNG）
+            const resultUrl = response.data.model_data?.model_picture;
             
-            if (!resultImageUrl) {
-                throw new Error('後端未返回結果圖片');
+            if (!resultUrl) {
+                throw new Error('後端未返回結果');
             }
 
-            // 使用 localStorage 通知 MainPage 更新照片
+            // 判斷文件類型
+            const isGLB = resultUrl.toLowerCase().includes('.glb');
+            const fileType = isGLB ? 'glb' : 'png';
+
+            // 🔍 詳細日誌追踪
+            console.log('🔍 虛擬試穿 URL 詳細信息:');
+            console.log('   URL:', resultUrl);
+            console.log('   文件類型:', fileType);
+            console.log('   時間戳:', new Date().toISOString());
+            console.log('   前端時間戳:', Date.now());
+
+            // 使用 localStorage 通知 MainPage 更新結果
             localStorage.setItem('virtualTryOnResult', JSON.stringify({
-                imageUrl: resultImageUrl,
-                timestamp: Date.now()
+                url: resultUrl,
+                fileType: fileType,
+                timestamp: Date.now(),
+                requestTime: new Date().toISOString()
             }));
 
             // 分發自定義事件通知 MainPage

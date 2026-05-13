@@ -7,6 +7,7 @@ import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import OutfitDisplay from '../../components/OutfitDisplay/OutfitDisplay';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import apiClient, { API_URL, fetcher } from '../../services/api';
 
@@ -355,13 +356,23 @@ const WardrobePage = () => {
                                             </div>
 
                                             <div className="outfit-model-section">
-                                                <img
-                                                    src={getFullClothesImageUrl(outfit.model_picture)}
+                                                <OutfitDisplay
+                                                    url={getFullClothesImageUrl(outfit.model_picture)}
                                                     alt="模特穿搭"
                                                     className="outfit-model-image"
-                                                    onError={(e) => {
-                                                        console.error('模特照片加載失敗:', outfit.model_picture);
-                                                        e.target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="300"%3E%3Crect fill="%23f0f0f0" width="200" height="300"/%3E%3Ctext x="50%" y="50%" text-anchor="middle" dy=".3em" fill="%23999" font-size="14"%3E圖片加載失敗%3C/text%3E%3C/svg%3E';
+                                                    style={{ borderRadius: '8px' }}
+                                                    containerStyle={{
+                                                        width: '100%',
+                                                        height: '280px',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'center',
+                                                        borderRadius: '8px',
+                                                        overflow: 'hidden'
+                                                    }}
+                                                    cameraConfig={{
+                                                        position: [0, 0.5, 1.5],
+                                                        fov: 50
                                                     }}
                                                 />
                                                 {outfit.model_favorite && (

@@ -609,3 +609,22 @@ export const getOutfitFavorites = async (page = 1, limit = 20) => {
     throw error;
   }
 };
+
+/**
+ * 檢測虛擬試穿結果的文件類型
+ * @param {string} url - 結果 URL
+ * @returns {string} - 'glb' 或 'png' 或 'unknown'
+ */
+export const detectVirtualTryOnFileType = (url) => {
+  if (!url) return 'unknown';
+  
+  const urlLower = url.toLowerCase();
+  if (urlLower.includes('.glb')) {
+    return 'glb';
+  } else if (urlLower.includes('.png') || urlLower.includes('.jpg') || urlLower.includes('.jpeg')) {
+    return 'png';
+  }
+  
+  return 'unknown';
+};
+

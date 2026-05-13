@@ -5,6 +5,7 @@ import './AIChatPage.css';
 import Navigation from '../../components/Navigation/Navigation';
 import BackButton from '../../components/Header/BackButton';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import OutfitDisplay from '../../components/OutfitDisplay/OutfitDisplay';
 import {
   generateAIRecommendation,
   getAIRecommendationHistory,
@@ -295,11 +296,21 @@ const AIChatPage = () => {
                       {/* 推薦圖片 */}
                       {rec.model_picture && (
                         <div className="ai-chat-card-image">
-                          <img
-                            src={rec.model_picture}
+                          <OutfitDisplay
+                            url={rec.model_picture}
                             alt="推薦穿搭"
-                            onError={(e) => {
-                              e.target.src = '../../assets/background/placeholder.png';
+                            containerStyle={{
+                              width: '300px',
+                              height: '300px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: '8px',
+                              overflow: 'hidden'
+                            }}
+                            cameraConfig={{
+                              position: [0, 0.5, 1.5],
+                              fov: 50
                             }}
                           />
                           <div className="ai-chat-card-score">
@@ -398,11 +409,21 @@ const AIChatPage = () => {
                   <div className="ai-chat-detail-image">
                     {selectedRecommendation.model_picture && (
                       <>
-                        <img
-                          src={selectedRecommendation.model_picture}
+                        <OutfitDisplay
+                          url={selectedRecommendation.model_picture}
                           alt="推薦穿搭"
-                          onError={(e) => {
-                            e.target.src = '../../assets/background/placeholder.png';
+                          containerStyle={{
+                            width: '300px',
+                            height: '300px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: '8px',
+                            overflow: 'hidden'
+                          }}
+                          cameraConfig={{
+                            position: [0, 0.5, 1.5],
+                            fov: 50
                           }}
                         />
                         <div className="ai-chat-detail-score">
