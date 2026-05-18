@@ -62,7 +62,7 @@ export const uploadClothes = async (file) => {
     console.log("正在上傳衣服至:", '/picture/clothes/');
 
     const response = await apiClient.post('/picture/clothes/', formData, {
-      timeout: 60000,
+      timeout: 0,
     });
 
     console.log("衣服上傳成功:", response.data);
@@ -109,7 +109,7 @@ export const uploadModelPhoto = async (file) => {
       '/picture/user/photo',
       formData,
       {
-        timeout: 60000,
+        timeout: 0,
       }
     );
 
@@ -156,7 +156,7 @@ export const getModelPhoto = async () => {
     console.log("正在獲取用戶模特照片...");
 
     const response = await apiClient.get('/picture/user/photo', {
-      timeout: 30000,
+      timeout: 0,
     });
 
     console.log("獲取模特照片成功:", response.data);
@@ -235,7 +235,7 @@ export const uploadClothesWithMeasurements = async (file, measurements) => {
     console.log("測量數據:", measurements);
 
     const response = await apiClient.post('/picture/clothes/', formData, {
-      timeout: 60000,
+      timeout: 0,
     });
 
     console.log("衣服上傳成功:", response.data);
@@ -339,7 +339,7 @@ export const updateClothesWithImage = async (clothesId, file, measurements) => {
       }
 
       const response = await apiClient.put(url, formData, {
-        timeout: 60000,
+        timeout: 0,
       });
 
       console.log("衣服更新成功（含圖片）:", response.data);
@@ -436,7 +436,7 @@ export const generateAIRecommendation = async (userInput, topK = 1) => {
       user_input: userInput,
       top_k: topK
     }, {
-      timeout: 120000,
+      timeout: 0,
     });
 
     console.log("AI 推薦生成成功:", response.data);
@@ -473,7 +473,7 @@ export const getAIRecommendationHistory = async (page = 1, limit = 20, sort = 'n
         limit,
         sort
       },
-      timeout: 30000,
+      timeout: 0,
     });
 
     console.log("獲取推薦歷史成功:", response.data);
@@ -502,8 +502,8 @@ export const getAIRecommendationDetail = async (modelUid) => {
   try {
     console.log("正在獲取推薦詳情:", modelUid);
 
-    const response = await apiClient.get(`/aichat_service/recommend/${modelUid}/`, {
-      timeout: 30000,
+    const response = await apiClient.get(`/aichat_service/recommend/detail/${modelUid}/`, {
+      timeout: 0,
     });
 
     console.log("獲取推薦詳情成功:", response.data);
@@ -532,8 +532,8 @@ export const deleteAIRecommendation = async (modelUid) => {
   try {
     console.log("正在刪除推薦:", modelUid);
 
-    const response = await apiClient.delete(`/aichat_service/recommend/${modelUid}/`, {
-      timeout: 30000,
+    const response = await apiClient.delete(`/aichat_service/recommend/delete/${modelUid}/`, {
+      timeout: 0,
     });
 
     console.log("推薦刪除成功:", response.data);
@@ -596,7 +596,7 @@ export const getOutfitFavorites = async (page = 1, limit = 20) => {
         page,
         limit
       },
-      timeout: 30000,
+      timeout: 0,
     });
 
     console.log("獲取收藏試穿結果成功:", response.data);

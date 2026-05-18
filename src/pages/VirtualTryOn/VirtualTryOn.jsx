@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../../App.css';
 import './VirtualTryOn.css';
 import * as Images from '../../assets';
@@ -10,15 +10,28 @@ import apiClient, { API_URL } from '../../services/api';
 
 const VirtualTryOn = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [groupedClothes, setGroupedClothes] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedClothes, setSelectedClothes] = useState([]);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [virtualTryOnMode, setVirtualTryOnMode] = useState('2d'); // '2d', '3d', '2d+3d'
     const isMountedRef = React.useRef(true);
 
     // 在組件掛載時調用 API
     useEffect(() => {
+        // 從 MainPage 或 localStorage 獲取虛擬試穿模式
+        if (location.state?.virtualTryOnMode) {
+            setVirtualTryOnMode(location.state.virtualTryOnMode);
+        } else {
+            // 如果沒有傳遞，則從 localStorage 讀取
+            const savedMode = localStorage.getItem('virtualTryOnMode');
+            if (savedMode) {
+                setVirtualTryOnMode(savedMode);
+            }
+        }
+        
         fetchUserClothes();
 
         // 組件卸載時清空虛擬試穿的臨時狀態（如果沒有開始試穿）
@@ -135,45 +148,183 @@ const VirtualTryOn = () => {
             };
 
             console.log('發送虛擬試穿請求:', requestData);
+            console.log('虛擬試穿模式:', virtualTryOnMode);
 
-            // 後台等待虛擬試穿 API
-            const response = await apiClient.post('/combine/user/virtual-try-on', requestData, {
+            // 先調用2D API以獲取 model_uid
+            console.log('📍 第一步：調用 2D API...');
+            const response2D = await apiClient.post('/combine/user/virtual-try-on/2d', requestData, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                timeout: 120000,
+                timeout: 0,
             });
 
-            console.log('虛擬試穿 API 回應:', response.data);
+            console.log('2D 虛擬試穿 API 回應:', response2D.data);
 
-            // 提取結果 URL（可能是 GLB 或 PNG）
-            const resultUrl = response.data.model_data?.model_picture;
+            // 提取 2D 結果
+            const resultUrl2D = response2D.data.model_data?.model_picture;
+            const modelUid = response2D.data.model_data?.model_uid;
             
-            if (!resultUrl) {
-                throw new Error('後端未返回結果');
+            if (!resultUrl2D) {
+                throw new Error('2D 試穿：後端未返回結果');
             }
 
-            // 判斷文件類型
-            const isGLB = resultUrl.toLowerCase().includes('.glb');
-            const fileType = isGLB ? 'glb' : 'png';
+            console.log('✅ 2D 試穿成功，model_uid:', modelUid);
 
-            // 🔍 詳細日誌追踪
-            console.log('🔍 虛擬試穿 URL 詳細信息:');
-            console.log('   URL:', resultUrl);
-            console.log('   文件類型:', fileType);
-            console.log('   時間戳:', new Date().toISOString());
-            console.log('   前端時間戳:', Date.now());
+            // 根據模式決定後續操作
+            if (virtualTryOnMode === '2d') {
+                // 純 2D 模式：直接使用 2D 結果
+                console.log('🎨 純 2D 模式');
+                
+                const isGLB = resultUrl2D.toLowerCase().includes('.glb');
+                const fileType = isGLB ? 'glb' : 'png';
 
-            // 使用 localStorage 通知 MainPage 更新結果
-            localStorage.setItem('virtualTryOnResult', JSON.stringify({
-                url: resultUrl,
-                fileType: fileType,
-                timestamp: Date.now(),
-                requestTime: new Date().toISOString()
-            }));
+                console.log('🔍 虛擬試穿 URL 詳細信息:');
+                console.log('   URL:', resultUrl2D);
+                console.log('   文件類型:', fileType);
+                console.log('   時間戳:', new Date().toISOString());
 
-            // 分發自定義事件通知 MainPage
-            window.dispatchEvent(new Event('virtualTryOnComplete'));
+                localStorage.setItem('virtualTryOnResult', JSON.stringify({
+                    url: resultUrl2D,
+                    fileType: fileType,
+                    timestamp: Date.now(),
+                    requestTime: new Date().toISOString()
+                }));
+
+                window.dispatchEvent(new Event('virtualTryOnComplete'));
+
+            } else if (virtualTryOnMode === '3d') {
+                // 純 3D 模式：調用 3D API，需要 model_uid
+                console.log('🎭 純 3D 模式，調用 3D API，model_uid:', modelUid);
+
+                if (!modelUid) {
+                    throw new Error('3D 試穿：無法獲取 model_uid');
+                }
+
+                const request3DData = {
+                    clothes_ids: clothesIds,
+                    model_uid: modelUid
+                };
+
+                console.log('📤 發送 3D API 請求:', request3DData);
+
+                const response3D = await apiClient.post('/combine/user/virtual-try-on/3d', request3DData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    timeout: 0,
+                });
+
+                console.log('📥 3D 虛擬試穿 API 完整回應:', response3D.data);
+                console.log('📥 3D response3D.data.model_data:', response3D.data.model_data);
+
+                // 3D 模式應該讀取 model_picture_3d（GLB 文件）
+                const resultUrl3D = response3D.data.model_data?.model_picture_3d;
+                
+                if (!resultUrl3D) {
+                    console.error('❌ 3D 試穿：後端未返回 model_picture_3d');
+                    console.error('   response3D.data:', response3D.data);
+                    console.error('   response3D.data.model_data:', response3D.data.model_data);
+                    throw new Error('3D 試穿：後端未返回 3D 結果');
+                }
+
+                console.log('✅ 3D 試穿成功，resultUrl3D:', resultUrl3D);
+
+                const isGLB = resultUrl3D.toLowerCase().includes('.glb');
+                const fileType = isGLB ? 'glb' : 'png';
+
+                console.log('🔍 3D 虛擬試穿 URL 詳細信息:');
+                console.log('   URL:', resultUrl3D);
+                console.log('   文件類型:', fileType);
+                console.log('   是否為 GLB:', isGLB);
+                console.log('   時間戳:', new Date().toISOString());
+
+                localStorage.setItem('virtualTryOnResult', JSON.stringify({
+                    url: resultUrl3D,
+                    fileType: fileType,
+                    timestamp: Date.now(),
+                    requestTime: new Date().toISOString()
+                }));
+
+                window.dispatchEvent(new Event('virtualTryOnComplete'));
+
+            } else if (virtualTryOnMode === '2d+3d') {
+                // 2D+3D 模式：同時調用兩個 API，保存兩個結果
+                console.log('🔄 2D+3D 模式，同時調用 2D 和 3D API...');
+
+                if (!modelUid) {
+                    throw new Error('2D+3D 試穿：無法獲取 model_uid');
+                }
+
+                const request3DData = {
+                    clothes_ids: clothesIds,
+                    model_uid: modelUid
+                };
+
+                const response3D = await apiClient.post('/combine/user/virtual-try-on/3d', request3DData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    timeout: 0,
+                });
+
+                console.log('2D+3D 虛擬試穿 API 回應:', response3D.data);
+
+                // 2D+3D 模式應該讀取 model_picture_3d（GLB 文件）作為主要結果
+                const resultUrl3D = response3D.data.model_data?.model_picture_3d;
+                
+                if (!resultUrl3D) {
+                    // 3D 結果失敗，只使用 2D 結果
+                    console.log('⚠️ 3D 結果失敗（無 model_picture_3d），只保存 2D 結果');
+                    
+                    const isGLB = resultUrl2D.toLowerCase().includes('.glb');
+                    const fileType = isGLB ? 'glb' : 'png';
+
+                    localStorage.setItem('virtualTryOnResult', JSON.stringify({
+                        url: resultUrl2D,
+                        fileType: fileType,
+                        timestamp: Date.now(),
+                        requestTime: new Date().toISOString(),
+                        hasBothResults: false
+                    }));
+
+                    window.dispatchEvent(new Event('virtualTryOnComplete'));
+                    return;
+                }
+
+                console.log('✅ 2D 和 3D 試穿都成功');
+
+                // 檢查文件類型
+                const isGLB2D = resultUrl2D.toLowerCase().includes('.glb');
+                const fileType2D = isGLB2D ? 'glb' : 'png';
+                const isGLB3D = resultUrl3D.toLowerCase().includes('.glb');
+                const fileType3D = isGLB3D ? 'glb' : 'png';
+
+                console.log('🔍 2D+3D 虛擬試穿 URL 詳細信息:');
+                console.log('   2D URL:', resultUrl2D, '類型:', fileType2D);
+                console.log('   3D URL:', resultUrl3D, '類型:', fileType3D);
+                console.log('   時間戳:', new Date().toISOString());
+
+                // 保存兩個結果，預設顯示 3D
+                localStorage.setItem('virtualTryOnResult', JSON.stringify({
+                    url: resultUrl3D,
+                    fileType: fileType3D,
+                    timestamp: Date.now(),
+                    requestTime: new Date().toISOString(),
+                    hasBothResults: true,
+                    result2D: {
+                        url: resultUrl2D,
+                        fileType: fileType2D
+                    },
+                    result3D: {
+                        url: resultUrl3D,
+                        fileType: fileType3D
+                    },
+                    currentView: '3d' // 預設顯示 3D
+                }));
+
+                window.dispatchEvent(new Event('virtualTryOnComplete'));
+            }
 
         } catch (err) {
             console.error('虛擬試穿失敗:', err);

@@ -22,6 +22,7 @@ import wardrobe from './mainpage/wardrobe.png';
 import test_clothes from './wardrobe/test_clothes.jpg';
 import icon_eye_open from './login/icon_eye_open.png';
 import chat from './mainpage/chat.png';
+import tryon_loading from './mainpage/tryon_loading.json';
 
 export {
     icon_profile,
@@ -46,5 +47,6 @@ export {
     wardrobe,
     test_clothes,
     icon_eye_open,
-    chat
+    chat,
+    tryon_loading
 };

@@ -155,12 +155,26 @@ const AIChatPage = () => {
       const result = await getAIRecommendationDetail(modelUid);
 
       if (result.success) {
-        setSelectedRecommendation(result.data);
+        // 後端返回的數據結構中，真正的內容在 result.data.data
+        const backendData = result.data.data;
+        
+        const detailData = {
+          ...backendData,
+          // 將後端的 clothes_info 轉換為 clothes_list 供詳情頁使用
+          clothes_list: backendData.clothes_info ? [
+            backendData.clothes_info.top,
+            backendData.clothes_info.bottom
+          ].filter(Boolean) : [],
+          // 確保使用正確的時間戳字段
+          created_at: backendData.created_at || new Date().toISOString()
+        };
+        setSelectedRecommendation(detailData);
         setShowHistory(false);
       } else {
         setError(result.error || '無法載入推薦詳情');
       }
     } catch (err) {
+      console.error('獲取推薦詳情出錯:', err);
       setError('無法載入推薦詳情');
     }
   };

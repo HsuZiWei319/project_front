@@ -20,6 +20,12 @@ const MainPage = () => {
   const [virtualTryOnImage, setVirtualTryOnImage] = useState(null);
   const [virtualTryOnModel, setVirtualTryOnModel] = useState(null); // GLB 模型 URL
   const [show3DModel, setShow3DModel] = useState(false);
+  const [virtualTryOnMode, setVirtualTryOnMode] = useState('2d'); // '2d', '3d', '2d+3d'
+  const [showModeDropdown, setShowModeDropdown] = useState(false);
+  const [result2D, setResult2D] = useState(null); // 2D 試穿結果
+  const [result3D, setResult3D] = useState(null); // 3D 試穿結果
+  const [currentResultView, setCurrentResultView] = useState('auto'); // 'auto', '2d', '3d'
+  const [hasBothResults, setHasBothResults] = useState(false); // 是否有 2D+3D 兩個結果
   const isVirtualTryingRef = useRef(false);
 
   // SWR fetcher for model photo
@@ -42,6 +48,14 @@ const MainPage = () => {
     dedupingInterval: 60000,
   });
 
+  // 從 localStorage 讀取虛擬試穿模式（持久化）
+  useEffect(() => {
+    const savedMode = localStorage.getItem('virtualTryOnMode');
+    if (savedMode) {
+      setVirtualTryOnMode(savedMode);
+    }
+  }, []);
+
   // 在組件首次掛載時清除虛擬試穿的臨時數據
   useEffect(() => {
     setIsVirtualTrying(false);
@@ -49,6 +63,10 @@ const MainPage = () => {
     setVirtualTryingClothes('');
     setVirtualTryOnImage(null);
     setVirtualTryOnModel(null);
+    setResult2D(null);
+    setResult3D(null);
+    setHasBothResults(false);
+    setCurrentResultView('auto');
     
     localStorage.removeItem('virtualTryOnResult');
     localStorage.removeItem('virtualTryOnError');
@@ -75,6 +93,10 @@ const MainPage = () => {
       setVirtualTryingClothes('');
       setVirtualTryOnImage(null);
       setVirtualTryOnModel(null);
+      setResult2D(null);
+      setResult3D(null);
+      setHasBothResults(false);
+      setCurrentResultView('auto');
       localStorage.removeItem('virtualTryOnResult');
       localStorage.removeItem('virtualTryOnError');
     }
@@ -93,38 +115,74 @@ const MainPage = () => {
       try {
         const resultData = localStorage.getItem('virtualTryOnResult');
         if (resultData) {
-          const { url, fileType } = JSON.parse(resultData);
-          console.log('✅ 虛擬試穿結果:', { url, fileType, timestamp: new Date().toISOString() });
+          const parsedData = JSON.parse(resultData);
+          const { url, fileType, hasBothResults, result2D: res2D, result3D: res3D, currentView } = parsedData;
+          
+          console.log('✅ 虛擬試穿結果:', { url, fileType, hasBothResults, timestamp: new Date().toISOString() });
 
           // 🔍 記錄到歷史，用於調試
           const history = JSON.parse(sessionStorage.getItem('virtualTryOnHistory') || '[]');
           history.push({
             timestamp: new Date().toISOString(),
             url: url,
-            fileType: fileType
+            fileType: fileType,
+            hasBothResults: hasBothResults
           });
           sessionStorage.setItem('virtualTryOnHistory', JSON.stringify(history));
           console.log('📋 試穿歷史已更新，總數:', history.length);
 
-          // 根據文件類型處理結果
-          if (fileType === 'glb') {
-            console.log('🎭 檢測到 GLB 模型，使用 3D 渲染');
-            // 先清除舊的模型，強制重新加載
-            setVirtualTryOnModel(null);
-            setVirtualTryOnImage(null);
-            setShow3DModel(false);
-            // 異步設置新模型，確保舊模型已清除
-            setTimeout(() => {
-              setVirtualTryOnModel(url);
-              setShow3DModel(true);
-            }, 100);
+          // 檢查是否有兩個結果
+          if (hasBothResults && res2D && res3D) {
+            console.log('🔄 檢測到 2D+3D 雙結果');
+            setResult2D(res2D);
+            setResult3D(res3D);
+            setHasBothResults(true);
+            setCurrentResultView(currentView || '3d'); // 預設顯示 3D
+
+            // 根據 currentView 決定初始顯示
+            if (currentView === '2d') {
+              console.log('🖼️ 初始顯示 2D 結果');
+              setVirtualTryOnImage(res2D.url);
+              setVirtualTryOnModel(null);
+              setShow3DModel(false);
+              mutate('modelPhoto', res2D.url, false);
+            } else {
+              console.log('🎭 初始顯示 3D 結果');
+              setVirtualTryOnModel(null);
+              setVirtualTryOnImage(null);
+              setShow3DModel(false);
+              setTimeout(() => {
+                setVirtualTryOnModel(res3D.url);
+                setShow3DModel(true);
+              }, 100);
+            }
           } else {
-            console.log('🖼️ 檢測到 PNG 圖片，使用 2D 渲染');
-            setVirtualTryOnModel(null);
-            setVirtualTryOnImage(url);
-            setShow3DModel(false);
-            // 使用 SWR mutate 更新緩存
-            mutate('modelPhoto', url, false);
+            // 單個結果
+            setResult2D(null);
+            setResult3D(null);
+            setHasBothResults(false);
+            setCurrentResultView('auto');
+
+            // 根據文件類型處理結果
+            if (fileType === 'glb') {
+              console.log('🎭 檢測到 GLB 模型，使用 3D 渲染');
+              // 先清除舊的模型，強制重新加載
+              setVirtualTryOnModel(null);
+              setVirtualTryOnImage(null);
+              setShow3DModel(false);
+              // 異步設置新模型，確保舊模型已清除
+              setTimeout(() => {
+                setVirtualTryOnModel(url);
+                setShow3DModel(true);
+              }, 100);
+            } else {
+              console.log('🖼️ 檢測到 PNG 圖片，使用 2D 渲染');
+              setVirtualTryOnModel(null);
+              setVirtualTryOnImage(url);
+              setShow3DModel(false);
+              // 使用 SWR mutate 更新緩存
+              mutate('modelPhoto', url, false);
+            }
           }
           
           setIsVirtualTrying(false);
@@ -161,6 +219,10 @@ const MainPage = () => {
       setIsVirtualTrying(false);
       isVirtualTryingRef.current = false;
       setVirtualTryingClothes('');
+      setResult2D(null);
+      setResult3D(null);
+      setHasBothResults(false);
+      setCurrentResultView('auto');
     };
 
     window.addEventListener('virtualTryOnComplete', handleVirtualTryOnComplete);
@@ -225,7 +287,7 @@ const MainPage = () => {
                   src={virtualTryOnImage || userPhotoUrl || Images.model} 
                   alt="model" 
                   className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
-                  onClick={() => navigate('/virtual-tryon')}
+                  onClick={() => navigate('/virtual-tryon', { state: { virtualTryOnMode } })}
                   style={{ cursor: 'pointer' }}
                 />
                 <div className="model-hint">點擊試穿</div>
@@ -236,13 +298,95 @@ const MainPage = () => {
         )}
 
         <button
-                onClick={() => setShow3DModel(!show3DModel)}
-                className="toggle-3d-button"
-                title={show3DModel ? "關閉 3D 模型" : "查看 3D 模型"}
+          onClick={() => {
+            // 如果有试穿结果，则切换试穿结果；否则切换 2D/3D 模型
+            if (hasBothResults && result2D && result3D) {
+              if (currentResultView === '3d') {
+                setCurrentResultView('2d');
+                setVirtualTryOnImage(result2D.url);
+                setVirtualTryOnModel(null);
+                setShow3DModel(false);
+                mutate('modelPhoto', result2D.url, false);
+              } else {
+                setCurrentResultView('3d');
+                setVirtualTryOnModel(null);
+                setVirtualTryOnImage(null);
+                setShow3DModel(false);
+                setTimeout(() => {
+                  setVirtualTryOnModel(result3D.url);
+                  setShow3DModel(true);
+                }, 100);
+              }
+            } else {
+              setShow3DModel(!show3DModel);
+            }
+          }}
+          className={`unified-view-button ${hasBothResults ? 'result-mode' : 'model-mode'}`}
+          title={hasBothResults ? 
+            (currentResultView === '3d' ? '切換到 2D 結果' : '切換到 3D 結果') : 
+            (show3DModel ? '查看 2D 模型' : '查看 3D 模型')
+          }
+        >
+          {hasBothResults ? (
+            <>
+              <span className="view-icon">🔄</span>
+              <span className="view-label">{currentResultView === '3d' ? '看2D' : '看3D'}</span>
+            </>
+          ) : (
+            <>
+              <span className="view-icon">📦</span>
+              <span className="view-label">{show3DModel ? '2D' : '3D'}</span>
+            </>
+          )}
+        </button>
+
+        {/* 虛擬試穿模式選擇器 */}
+        <div className="virtual-tryon-mode-selector">
+          <button
+            onClick={() => setShowModeDropdown(!showModeDropdown)}
+            className="mode-selector-button"
+            title="選擇虛擬試穿模式"
+          >
+            <span className="mode-icon">🎨</span>
+            <span className="mode-label">{virtualTryOnMode === '2d' ? '2D' : virtualTryOnMode === '3d' ? '3D' : '2D+3D'}</span>
+          </button>
+
+          {showModeDropdown && (
+            <div className="mode-dropdown">
+              <button
+                className={`mode-option ${virtualTryOnMode === '2d' ? 'active' : ''}`}
+                onClick={() => {
+                  setVirtualTryOnMode('2d');
+                  localStorage.setItem('virtualTryOnMode', '2d');
+                  setShowModeDropdown(false);
+                }}
               >
-                3D
+                試穿2D
               </button>
-        
+              <button
+                className={`mode-option ${virtualTryOnMode === '3d' ? 'active' : ''}`}
+                onClick={() => {
+                  setVirtualTryOnMode('3d');
+                  localStorage.setItem('virtualTryOnMode', '3d');
+                  setShowModeDropdown(false);
+                }}
+              >
+                試穿3D
+              </button>
+              <button
+                className={`mode-option ${virtualTryOnMode === '2d+3d' ? 'active' : ''}`}
+                onClick={() => {
+                  setVirtualTryOnMode('2d+3d');
+                  localStorage.setItem('virtualTryOnMode', '2d+3d');
+                  setShowModeDropdown(false);
+                }}
+              >
+                試穿2D+3D
+              </button>
+            </div>
+          )}
+        </div>
+
         {isVirtualTrying && (
           <div className="virtual-tryon-status-overlay">
             <h2>試穿中...</h2>

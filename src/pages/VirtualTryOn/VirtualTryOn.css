@@ -117,7 +117,8 @@
 .try-on-button-container {
   position: fixed;
   bottom: 100px;
-  left: 43.7%;
+  left: 50%;
+  transform: translateX(-50%); /* 將容器向左平移自身寬度的50%，使中心對齊中點 */
   z-index: 100;
   animation: slideUp 0.4s ease-out;
 }

@@ -508,17 +508,16 @@
   }
 }
 
-.toggle-3d-button {
+.unified-view-button {
   position: absolute;
   top: 160px;
   left: 60px;
   width: 64px;
   height: 64px;
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
   color: white;
   border: 3px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
   padding: 0;
   display: flex;
@@ -532,35 +531,62 @@
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
   z-index: 35;
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
   line-height: 1.1;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  animation: pulse-glow 2.5s ease-in-out infinite;
   backdrop-filter: blur(10px);
 }
 
-.toggle-3d-button::before {
-  content: '📦';
-  font-size: 24px;
-  display: block;
-  line-height: 1;
-  margin-bottom: 2px;
+/* 模型模式样式（紫色） */
+.unified-view-button.model-mode {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  animation: pulse-glow 2.5s ease-in-out infinite;
 }
 
-.avatar-wrapper:hover .toggle-3d-button {
-  animation: pulse-glow 2.5s ease-in-out infinite, float 3s ease-in-out infinite;
-}
-
-.toggle-3d-button:hover {
+.unified-view-button.model-mode:hover {
   transform: scale(1.2) translateY(-4px);
   box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5), inset -2px -2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 8px rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #7c3aed, #a855f7);
   border-color: rgba(255, 255, 255, 0.5);
 }
 
-.toggle-3d-button:active {
+/* 结果模式样式（青色） */
+.unified-view-button.result-mode {
+  background: linear-gradient(135deg, #06b6d4, #0891b2);
+  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  animation: pulse-glow-cyan 2.5s ease-in-out infinite;
+}
+
+.unified-view-button.result-mode:hover {
+  transform: scale(1.2) translateY(-4px);
+  box-shadow: 0 12px 32px rgba(6, 182, 212, 0.5), inset -2px -2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 8px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #0891b2, #0369a1);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.unified-view-button:active {
   transform: scale(0.95);
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3), inset -1px -1px 4px rgba(0, 0, 0, 0.2), inset 1px 1px 4px rgba(255, 255, 255, 0.1);
+}
+
+.avatar-wrapper:hover .unified-view-button.model-mode {
+  animation: pulse-glow 2.5s ease-in-out infinite, float 3s ease-in-out infinite;
+}
+
+.avatar-wrapper:hover .unified-view-button.result-mode {
+  animation: pulse-glow-cyan 2.5s ease-in-out infinite, float 3s ease-in-out infinite;
+}
+
+.view-icon {
+  font-size: 24px;
+  display: block;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.view-label {
+  font-size: 11px;
+  font-weight: 700;
 }
 
 /* === 3D 模型容器 === */
@@ -586,15 +612,200 @@
 
 /* 響應式調整 */
 @media (max-width: 768px) {
-  .toggle-3d-button {
+  .unified-view-button {
     width: 56px;
     height: 56px;
-    font-size: 12px;
+    font-size: 10px;
     top: 70px;
     right: 12px;
   }
   
-  .toggle-3d-button::before {
+  .view-icon {
     font-size: 22px;
+    margin-bottom: 2px;
+  }
+  
+  .view-label {
+    font-size: 10px;
+  }
+}
+
+/* === 虛擬試穿模式選擇器 === */
+.virtual-tryon-mode-selector {
+  position: absolute;
+  top: 240px;
+  left: 60px;
+  z-index: 35;
+}
+
+.mode-selector-button {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+  color: white;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex-direction: column;
+  gap: 2px;
+  opacity: 1;
+  pointer-events: auto;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  line-height: 1.1;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  animation: pulse-glow-pink 2.5s ease-in-out infinite;
+  backdrop-filter: blur(10px);
+}
+
+.mode-icon {
+  font-size: 24px;
+  display: block;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.mode-label {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.avatar-wrapper:hover .mode-selector-button {
+  animation: pulse-glow-pink 2.5s ease-in-out infinite, float 3s ease-in-out infinite;
+}
+
+.mode-selector-button:hover {
+  transform: scale(1.2) translateY(-4px);
+  box-shadow: 0 12px 32px rgba(236, 72, 153, 0.5), inset -2px -2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 8px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #be185d, #db2777);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.mode-selector-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3), inset -1px -1px 4px rgba(0, 0, 0, 0.2), inset 1px 1px 4px rgba(255, 255, 255, 0.1);
+}
+
+/* === 下拉菜單 === */
+.mode-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: white;
+  border: 2px solid #ec4899;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: slideDown 0.3s ease-out;
+  z-index: 100;
+  min-width: 120px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mode-option {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  background: white;
+  border: none;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.mode-option:last-child {
+  border-bottom: none;
+}
+
+.mode-option:hover {
+  background: #ffe4f0;
+  color: #ec4899;
+  padding-left: 20px;
+}
+
+.mode-option.active {
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+  color: white;
+  font-weight: 700;
+}
+
+.mode-option.active::before {
+  content: '✓ ';
+  margin-right: 4px;
+}
+
+/* === 粉紅色脈動動畫 === */
+@keyframes pulse-glow-pink {
+  0%, 100% {
+    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(236, 72, 153, 0.6), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* === 青色脈動動畫 === */
+@keyframes pulse-glow-cyan {
+  0%, 100% {
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 8px 30px rgba(6, 182, 212, 0.6), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* 響應式調整虛擬試穿模式選擇器 */
+@media (max-width: 768px) {
+  .virtual-tryon-mode-selector {
+    top: 140px;
+    left: auto;
+    right: 80px;
+  }
+  
+  .mode-selector-button {
+    width: 56px;
+    height: 56px;
+    font-size: 10px;
+  }
+  
+  .mode-icon {
+    font-size: 22px;
+    margin-bottom: 2px;
+  }
+  
+  .mode-label {
+    font-size: 10px;
+  }
+  
+  .mode-dropdown {
+    min-width: 110px;
+  }
+  
+  .mode-option {
+    padding: 10px 14px;
+    font-size: 12px;
   }
 }

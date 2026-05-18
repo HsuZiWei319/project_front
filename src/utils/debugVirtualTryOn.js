@@ -63,7 +63,7 @@ export const debugVirtualTryOn = () => {
   // 4. 建議
   console.log('\n💡 診斷建議:');
   console.log('   1️⃣  檢查瀏覽器開發者工具 Network 標籤');
-  console.log('       - 查看 /combine/user/virtual-try-on 的響應');
+  console.log('       - 查看 /combine/user/virtual-try-on/2d 的響應');
   console.log('       - 檢查每次請求返回的 model_picture URL 是否不同');
   console.log('');
   console.log('   2️⃣  檢查後端日誌:');
