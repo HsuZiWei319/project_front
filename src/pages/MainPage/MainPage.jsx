@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import useSWR, { mutate } from 'swr';
+import LottieComponent from 'lottie-react';
+const Lottie = LottieComponent.default || LottieComponent;
 import '../../App.css';
 import './MainPage.css';
 import * as Images from '../../assets';
@@ -389,6 +391,12 @@ const MainPage = () => {
 
         {isVirtualTrying && (
           <div className="virtual-tryon-status-overlay">
+            <div className="lottie-container">
+              <Lottie 
+                animationData={Images.tryon_loading} 
+                loop={true} 
+              />
+            </div>
             <h2>試穿中...</h2>
           </div>
         )}
