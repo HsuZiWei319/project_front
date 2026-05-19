@@ -28,6 +28,7 @@ const WardrobePage = () => {
     const navigate = useNavigate();
     const { handleFileSelectedForClothesUpload } = useImageUpload();
     const [filterMode, setFilterMode] = useState('category'); // 'category' 或 'style'
+    const [show3DMap, setShow3DMap] = useState({}); // 追蹤每個穿搭的 3D 顯示狀態
     
     // 從 localStorage 初始化 viewMode，若無則預設為 'wardrobe'
     const [viewMode, setViewMode] = useState(() => {
@@ -144,8 +145,16 @@ const WardrobePage = () => {
         }
     };
 
+    const toggle3D = (e, uid) => {
+        e.stopPropagation(); // 防止觸發卡片點擊
+        setShow3DMap(prev => ({
+            ...prev,
+            [uid]: !prev[uid]
+        }));
+    };
+
     return (
-        <div className="container">
+        <div className="container wardrobe-page">
             <Navigation position="top" />
             <BackButton />
 
@@ -346,10 +355,12 @@ const WardrobePage = () => {
                                             style={{ cursor: 'pointer' }}
                                         >
                                             <div className="outfit-styles">
-                                                {outfit.model_style && outfit.model_style.length > 0 ? (
+                                                {Array.isArray(outfit.model_style) && outfit.model_style.length > 0 ? (
                                                     outfit.model_style.map((style, index) => (
                                                         <span key={index} className="style-tag">{style}</span>
                                                     ))
+                                                ) : outfit.model_style && typeof outfit.model_style === 'string' ? (
+                                                    <span className="style-tag">{outfit.model_style}</span>
                                                 ) : (
                                                     <span className="style-tag">未分類</span>
                                                 )}
@@ -357,7 +368,7 @@ const WardrobePage = () => {
 
                                             <div className="outfit-model-section">
                                                 <OutfitDisplay
-                                                    url={getFullClothesImageUrl(outfit.model_picture)}
+                                                    url={getFullClothesImageUrl(show3DMap[outfit.model_uid] ? outfit.model_picture_3d : outfit.model_picture)}
                                                     alt="模特穿搭"
                                                     className="outfit-model-image"
                                                     style={{ borderRadius: '8px' }}
@@ -375,6 +386,16 @@ const WardrobePage = () => {
                                                         fov: 50
                                                     }}
                                                 />
+                                                {outfit.model_picture_3d && (
+                                                    <button
+                                                        onClick={(e) => toggle3D(e, outfit.model_uid)}
+                                                        className="unified-view-button result-mode wardrobe-toggle-button"
+                                                        title={show3DMap[outfit.model_uid] ? '切換到 2D 結果' : '切換到 3D 結果'}
+                                                    >
+                                                        <span className="view-icon">🔄</span>
+                                                        <span className="view-label">{show3DMap[outfit.model_uid] ? '看2D' : '看3D'}</span>
+                                                    </button>
+                                                )}
                                                 {outfit.model_favorite && (
                                                     <span style={{
                                                         position: 'absolute',

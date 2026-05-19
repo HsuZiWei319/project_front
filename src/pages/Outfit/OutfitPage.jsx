@@ -21,6 +21,7 @@ const OutfitPage = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
     const [isTogglingLike, setIsTogglingLike] = useState(false);
+    const [show3D, setShow3D] = useState(false);
 
     // 組件掛載時調用 API
     useEffect(() => {
@@ -205,10 +206,12 @@ const OutfitPage = () => {
                         <div className="outfit-detail-styles">
                             <h2 className="outfit-detail-subtitle">模特風格</h2>
                             <div className="styles-tag-group">
-                                {outfit.model_style && outfit.model_style.length > 0 ? (
+                                {Array.isArray(outfit.model_style) && outfit.model_style.length > 0 ? (
                                     outfit.model_style.map((style, index) => (
                                         <span key={index} className="detail-style-tag">{style}</span>
                                     ))
+                                ) : outfit.model_style && typeof outfit.model_style === 'string' ? (
+                                    <span className="detail-style-tag">{outfit.model_style}</span>
                                 ) : (
                                     <span className="detail-style-tag">未分類</span>
                                 )}
@@ -220,7 +223,7 @@ const OutfitPage = () => {
                             <h2 className="outfit-detail-subtitle">模特穿搭照片</h2>
                             <div className="outfit-detail-image-container">
                                 <OutfitDisplay
-                                    url={getFullClothesImageUrl(outfit.model_picture)}
+                                    url={getFullClothesImageUrl(show3D ? outfit.model_picture_3d : outfit.model_picture)}
                                     alt="模特穿搭"
                                     className="outfit-detail-image"
                                     style={{ borderRadius: '8px' }}
@@ -237,6 +240,16 @@ const OutfitPage = () => {
                                         fov: 50
                                     }}
                                 />
+                                {outfit.model_picture_3d && (
+                                    <button
+                                        onClick={() => setShow3D(!show3D)}
+                                        className="unified-view-button result-mode outfit-toggle-button"
+                                        title={show3D ? '切換到 2D 結果' : '切換到 3D 結果'}
+                                    >
+                                        <span className="view-icon">🔄</span>
+                                        <span className="view-label">{show3D ? '看2D' : '看3D'}</span>
+                                    </button>
+                                )}
                             </div>
                         </div>
 

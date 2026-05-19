@@ -16,6 +16,7 @@ const FavoritesPage = () => {
     const { handleFileSelectedForClothesUpload } = useImageUpload();
     const [filterMode, setFilterMode] = useState('category'); // 'category' 或 'style'
     const [viewMode, setViewMode] = useState('wardrobe'); // 'wardrobe' 或 'outfit'
+    const [show3DMap, setShow3DMap] = useState({}); // 追蹤每個穿搭的 3D 顯示狀態
 
     // 使用 SWR 獲取收藏的衣服數據
     const { 
@@ -140,8 +141,16 @@ const FavoritesPage = () => {
         navigate(`/outfit/${modelUuid}`);
     };
 
+    const toggle3D = (e, uid) => {
+        e.stopPropagation(); // 防止觸發卡片點擊
+        setShow3DMap(prev => ({
+            ...prev,
+            [uid]: !prev[uid]
+        }));
+    };
+
     return (
-        <div className="container">
+        <div className="container favorites-page">
             <Navigation position="top" />
             <BackButton />
 
@@ -307,7 +316,7 @@ const FavoritesPage = () => {
                                         display: 'inline-block',
                                         width: '4px',
                                         height: '28px',
-                                        background: 'linear-gradient(180deg, var(--primary), #a855f7)',
+                                        background: '#ec4899',
                                         borderRadius: '2px'
                                     }}></span>
                                     穿搭收藏 <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--gray-600)'}}>(共 {outfitFavorites.length} 組)</span>
@@ -315,16 +324,18 @@ const FavoritesPage = () => {
                                 <div className="outfit-history-list">
                                     {outfitFavorites.map((outfit) => (
                                         <div 
-                                            key={outfit.model_uuid || outfit.id}
+                                            key={outfit.model_uid || outfit.model_uuid || outfit.id}
                                             className="outfit-item"
                                             onClick={() => handleOutfitClick(outfit)}
                                             style={{ cursor: 'pointer' }}
                                         >
                                             <div className="outfit-styles">
-                                                {outfit.model_style && outfit.model_style.length > 0 ? (
+                                                {Array.isArray(outfit.model_style) && outfit.model_style.length > 0 ? (
                                                     outfit.model_style.map((style, index) => (
                                                         <span key={index} className="style-tag">{style}</span>
                                                     ))
+                                                ) : outfit.model_style && typeof outfit.model_style === 'string' ? (
+                                                    <span className="style-tag">{outfit.model_style}</span>
                                                 ) : (
                                                     <span className="style-tag">未分類</span>
                                                 )}
@@ -332,7 +343,7 @@ const FavoritesPage = () => {
 
                                             <div className="outfit-model-section">
                                                 <OutfitDisplay
-                                                    url={getFullOutfitImageUrl(outfit.model_picture)}
+                                                    url={getFullOutfitImageUrl(show3DMap[outfit.model_uid || outfit.model_uuid || outfit.id] ? outfit.model_picture_3d : outfit.model_picture)}
                                                     alt="模特穿搭"
                                                     className="outfit-model-image"
                                                     style={{ borderRadius: '8px' }}
@@ -350,6 +361,16 @@ const FavoritesPage = () => {
                                                         fov: 50
                                                     }}
                                                 />
+                                                {outfit.model_picture_3d && (
+                                                    <button
+                                                        onClick={(e) => toggle3D(e, outfit.model_uid || outfit.model_uuid || outfit.id)}
+                                                        className="unified-view-button result-mode favorites-toggle-button"
+                                                        title={show3DMap[outfit.model_uid || outfit.model_uuid || outfit.id] ? '切換到 2D 結果' : '切換到 3D 結果'}
+                                                    >
+                                                        <span className="view-icon">🔄</span>
+                                                        <span className="view-label">{show3DMap[outfit.model_uid || outfit.model_uuid || outfit.id] ? '看2D' : '看3D'}</span>
+                                                    </button>
+                                                )}
                                                 <span style={{
                                                     position: 'absolute',
                                                     top: '8px',
