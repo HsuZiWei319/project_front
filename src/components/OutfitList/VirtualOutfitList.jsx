@@ -24,6 +24,8 @@ const VirtualOutfitList = ({
   windowHeight = 800 // 可見窗口高度
 }) => {
   const itemCount = outfits?.length || 0;
+  const pressTimerRef = React.useRef({}); // 追蹤每個穿搭項的按下計時器
+  const LONG_PRESS_THRESHOLD = 500; // 500ms 判定為長按
 
   // 創建行渲染器
   const Row = useCallback(({ index, style }) => {
@@ -33,11 +35,37 @@ const VirtualOutfitList = ({
     const outfitId = outfit.model_uid || outfit.model_uuid || outfit.id;
     const isShow3D = show3DMap[outfitId];
 
+    const handleMouseDown = () => {
+      const startTime = Date.now();
+      pressTimerRef.current[outfitId] = startTime;
+    };
+
+    const handleMouseUp = (e) => {
+      const startTime = pressTimerRef.current[outfitId];
+      if (startTime) {
+        const pressDuration = Date.now() - startTime;
+        // 檢查點擊目標是否為按鈕或其子元素
+        const isClickOnButton = e.target.closest('.unified-view-button, .wardrobe-toggle-button, .favorites-toggle-button');
+        // 只有短按（少於 LONG_PRESS_THRESHOLD）才觸發點擊，且不是按鈕
+        if (pressDuration < LONG_PRESS_THRESHOLD && !isClickOnButton) {
+          onOutfitClick(outfit);
+        }
+        delete pressTimerRef.current[outfitId];
+      }
+    };
+
+    const handleMouseLeave = () => {
+      // 用戶按著滑鼠移出時，取消計時
+      delete pressTimerRef.current[outfitId];
+    };
+
     return (
       <div style={style} key={outfitId} className="virtual-outfit-item-wrapper">
         <div
           className="outfit-item"
-          onClick={() => onOutfitClick(outfit)}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
           style={{ cursor: 'pointer', marginBottom: '16px' }}
         >
           <div className="outfit-styles">
