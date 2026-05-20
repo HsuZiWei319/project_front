@@ -1,0 +1,46 @@
+/* OutfitDisplay.css - 虛擬試穿結果展示組件樣式 */
+
+/* 容器 - 無數據狀態 */
+.outfit-display-empty-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #999;
+}
+
+/* 3D 模型容器 */
+.outfit-display-model-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* 2D 圖片容器 */
+.outfit-display-image-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* 錯誤提示 */
+.outfit-display-error {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d32f2f;
+  font-size: 14px;
+  border-radius: 8px;
+  z-index: 10;
+}
+
+/* 圖片本身 */
+.outfit-display-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

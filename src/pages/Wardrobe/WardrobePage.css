@@ -105,9 +105,19 @@
 /* 滾動內容區 */
 .wardrobe-content {
   flex: 1;
-  overflow-y: auto;
   padding: 0 var(--spacing-lg) var(--spacing-lg);
   animation: slideUp 0.4s ease-out;
+}
+
+/* 衣櫃視圖 */
+.wardrobe-clothes-view {
+    overflow-y: auto;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.02), rgba(168, 85, 247, 0.02));
+}
+
+/* 穿搭視圖 */
+.wardrobe-outfit-view {
+  background: transparent;
 }
 
 /* 分類標題 */
@@ -121,7 +131,7 @@
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 24px;
-  padding-bottom: 12px;
+  padding-bottom: 0;
   position: relative;
   display: flex;
   align-items: center;
@@ -141,7 +151,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
-  padding-bottom: var(--spacing-lg);
+  padding-bottom: 0;
 }
 
 @media (min-width: 1024px) {
@@ -167,9 +177,11 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background-color: rgba(139, 141, 249, 0.03); /* 設定背景色 */
+  background-color: linear-gradient(135deg, rgba(139, 141, 249, 0.08), rgba(168, 85, 247, 0.08));
   background-size: cover;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(99, 102, 241, 0.1);
 }
 
 .clothes-item:hover {
@@ -318,6 +330,8 @@
 /* 穿搭歷史容器 */
 .outfit-history-container {
   animation: slideUp 0.4s ease-out;
+  background: transparent;
+  padding: 0;
 }
 
 /* 穿搭歷史列表 */

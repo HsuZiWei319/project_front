@@ -1,0 +1,133 @@
+/* VirtualFavoriteOutfitList.css - 虛擬滾動收藏穿搭列表樣式 */
+
+/* 虛擬列表項包裝器 */
+.virtual-favorite-outfit-item-wrapper {
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: flex;
+  overflow: visible;
+}
+
+/* 收藏穿搭列表標題 */
+.virtual-favorite-outfit-list-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-left: 20px;
+}
+
+/* 標題裝飾線 - 收藏專用（粉色） */
+.virtual-favorite-outfit-list-title-bar {
+  display: inline-block;
+  width: 4px;
+  height: 28px;
+  background: #ec4899;
+  border-radius: 2px;
+}
+
+/* 標題副文本 */
+.virtual-favorite-outfit-list-count {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+/* 空狀態容器 */
+.virtual-favorite-outfit-list-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray-600);
+}
+
+/* 空狀態圖標 */
+.virtual-favorite-outfit-list-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* 穿搭卡片 - 主要容器 */
+.outfit-item {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.outfit-item:hover {
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 穿搭樣式標籤 */
+.virtual-favorite-outfit-style-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4f46e5;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+/* 穿搭模型顯示區 */
+.virtual-favorite-outfit-model-section {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+/* 穿搭圖片 */
+.virtual-favorite-outfit-model-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+/* 收藏心形標記 */
+.virtual-favorite-outfit-favorite-mark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  z-index: 5;
+}
+
+/* 2D/3D 切換按鈕 */
+.virtual-favorite-outfit-toggle-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+/* 穿搭信息（日期等） */
+.virtual-favorite-outfit-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--gray-200);
+}
+
+/* 穿搭日期 */
+.virtual-favorite-outfit-date {
+  font-size: 12px;
+  color: var(--gray-600);
+}

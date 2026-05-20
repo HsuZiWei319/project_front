@@ -1,0 +1,128 @@
+/* VirtualOutfitList.css - 虛擬滾動穿搭列表樣式 */
+
+/* 虛擬列表項包裝器 */
+.virtual-outfit-item-wrapper {
+    padding: 0 16px;
+    box-sizing: border-box;
+    display: flex;
+    overflow: visible;
+}
+
+/* 穿搭卡片容器 */
+.virtual-outfit-list-container {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+/* 穿搭列表標題 */
+.virtual-outfit-list-title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding-left: 20px;
+}
+
+/* 標題裝飾線 */
+.virtual-outfit-list-title-bar {
+  display: inline-block;
+  width: 4px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--primary), #a855f7);
+  border-radius: 2px;
+}
+
+/* 標題副文本 */
+.virtual-outfit-list-count {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+/* 空狀態容器 */
+.virtual-outfit-list-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--gray-600);
+}
+
+/* 空狀態圖標 */
+.virtual-outfit-list-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+/* 穿搭樣式標籤 */
+.virtual-outfit-style-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+  border: 1px solid #c7d2fe;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4f46e5;
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+/* 穿搭模型顯示區 */
+.virtual-outfit-model-section {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+/* 穿搭圖片 */
+.virtual-outfit-model-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+/* 收藏心形標記 */
+.virtual-outfit-favorite-mark {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  z-index: 5;
+}
+
+/* 2D/3D 切換按鈕 */
+.virtual-outfit-toggle-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+}
+
+/* 穿搭信息（日期等） */
+.virtual-outfit-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid var(--gray-200);
+}
+
+/* 穿搭日期 */
+.virtual-outfit-date {
+  font-size: 12px;
+  color: var(--gray-600);
+}

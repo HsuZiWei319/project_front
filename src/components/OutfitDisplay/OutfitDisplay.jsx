@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import ModelViewer from '../3D/ModelViewer';
 import { detectVirtualTryOnFileType } from '../../services/imageService';
+import './OutfitDisplay.css';
 
 /**
  * 虛擬試穿結果展示組件
@@ -74,7 +75,7 @@ const OutfitDisplay = ({
 
   if (!url) {
     return (
-      <div style={{ ...containerStyle, textAlign: 'center', color: '#999' }}>
+      <div className="outfit-display-empty-container" style={containerStyle}>
         無結果數據
       </div>
     );
@@ -83,12 +84,7 @@ const OutfitDisplay = ({
   // GLB 模型 - 使用 3D ModelViewer
   if (fileType === 'glb') {
     return (
-      <div style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        ...containerStyle
-      }}>
+      <div className="outfit-display-model-wrapper" style={containerStyle}>
         <ModelViewer
           key={modelKey}
           modelPath={url}
@@ -101,39 +97,17 @@ const OutfitDisplay = ({
 
   // PNG/JPG 圖片 - 使用普通 img
   return (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      ...containerStyle
-    }}>
+    <div className="outfit-display-image-wrapper" style={containerStyle}>
       {error && (
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#d32f2f',
-          fontSize: '14px',
-          borderRadius: '8px',
-          zIndex: 10
-        }}>
+        <div className="outfit-display-error">
           {error}
         </div>
       )}
       <img
         src={url}
         alt={alt}
-        className={className}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'contain',
-          ...style
-        }}
+        className={`outfit-display-image ${className}`}
+        style={style}
         onLoad={() => setIsLoading(false)}
         onError={handleImageError}
       />

@@ -1,18 +1,18 @@
 import React, { useCallback, useMemo } from 'react';
 import { FixedSizeList as List } from 'react-window';
 import OutfitDisplay from '../OutfitDisplay/OutfitDisplay';
-import '../../pages/Wardrobe/WardrobePage.css';
+import './VirtualOutfitList.css';
 
 /**
- * 虚拟滚动穿搭列表 - 只在视口内渲染项目，大幅减少3D模型加载
- * 使用场景：WardrobePage 和 FavoritesPage 的穿搭列表视图
+ * 虛擬滾動穿搭列表 - 只在視口內渲染項目，大幅減少3D模型加載
+ * 使用場景：WardrobePage 和 FavoritesPage 的穿搭列表視圖
  * 
- * @param {Array} outfits - 穿搭列表数据
- * @param {Function} onOutfitClick - 点击穿搭项时的回调
- * @param {Object} show3DMap - 追踪每个穿搭的3D显示状态
- * @param {Function} onToggle3D - 切换2D/3D显示的回调
- * @param {Function} getImageUrl - 获取完整URL的函数
- * @param {number} itemHeight - 每个穿搭项的高度（px）
+ * @param {Array} outfits - 穿搭列表資料
+ * @param {Function} onOutfitClick - 點擊穿搭項時的回調
+ * @param {Object} show3DMap - 追蹤每個穿搭的3D顯示狀態
+ * @param {Function} onToggle3D - 切換2D/3D顯示的回調
+ * @param {Function} getImageUrl - 獲取完整URL的函數
+ * @param {number} itemHeight - 每個穿搭項的高度（px）
  */
 const VirtualOutfitList = ({
   outfits,
@@ -20,12 +20,12 @@ const VirtualOutfitList = ({
   show3DMap = {},
   onToggle3D,
   getImageUrl,
-  itemHeight = 420, // 高度包括图片、标签、日期等
-  windowHeight = 800 // 可见窗口高度
+  itemHeight = 420, // 高度包括圖片、標籤、日期等
+  windowHeight = 800 // 可見窗口高度
 }) => {
   const itemCount = outfits?.length || 0;
 
-  // 创建行渲染器
+  // 創建行渲染器
   const Row = useCallback(({ index, style }) => {
     const outfit = outfits[index];
     if (!outfit) return null;
@@ -50,15 +50,15 @@ const VirtualOutfitList = ({
             ) : outfit.model_style && typeof outfit.model_style === 'string' ? (
               <span className="style-tag">{outfit.model_style}</span>
             ) : (
-              <span className="style-tag">未分类</span>
+              <span className="style-tag">未分類</span>
             )}
           </div>
 
-          <div className="outfit-model-section">
+          <div className="virtual-outfit-model-section">
             <OutfitDisplay
               url={getImageUrl(isShow3D ? outfit.model_picture_3d : outfit.model_picture)}
               alt="模特穿搭"
-              className="outfit-model-image"
+              className="virtual-outfit-model-image"
               style={{ borderRadius: '8px' }}
               containerStyle={{
                 width: '100%',
@@ -81,30 +81,21 @@ const VirtualOutfitList = ({
                   onToggle3D(outfitId);
                 }}
                 className="unified-view-button result-mode wardrobe-toggle-button"
-                title={isShow3D ? '切换到 2D 结果' : '切换到 3D 结果'}
+                title={isShow3D ? '切換到 2D 結果' : '切換到 3D 結果'}
               >
                 <span className="view-icon">🔄</span>
                 <span className="view-label">{isShow3D ? '看2D' : '看3D'}</span>
               </button>
             )}
             {outfit.model_favorite && (
-              <span
-                style={{
-                  position: 'absolute',
-                  top: '8px',
-                  right: '8px',
-                  fontSize: '20px',
-                  filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
-                  zIndex: 5
-                }}
-              >
+              <span className="virtual-outfit-favorite-mark">
                 ❤️
               </span>
             )}
           </div>
 
-          <div className="outfit-info">
-            <span className="outfit-date">
+          <div className="virtual-outfit-info">
+            <span className="virtual-outfit-date">
               {outfit.model_created_time || outfit.created_at
                 ? new Date(
                     outfit.model_created_time || outfit.created_at
@@ -123,30 +114,11 @@ const VirtualOutfitList = ({
 
   return (
     <div className="outfit-history-container">
-      <h2
-        style={{
-          fontSize: 'var(--font-2xl)',
-          fontWeight: '700',
-          color: 'var(--gray-900)',
-          marginBottom: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 'var(--spacing-md)',
-          paddingLeft: '20px'
-        }}
-      >
-        <span
-          style={{
-            display: 'inline-block',
-            width: '4px',
-            height: '28px',
-            background: 'linear-gradient(180deg, var(--primary), #a855f7)',
-            borderRadius: '2px'
-          }}
-        ></span>
+      <h2 className="virtual-outfit-list-title">
+        <span className="virtual-outfit-list-title-bar"></span>
         我的穿搭{' '}
-        <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--gray-600)' }}>
-          (共 {itemCount} 组)
+        <span className="virtual-outfit-list-count">
+          (共 {itemCount} 組)
         </span>
       </h2>
 
@@ -156,20 +128,14 @@ const VirtualOutfitList = ({
           itemCount={itemCount}
           itemSize={itemHeight}
           width="100%"
-          overscanCount={2} // 预加载相邻项，提高滚动流畅度
+          overscanCount={2}
         >
           {Row}
         </List>
       ) : (
-        <div
-          style={{
-            textAlign: 'center',
-            padding: '40px 20px',
-            color: 'var(--gray-600)'
-          }}
-        >
-          <div style={{ fontSize: '40px', marginBottom: '12px' }}>✨</div>
-          <p>还没有穿搭记录</p>
+        <div className="virtual-outfit-list-empty">
+          <div className="virtual-outfit-list-empty-icon">✨</div>
+          <p>還沒有穿搭紀錄</p>
         </div>
       )}
     </div>

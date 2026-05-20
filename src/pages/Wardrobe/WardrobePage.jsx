@@ -194,7 +194,7 @@ const WardrobePage = () => {
                 </div>
             )}
 
-            <main className="wardrobe-content">
+            <main className={`wardrobe-content ${viewMode === 'wardrobe' ? 'wardrobe-clothes-view' : 'wardrobe-outfit-view'}`}>
                 {viewMode === 'wardrobe' && (
                     <>
                         {isLoading && (
