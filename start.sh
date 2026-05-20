@@ -90,6 +90,12 @@ if command -v npm &> /dev/null; then
         npm install @react-three/fiber @react-three/drei three
     fi
 
+    # 檢查是否已安裝 react-window (虛擬滾動優化)
+    if ! grep -q "react-window" package.json; then
+        echo "   📦 偵測到缺少 react-window，正在安裝..."
+        npm install react-window
+    fi
+
     echo -e "   ${GREEN}✨ npm 依賴檢查/安裝完成！${NC}"
 else
     echo "⚠️  npm 未安裝在本機，將由 Docker 容器內部處理依賴安裝"

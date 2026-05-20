@@ -8,6 +8,7 @@ import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import OutfitDisplay from '../../components/OutfitDisplay/OutfitDisplay';
+import VirtualOutfitList from '../../components/OutfitList/VirtualOutfitList';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import apiClient, { API_URL, fetcher } from '../../services/api';
 
@@ -327,102 +328,20 @@ const WardrobePage = () => {
                         )}
 
                         {!isOutfitLoading && outfitHistory.length > 0 ? (
-                            <div className="outfit-history-container">
-                                <h2 style={{
-                                    fontSize: 'var(--font-2xl)',
-                                    fontWeight: '700',
-                                    color: 'var(--gray-900)',
-                                    marginBottom: '24px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 'var(--spacing-md)'
-                                }}>
-                                    <span style={{
-                                        display: 'inline-block',
-                                        width: '4px',
-                                        height: '28px',
-                                        background: 'linear-gradient(180deg, var(--primary), #a855f7)',
-                                        borderRadius: '2px'
-                                    }}></span>
-                                    我的穿搭 <span style={{fontSize: '14px', fontWeight: '500', color: 'var(--gray-600)'}}>(共 {outfitHistory.length} 組)</span>
-                                </h2>
-                                <div className="outfit-history-list">
-                                    {outfitHistory.map((outfit) => (
-                                        <div 
-                                            key={outfit.model_uid} 
-                                            className="outfit-item"
-                                            onClick={() => navigate(`/outfit/${outfit.model_uid}`)}
-                                            style={{ cursor: 'pointer' }}
-                                        >
-                                            <div className="outfit-styles">
-                                                {Array.isArray(outfit.model_style) && outfit.model_style.length > 0 ? (
-                                                    outfit.model_style.map((style, index) => (
-                                                        <span key={index} className="style-tag">{style}</span>
-                                                    ))
-                                                ) : outfit.model_style && typeof outfit.model_style === 'string' ? (
-                                                    <span className="style-tag">{outfit.model_style}</span>
-                                                ) : (
-                                                    <span className="style-tag">未分類</span>
-                                                )}
-                                            </div>
-
-                                            <div className="outfit-model-section">
-                                                <OutfitDisplay
-                                                    url={getFullClothesImageUrl(show3DMap[outfit.model_uid] ? outfit.model_picture_3d : outfit.model_picture)}
-                                                    alt="模特穿搭"
-                                                    className="outfit-model-image"
-                                                    style={{ borderRadius: '8px' }}
-                                                    containerStyle={{
-                                                        width: '100%',
-                                                        height: '280px',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        borderRadius: '8px',
-                                                        overflow: 'hidden'
-                                                    }}
-                                                    cameraConfig={{
-                                                        position: [0, 0.5, 1.5],
-                                                        fov: 50
-                                                    }}
-                                                />
-                                                {outfit.model_picture_3d && (
-                                                    <button
-                                                        onClick={(e) => toggle3D(e, outfit.model_uid)}
-                                                        className="unified-view-button result-mode wardrobe-toggle-button"
-                                                        title={show3DMap[outfit.model_uid] ? '切換到 2D 結果' : '切換到 3D 結果'}
-                                                    >
-                                                        <span className="view-icon">🔄</span>
-                                                        <span className="view-label">{show3DMap[outfit.model_uid] ? '看2D' : '看3D'}</span>
-                                                    </button>
-                                                )}
-                                                {outfit.model_favorite && (
-                                                    <span style={{
-                                                        position: 'absolute',
-                                                        top: '8px',
-                                                        right: '8px',
-                                                        fontSize: '20px',
-                                                        filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
-                                                        zIndex: 5
-                                                    }}>
-                                                        ❤️
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <div className="outfit-info">
-                                                <span className="outfit-date">
-                                                    {(outfit.model_created_time || outfit.created_at) ? new Date(outfit.model_created_time || outfit.created_at).toLocaleDateString('zh-TW', {
-                                                        year: 'numeric',
-                                                        month: '2-digit',
-                                                        day: '2-digit'
-                                                    }) : '日期未知'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
+                            <VirtualOutfitList
+                                outfits={outfitHistory}
+                                onOutfitClick={(outfit) => navigate(`/outfit/${outfit.model_uid}`)}
+                                show3DMap={show3DMap}
+                                onToggle3D={(uid) => {
+                                    setShow3DMap(prev => ({
+                                        ...prev,
+                                        [uid]: !prev[uid]
+                                    }));
+                                }}
+                                getImageUrl={getFullClothesImageUrl}
+                                itemHeight={420}
+                                windowHeight={window.innerHeight - 300}
+                            />
                         ) : (
                             !isOutfitLoading && (
                                 <div className="empty-state">

@@ -17,13 +17,10 @@ ENV PATH="/opt/venv/bin:$PATH"
 # --- 階段二：建置 (Builder) ---
 FROM base AS builder
 # 安裝前端依賴
-# 拆開寫，看它在哪一行噴錯，就能抓出是誰失蹤
-COPY package.json ./
-RUN ls -l package.json # 測試是否成功複製
-
-COPY package-lock.json ./
-RUN ls -l package-lock.json
-RUN npm install
+# 使用 npm ci 確保依賴版本一致性
+COPY package.json package-lock.json ./
+RUN ls -l package*.json # 測試是否成功複製
+RUN npm ci --prefer-offline --no-audit --legacy-peer-deps
 
 # 傳入 Vite 參數（打包時會寫入 JS）
 ARG VITE_API_URL
