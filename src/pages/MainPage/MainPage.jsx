@@ -141,8 +141,24 @@ const MainPage = () => {
             setHasBothResults(true);
             setCurrentResultView(currentView || '3d'); // 預設顯示 3D
 
-            // 根據 currentView 決定初始顯示
-            if (currentView === '2d') {
+            // 當模式為 2d+3d 時，優先顯示 2D，然後自動切換到 3D 並改為 3d 模式
+            if (virtualTryOnMode === '2d+3d') {
+              console.log('🖼️ [2D+3D 模式] 先顯示 2D 結果，將在 3 秒後自動切換到 3D 並改為 3d 模式');
+              setVirtualTryOnImage(res2D.url);
+              setVirtualTryOnModel(null);
+              setShow3DModel(false);
+              mutate('modelPhoto', res2D.url, false);
+              
+              // 3 秒後自動切換到 3D 並改模式為 3d
+              setTimeout(() => {
+                console.log('🎭 自動切換到 3D 結果，模式改為 3d');
+                setVirtualTryOnModel(res3D.url);
+                setVirtualTryOnImage(null);
+                setShow3DModel(true);
+                setVirtualTryOnMode('3d');
+                localStorage.setItem('virtualTryOnMode', '3d');
+              }, 3000);
+            } else if (currentView === '2d') {
               console.log('🖼️ 初始顯示 2D 結果');
               setVirtualTryOnImage(res2D.url);
               setVirtualTryOnModel(null);
@@ -234,7 +250,7 @@ const MainPage = () => {
       window.removeEventListener('virtualTryOnComplete', handleVirtualTryOnComplete);
       window.removeEventListener('virtualTryOnError', handleVirtualTryOnError);
     };
-  }, []);
+  }, [virtualTryOnMode]);
 
   return (
     <div className="container">
@@ -389,7 +405,7 @@ const MainPage = () => {
           )}
         </div>
 
-        {isVirtualTrying && (
+        {isVirtualTrying && (virtualTryOnMode === '2d+3d' || (virtualTryOnMode === '2d' && !show3DModel) || (virtualTryOnMode === '3d' && show3DModel)) && (
           <div className="virtual-tryon-status-overlay">
             <div className="lottie-container">
               <Lottie 
