@@ -58,62 +58,120 @@ const MainPage = () => {
     }
   }, []);
 
-  // 在組件首次掛載時清除虛擬試穿的臨時數據
+  // 在組件首次掛載時恢復虛擬試穿的快取結果（不清除）
   useEffect(() => {
-    setIsVirtualTrying(false);
-    isVirtualTryingRef.current = false;
-    setVirtualTryingClothes('');
-    setVirtualTryOnImage(null);
-    setVirtualTryOnModel(null);
-    setResult2D(null);
-    setResult3D(null);
-    setHasBothResults(false);
-    setCurrentResultView('auto');
+    // 1. 檢查是否有正在進行的虛擬試穿（使用 sessionStorage 跨頁面保持狀態）
+    const tryingStatus = sessionStorage.getItem('virtualTryingStatus');
+    let hasOngoingTryOn = false;
     
-    localStorage.removeItem('virtualTryOnResult');
-    localStorage.removeItem('virtualTryOnError');
+    if (tryingStatus) {
+      console.log('🔄 [恢復] 檢測到進行中的虛擬試穿狀態');
+      const { isVirtualTrying: wasVirtualTrying, clothesInfo } = JSON.parse(tryingStatus);
+      if (wasVirtualTrying) {
+        console.log('🔄 [恢復] 恢復試穿中狀態，衣服:', clothesInfo?.names);
+        hasOngoingTryOn = true;
+        setIsVirtualTrying(true);
+        isVirtualTryingRef.current = true;
+        setVirtualTryingClothes(clothesInfo?.names || '選中的衣服');
+      }
+    }
+
+    // 2. 只有當沒有進行中的試穿時，才恢復快取的試穿結果
+    // 這樣可以避免用戶發送新試穿請求後，切回頁面時被舊結果打斷
+    if (!hasOngoingTryOn) {
+      const cachedResult = localStorage.getItem('virtualTryOnResult');
+      if (cachedResult) {
+        console.log('💾 恢復快取的試穿結果（沒有進行中的試穿）');
+        try {
+          const parsedResult = JSON.parse(cachedResult);
+          const { url, fileType, hasBothResults, result2D: res2D, result3D: res3D, currentView } = parsedResult;
+          
+          if (hasBothResults && res2D && res3D) {
+            console.log('🔄 恢復 2D+3D 雙結果');
+            setResult2D(res2D);
+            setResult3D(res3D);
+            setHasBothResults(true);
+            setCurrentResultView(currentView || '3d');
+            
+            // 根據 currentView 恢復顯示
+            if (currentView === '2d') {
+              setVirtualTryOnImage(res2D.url);
+              setVirtualTryOnModel(null);
+              setShow3DModel(false);
+            } else {
+              setVirtualTryOnModel(res3D.url);
+              setVirtualTryOnImage(null);
+              setShow3DModel(true);
+            }
+          } else {
+            // 單個結果
+            if (fileType === 'glb') {
+              console.log('🎭 恢復 3D 模型');
+              setVirtualTryOnModel(url);
+              setVirtualTryOnImage(null);
+              setShow3DModel(true);
+            } else {
+              console.log('🖼️ 恢復 2D 圖片');
+              setVirtualTryOnImage(url);
+              setVirtualTryOnModel(null);
+              setShow3DModel(false);
+            }
+          }
+          
+          // ✅ 恢復結果後，確保取消試穿動畫
+          setIsVirtualTrying(false);
+          isVirtualTryingRef.current = false;
+          setVirtualTryingClothes('');
+          // ✅ 清除 sessionStorage 中的進行中標誌，表示試穿已完成
+          sessionStorage.removeItem('virtualTryingStatus');
+          console.log('✅ 試穿動畫已取消，顯示試穿結果');
+        } catch (e) {
+          console.error('❌ 恢復試穿結果失敗:', e);
+        }
+      }
+    } else {
+      // 如果有進行中的試穿，不恢復舊結果，以便顯示新的結果
+      console.log('⏳ 有進行中的試穿，暫不恢復舊結果，等待新結果');
+    }
     
+    // 3. 只清除路由狀態，不清除試穿結果
     if (location.state?.startedVirtualTryOn) {
-      console.log('🧹 檢測到殘留的虛擬試穿狀態，清除路由信息');
+      console.log('🧹 檢測到虛擬試穿路由信息，清除路由狀態');
       window.history.replaceState({}, document.title, window.location.pathname);
     }
     
-    console.log('🧹 頁面加載：已清除所有虛擬試穿狀態');
+    console.log('✅ 頁面加載完成');
   }, []);
 
-  // 監控虛擬試穿的啟動
+  // 監控虛擬試穿的啟動（來自 VirtualTryOn 頁面）
   useEffect(() => {
     if (location.state?.startedVirtualTryOn) {
       const clothesNames = location.state.clothesInfo?.names || '選中的衣服';
       setIsVirtualTrying(true);
       isVirtualTryingRef.current = true;
       setVirtualTryingClothes(clothesNames);
-      console.log('🔍 接收到虛擬試穿請求，衣服:', clothesNames);
-    } else {
-      setIsVirtualTrying(false);
-      isVirtualTryingRef.current = false;
-      setVirtualTryingClothes('');
-      setVirtualTryOnImage(null);
-      setVirtualTryOnModel(null);
-      setResult2D(null);
-      setResult3D(null);
-      setHasBothResults(false);
-      setCurrentResultView('auto');
-      localStorage.removeItem('virtualTryOnResult');
-      localStorage.removeItem('virtualTryOnError');
+      
+      // 保存試穿狀態到 sessionStorage，跨頁面保持狀態
+      sessionStorage.setItem('virtualTryingStatus', JSON.stringify({
+        isVirtualTrying: true,
+        clothesInfo: location.state.clothesInfo,
+        startTime: Date.now()
+      }));
+      
+      console.log('🔍 [MainPage] 接收到虛擬試穿啟動信號，衣服:', clothesNames);
     }
   }, [location.state?.startedVirtualTryOn, location.pathname]);
 
   // 監控虛擬試穿完成事件
   useEffect(() => {
     const handleVirtualTryOnComplete = () => {
+      console.log('📥 [MainPage] 收到虛擬試穿完成事件');
+      
       if (!isVirtualTryingRef.current) {
-        console.log('⏭️ 虛擬試穿已取消，忽略 API 結果');
+        console.log('⏭️ 虛擬試穿狀態已結束，忽略此事件');
         return;
       }
 
-      console.log('📥 收到虛擬試穿完成事件');
-      
       try {
         const resultData = localStorage.getItem('virtualTryOnResult');
         if (resultData) {
@@ -166,13 +224,9 @@ const MainPage = () => {
               mutate('modelPhoto', res2D.url, false);
             } else {
               console.log('🎭 初始顯示 3D 結果');
-              setVirtualTryOnModel(null);
+              setVirtualTryOnModel(res3D.url);
               setVirtualTryOnImage(null);
-              setShow3DModel(false);
-              setTimeout(() => {
-                setVirtualTryOnModel(res3D.url);
-                setShow3DModel(true);
-              }, 100);
+              setShow3DModel(true);
             }
           } else {
             // 單個結果
@@ -206,12 +260,15 @@ const MainPage = () => {
           setIsVirtualTrying(false);
           isVirtualTryingRef.current = false;
           setVirtualTryingClothes('');
-          localStorage.removeItem('virtualTryOnResult');
+          // 清除 sessionStorage 中的試穿狀態
+          sessionStorage.removeItem('virtualTryingStatus');
+          // 不刪除 virtualTryOnResult，保留在 localStorage 中供切回時使用
         }
       } catch (err) {
         console.error('❌ 處理虛擬試穿結果失敗:', err);
         setIsVirtualTrying(false);
         isVirtualTryingRef.current = false;
+        sessionStorage.removeItem('virtualTryingStatus');
       }
     };
 
@@ -221,14 +278,14 @@ const MainPage = () => {
         return;
       }
 
-      console.log('❌ 收到虛擬試穿錯誤事件');
+      console.log('❌ [MainPage] 收到虛擬試穿錯誤事件');
       
       try {
         const errorData = localStorage.getItem('virtualTryOnError');
         if (errorData) {
           const { error } = JSON.parse(errorData);
           alert('虛擬試穿失敗: ' + error);
-          localStorage.removeItem('virtualTryOnError');
+          // 不刪除錯誤，保留供全局使用
         }
       } catch (err) {
         console.error('❌ 處理虛擬試穿錯誤失敗:', err);
@@ -237,6 +294,7 @@ const MainPage = () => {
       setIsVirtualTrying(false);
       isVirtualTryingRef.current = false;
       setVirtualTryingClothes('');
+      sessionStorage.removeItem('virtualTryingStatus');
       setResult2D(null);
       setResult3D(null);
       setHasBothResults(false);
@@ -276,7 +334,7 @@ const MainPage = () => {
         />
         
         {show3DModel ? (
-          <div className="model-3d-container">
+          <div className={`model-3d-container ${isVirtualTrying ? 'trying-opacity' : ''}`}>
             {virtualTryOnModel ? (
               <ModelViewer
                 modelPath={virtualTryOnModel}
@@ -293,8 +351,8 @@ const MainPage = () => {
             )}
           </div>
         ) : (
-          <div className={`avatar-wrapper`}>
-            {isLoadingModel ? (
+          <div className={`avatar-wrapper`} style={{ position: 'relative', display: 'inline-block' }}>
+            {isLoadingModel && !virtualTryOnImage && !show3DModel ? (
               <div className="model-loading">
                 <div className="loading-spinner"></div>
                 <span>加載中...</span>
@@ -304,15 +362,83 @@ const MainPage = () => {
                 <img 
                   src={virtualTryOnImage || userPhotoUrl || Images.model} 
                   alt="model" 
-                  className={`model-img ${isVirtualTrying ? 'trying-opacity' : ''} `}
+                  className={`model-img ${isVirtualTrying && !show3DModel ? 'trying-opacity' : ''} `}
                   onClick={() => navigate('/virtual-tryon', { state: { virtualTryOnMode } })}
                   style={{ cursor: 'pointer' }}
                 />
                 <div className="model-hint">點擊試穿</div>
-                
               </>
             )}
           </div>
+        )}
+
+        {/* 清空試穿結果按鈕 - 當有試穿結果時顯示（2D 和 3D 都適用） */}
+        {(virtualTryOnImage || virtualTryOnModel) && (
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              console.log('🗑️ 清空試穿結果 - 開始清除所有緩存和狀態');
+              
+              // 1. 清除所有 React 狀態（立刻生效）
+              setVirtualTryOnImage(null);
+              setVirtualTryOnModel(null);
+              setResult2D(null);
+              setResult3D(null);
+              setHasBothResults(false);
+              setCurrentResultView('auto');
+              setShow3DModel(false);
+              setIsVirtualTrying(false);
+              setVirtualTryingClothes('');
+              isVirtualTryingRef.current = false;
+              
+              // 2. 清除所有 localStorage 項目
+              localStorage.removeItem('virtualTryOnResult');
+              localStorage.removeItem('virtualTryOnError');
+              
+              // 3. 清除所有 sessionStorage 項目
+              sessionStorage.removeItem('virtualTryingStatus');
+              sessionStorage.removeItem('virtualTryOnHistory');
+              
+              // 4. 重新獲取用戶設定的模特照片並更新 SWR 緩存
+              try {
+                const result = await getModelPhoto();
+                if (result.success && result.photo?.user_image_url) {
+                  console.log('📸 已恢復用戶設定的模特照片:', result.photo.user_image_url);
+                  mutate('modelPhoto', result.photo.user_image_url, false);
+                } else {
+                  console.log('📸 使用默認模特照片');
+                  mutate('modelPhoto', undefined, false);
+                }
+              } catch (err) {
+                console.error('❌ 重新獲取用戶模特照片失敗:', err);
+                mutate('modelPhoto', undefined, false);
+              }
+              
+              console.log('✅ 試穿結果已完全清除');
+            }}
+            className="clear-tryon-button"
+            title="清空試穿結果"
+            style={{
+              position: 'absolute',
+              top: '150px',
+              right: '100px',
+              background: 'rgba(255, 100, 100, 0.8)',
+              border: 'none',
+              borderRadius: '50%',
+              width: '36px',
+              height: '36px',
+              cursor: 'pointer',
+              fontSize: '20px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 100,
+              padding: 0,
+              transition: 'all 0.2s ease'
+            }}
+          >
+            ✕
+          </button>
         )}
 
         <button

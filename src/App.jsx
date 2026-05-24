@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 
 // 引入頁面
 import LoginPage from './pages/Login/LoginPage';
@@ -20,9 +20,72 @@ import NotificationPage from './pages/Notification/NotificationPage';
 import CrawlerPage from './pages/Crawler/CrawlerPage';
 import Test3D from './components/3D/Test3D';
 
+// 全局虛擬試穿事件處理組件
+const VirtualTryOnEventHandler = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleVirtualTryOnComplete = () => {
+      console.log('🌍 [全局] 收到虛擬試穿完成事件');
+      const isOnMainPage = location.pathname === '/home';
+      
+      if (!isOnMainPage) {
+        console.log('📍 用戶不在 MainPage，顯示通知');
+        try {
+          const resultData = localStorage.getItem('virtualTryOnResult');
+          if (resultData) {
+            const parsed = JSON.parse(resultData);
+            alert(`✅ 試穿完成！\n\n回到主頁查看結果`);
+            // 保留結果在 localStorage，不刪除
+          }
+        } catch (e) {
+          console.error('❌ 處理虛擬試穿完成通知失敗:', e);
+        }
+      }
+      
+      // ✅ 清除進行中標誌，讓 MainPage 知道試穿已完成
+      console.log('✅ 清除試穿進行中標誌');
+      sessionStorage.removeItem('virtualTryingStatus');
+    };
+
+    const handleVirtualTryOnError = () => {
+      console.log('🌍 [全局] 收到虛擬試穿錯誤事件');
+      const isOnMainPage = location.pathname === '/home';
+      
+      if (!isOnMainPage) {
+        console.log('📍 用戶不在 MainPage，顯示錯誤通知');
+        try {
+          const errorData = localStorage.getItem('virtualTryOnError');
+          if (errorData) {
+            const { error } = JSON.parse(errorData);
+            alert(`❌ 試穿失敗: ${error}`);
+            // 不刪除錯誤，讓 MainPage 可以收到
+          }
+        } catch (e) {
+          console.error('❌ 處理虛擬試穿錯誤通知失敗:', e);
+        }
+      }
+      
+      // ✅ 清除進行中標誌
+      sessionStorage.removeItem('virtualTryingStatus');
+    };
+
+    window.addEventListener('virtualTryOnComplete', handleVirtualTryOnComplete);
+    window.addEventListener('virtualTryOnError', handleVirtualTryOnError);
+
+    return () => {
+      window.removeEventListener('virtualTryOnComplete', handleVirtualTryOnComplete);
+      window.removeEventListener('virtualTryOnError', handleVirtualTryOnError);
+    };
+  }, [location.pathname]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <BrowserRouter>
+      <VirtualTryOnEventHandler />
       <Routes>
         {/* 設定路徑規則 */}
         

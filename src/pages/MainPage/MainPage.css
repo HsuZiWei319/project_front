@@ -325,6 +325,10 @@
   opacity: 0.5;
 }
 
+.model-3d-container.trying-opacity {
+  opacity: 0.5;
+}
+
 /* 模型加載狀態樣式 */
 .model-loading {
   width: 100%;

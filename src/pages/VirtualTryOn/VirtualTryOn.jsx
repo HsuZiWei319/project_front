@@ -131,6 +131,12 @@ const VirtualTryOn = () => {
         const clothesIds = selectedClothes.map(clothes => clothes.clothes_uid);
         const clothesNames = selectedClothes.map(clothes => clothes.clothes_category).join(' + ');
 
+        // ✅ 清除舊的試穿結果，確保新試穿不會被舊結果污染
+        localStorage.removeItem('virtualTryOnResult');
+        localStorage.removeItem('virtualTryOnError');
+        sessionStorage.removeItem('virtualTryOnHistory');
+        console.log('🧹 已清除舊的試穿結果緩存');
+
         // 立即導航回 MainPage，傳遞衣服信息和開始試穿標誌
         navigate('/home', { 
             state: { 
@@ -335,6 +341,9 @@ const VirtualTryOn = () => {
                 error: errorMsg,
                 timestamp: Date.now()
             }));
+            
+            // 清除試穿中的狀態
+            sessionStorage.removeItem('virtualTryingStatus');
             
             window.dispatchEvent(new Event('virtualTryOnError'));
         } finally {
