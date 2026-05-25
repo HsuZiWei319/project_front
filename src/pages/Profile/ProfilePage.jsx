@@ -7,6 +7,9 @@ import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
+import PhotoSourceModal from '../../components/Dialog/PhotoSourceModal';
+import CameraCapture from '../../components/Dialog/CameraCapture';
+import ImageCropper from '../../components/Dialog/ImageCropper';
 import { logout, deleteUser } from '../../services/authService';
 import { useImageUpload } from '../../hooks/useImageUpload';
 import { getModelPhoto } from '../../services/imageService';
@@ -20,6 +23,12 @@ const ProfilePage = () => {
   const [deletePassword, setDeletePassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  // 照片上傳流程狀態
+  const [showPhotoSourceModal, setShowPhotoSourceModal] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [showCropper, setShowCropper] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
   
   const fileInputRef = useRef(null);
   const { handleFileSelectedForModelUpload, error: hookError, isLoading: hookIsLoading } = useImageUpload();
@@ -101,7 +110,7 @@ const ProfilePage = () => {
 
   const handlePhotoClick = () => {
     if (hookIsLoading) return;
-    fileInputRef.current?.click();
+    setShowPhotoSourceModal(true);
   };
 
   const handleFileChange = async (event) => {
@@ -110,6 +119,40 @@ const ProfilePage = () => {
     try {
       await handleFileSelectedForModelUpload(file, () => {
         event.target.value = '';
+        // 上傳成功後，通知 SWR 重新獲取數據
+        mutate('profileModelPhoto');
+      });
+    } catch (error) {
+      console.error('上傳錯誤:', error);
+    }
+  };
+
+  // 處理從照片庫選擇照片
+  const handleSelectFromLibrary = () => {
+    setShowPhotoSourceModal(false);
+    fileInputRef.current?.click();
+  };
+
+  // 處理直接拍照
+  const handleSelectCamera = () => {
+    setShowPhotoSourceModal(false);
+    setShowCamera(true);
+  };
+
+  // 處理相機拍照完成
+  const handleCameraCapture = (file) => {
+    setCapturedImage(file);
+    setShowCamera(false);
+    setShowCropper(true);
+  };
+
+  // 處理裁切完成
+  const handleCropComplete = async (file) => {
+    setShowCropper(false);
+    setCapturedImage(null);
+    
+    try {
+      await handleFileSelectedForModelUpload(file, () => {
         // 上傳成功後，通知 SWR 重新獲取數據
         mutate('profileModelPhoto');
       });
@@ -330,6 +373,33 @@ const ProfilePage = () => {
       )}
 
       <BottomNavigation onFileSelected={handleFileSelectedForClothesUpload} />
+
+      {/* 照片源選擇模態框 */}
+      <PhotoSourceModal
+        isOpen={showPhotoSourceModal}
+        onClose={() => setShowPhotoSourceModal(false)}
+        onSelectFromLibrary={handleSelectFromLibrary}
+        onSelectCamera={handleSelectCamera}
+      />
+
+      {/* 相機拍照組件 */}
+      <CameraCapture
+        isOpen={showCamera}
+        onClose={() => setShowCamera(false)}
+        onCapture={handleCameraCapture}
+      />
+
+      {/* 圖像裁切組件 */}
+      <ImageCropper
+        isOpen={showCropper}
+        imageSrc={capturedImage}
+        onClose={() => {
+          setShowCropper(false);
+          setCapturedImage(null);
+        }}
+        onCropComplete={handleCropComplete}
+        aspectRatio={1}
+      />
 
       <input
         ref={fileInputRef}

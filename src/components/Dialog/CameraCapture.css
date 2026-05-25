@@ -1,0 +1,215 @@
+/* CameraCapture 樣式 */
+
+.camera-capture-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+.camera-capture-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  color: white;
+}
+
+.camera-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.camera-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.camera-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.camera-close-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.camera-close-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.camera-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-loading,
+.camera-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: white;
+}
+
+.camera-loading p,
+.camera-error p {
+  font-size: 16px;
+  margin: 0;
+  text-align: center;
+}
+
+.camera-error svg {
+  width: 48px;
+  height: 48px;
+  color: #ff6b6b;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.camera-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.7);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.camera-toggle-btn,
+.camera-capture-btn,
+.camera-cancel-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.camera-toggle-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.camera-toggle-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.camera-toggle-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.camera-capture-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 40px;
+  font-size: 16px;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.camera-capture-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.camera-capture-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.camera-cancel-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.camera-cancel-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.camera-toggle-btn:disabled,
+.camera-capture-btn:disabled,
+.camera-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 手機適配 */
+@media (max-width: 768px) {
+  .camera-header h2 {
+    font-size: 16px;
+  }
+
+  .camera-footer {
+    padding: 12px;
+    gap: 8px;
+  }
+
+  .camera-toggle-btn,
+  .camera-cancel-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+
+  .camera-capture-btn {
+    padding: 10px 32px;
+    font-size: 14px;
+    min-width: 100px;
+  }
+}

@@ -1,18 +1,25 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Images from '../../assets';
+import PhotoSourceModal from '../Dialog/PhotoSourceModal';
+import CameraCapture from '../Dialog/CameraCapture';
+import ImageCropper from '../Dialog/ImageCropper';
 
 const BottomNavigation = ({ onFileSelected }) => {
   const fileInputRef = useRef(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showPhotoSourceModal, setShowPhotoSourceModal] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
+  const [showCropper, setShowCropper] = useState(false);
+  const [capturedImage, setCapturedImage] = useState(null);
   const navigate = useNavigate();
 
   const handleAddButtonClick = () => {
     // 檢查是否正在處理，如果在處理就不能按
     if (isProcessing) return;
     
-    // 透過Ref去觸發隱藏input
-    fileInputRef.current?.click();
+    // 打開照片源選擇模態框
+    setShowPhotoSourceModal(true);
   };
 
   const handleHomeClick = () => {
@@ -40,6 +47,41 @@ const BottomNavigation = ({ onFileSelected }) => {
     }
   };
 
+  // 處理從照片庫選擇照片
+  const handleSelectFromLibrary = () => {
+    setShowPhotoSourceModal(false);
+    fileInputRef.current?.click();
+  };
+
+  // 處理直接拍照
+  const handleSelectCamera = () => {
+    setShowPhotoSourceModal(false);
+    setShowCamera(true);
+  };
+
+  // 處理相機拍照完成
+  const handleCameraCapture = (file) => {
+    setCapturedImage(file);
+    setShowCamera(false);
+    setShowCropper(true);
+  };
+
+  // 處理裁切完成
+  const handleCropComplete = (file) => {
+    setShowCropper(false);
+    setCapturedImage(null);
+    
+    setIsProcessing(true);
+    
+    // 調用父組件傳入的回調函數
+    if (onFileSelected) {
+      onFileSelected(file, () => {
+        // 上傳完成後重置狀態
+        setIsProcessing(false);
+      });
+    }
+  };
+
   return (
     <>
       <div className="shared-nav bottom-nav">
@@ -62,6 +104,33 @@ const BottomNavigation = ({ onFileSelected }) => {
           <div className="notification-text">通知</div>
         </div>
       </div>
+
+      {/* 照片源選擇模態框 */}
+      <PhotoSourceModal
+        isOpen={showPhotoSourceModal}
+        onClose={() => setShowPhotoSourceModal(false)}
+        onSelectFromLibrary={handleSelectFromLibrary}
+        onSelectCamera={handleSelectCamera}
+      />
+
+      {/* 相機拍照組件 */}
+      <CameraCapture
+        isOpen={showCamera}
+        onClose={() => setShowCamera(false)}
+        onCapture={handleCameraCapture}
+      />
+
+      {/* 圖像裁切組件 */}
+      <ImageCropper
+        isOpen={showCropper}
+        imageSrc={capturedImage}
+        onClose={() => {
+          setShowCropper(false);
+          setCapturedImage(null);
+        }}
+        onCropComplete={handleCropComplete}
+        aspectRatio={1}
+      />
 
       {/* 隱藏文件輸入 */}
       <input
