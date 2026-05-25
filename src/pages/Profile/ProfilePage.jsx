@@ -38,8 +38,8 @@ const ProfilePage = () => {
     }
   };
 
-  // Use SWR to manage model photo data
-  const { data: userPhotoUrl, isLoading: isLoadingModel } = useSWR('modelPhoto', fetchModelPhoto, {
+  // Use SWR to manage model photo data (使用獨立的 key，不與 MainPage 共用)
+  const { data: userPhotoUrl, isLoading: isLoadingModel } = useSWR('profileModelPhoto', fetchModelPhoto, {
     revalidateOnFocus: false,
     dedupingInterval: 60000,
   });
@@ -111,7 +111,7 @@ const ProfilePage = () => {
       await handleFileSelectedForModelUpload(file, () => {
         event.target.value = '';
         // 上傳成功後，通知 SWR 重新獲取數據
-        mutate('modelPhoto');
+        mutate('profileModelPhoto');
       });
     } catch (error) {
       console.error('上傳錯誤:', error);
