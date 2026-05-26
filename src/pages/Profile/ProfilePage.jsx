@@ -398,7 +398,6 @@ const ProfilePage = () => {
           setCapturedImage(null);
         }}
         onCropComplete={handleCropComplete}
-        aspectRatio={1}
       />
 
       <input

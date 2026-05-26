@@ -129,7 +129,6 @@ const BottomNavigation = ({ onFileSelected }) => {
           setCapturedImage(null);
         }}
         onCropComplete={handleCropComplete}
-        aspectRatio={1}
       />
 
       {/* 隱藏文件輸入 */}

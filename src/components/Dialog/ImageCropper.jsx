@@ -10,7 +10,7 @@ import './ImageCropper.css';
  * @param {Function} props.onCropComplete - 裁切完成回調，傳遞裁切後的 File
  * @param {number} props.aspectRatio - 縱橫比 (寬/高，e.g., 1 表示正方形)
  */
-const ImageCropper = ({ isOpen, imageSrc, onClose, onCropComplete, aspectRatio = 1 }) => {
+const ImageCropper = ({ isOpen, imageSrc, onClose, onCropComplete, aspectRatio = null }) => {
   const containerRef = useRef(null);
   const imgRef = useRef(null);
   const canvasRef = useRef(null);
@@ -253,12 +253,26 @@ const ImageCropper = ({ isOpen, imageSrc, onClose, onCropComplete, aspectRatio =
     const maxWidth = containerRect.width * 0.8;
     const maxHeight = containerRect.height * 0.6;
 
-    let width = Math.min(maxWidth, imgRect.width * 0.8);
-    let height = width / aspectRatio;
+    let width, height;
 
-    if (height > maxHeight) {
-      height = maxHeight;
-      width = height * aspectRatio;
+    if (aspectRatio && aspectRatio > 0) {
+      width = Math.min(maxWidth, imgRect.width * 0.8);
+      height = width / aspectRatio;
+
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * aspectRatio;
+      }
+    } else {
+      // 自由裁切：預設使用圖像比例的 80%，但不超過容器
+      const imgAspect = imgRect.width / imgRect.height;
+      width = Math.min(maxWidth, imgRect.width * 0.8);
+      height = width / imgAspect;
+
+      if (height > maxHeight) {
+        height = maxHeight;
+        width = height * imgAspect;
+      }
     }
 
     const x = (containerRect.width - width) / 2;
@@ -397,7 +411,7 @@ const ImageCropper = ({ isOpen, imageSrc, onClose, onCropComplete, aspectRatio =
                   width: `${cropArea.width}px`,
                   height: `${cropArea.height}px`,
                 }}
-                onMouseDown={(e) => handleMouseDown(e, 'pan')}
+                onMouseDown={(e) => handleMouseDown(e, 'move')}
               >
                 {/* 邊緣調整句柄 */}
                 <div className="crop-edge crop-edge-n" onMouseDown={(e) => handleMouseDown(e, 'n')} />
