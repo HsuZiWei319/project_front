@@ -3,27 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import '../../App.css';
 import './WardrobePage.css';
-import * as Images from '../../assets';
 import BackButton from '../../components/Header/BackButton';
 import Navigation from '../../components/Navigation/Navigation';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
-import OutfitDisplay from '../../components/OutfitDisplay/OutfitDisplay';
 import VirtualOutfitList from '../../components/OutfitList/VirtualOutfitList';
 import { useImageUpload } from '../../hooks/useImageUpload';
-import apiClient, { API_URL, fetcher } from '../../services/api';
-
-// 開發用衣服配置
-const DEV_CLOTHES = {
-    clothes_uid: 'dev-clothes-001',
-    clothes_category: '開發用圖片',
-    clothes_image_url: Images.test_clothes,
-    clothes_arm_length: 0,
-    clothes_leg_length: 0,
-    clothes_shoulder_width: 0,
-    clothes_waistline: 0,
-    clothes_favorite: false,
-    is_dev_clothes: true, // 標記為開發衣服
-};
+import { API_URL, fetcher } from '../../services/api';
 
 const WardrobePage = () => {
     const navigate = useNavigate();
@@ -65,18 +50,10 @@ const WardrobePage = () => {
         localStorage.setItem('wardrobeViewMode', viewMode);
     }, [viewMode]);
 
-    // 構建完整的衣服列表（包括開發衣服）
-    const allClothes = useMemo(() => {
-        const list = clothesData?.results ? [...clothesData.results] : [];
-        // 總是添加開發衣服
-        list.push(DEV_CLOTHES);
-        return list;
-    }, [clothesData]);
-
     // 根據分組模式重新分組衣服
     const groupedClothes = useMemo(() => {
         const grouped = {};
-        const clothes = allClothes;
+        const clothes = clothesData?.results || [];
         
         if (filterMode === 'category') {
             // 按類型分組
@@ -110,7 +87,7 @@ const WardrobePage = () => {
         }
         
         return grouped;
-    }, [allClothes, filterMode]);
+    }, [clothesData, filterMode]);
 
     const outfitHistory = outfitData?.results || [];
     const isLoading = !clothesData && !clothesError;
@@ -137,13 +114,7 @@ const WardrobePage = () => {
     };
 
     const handleClotheClick = (clothes) => {
-        if (clothes.is_dev_clothes) {
-            navigate(`/clothes/${clothes.clothes_uid}`, {
-                state: { isDevImage: true }
-            });
-        } else {
-            navigate(`/clothes/${clothes.clothes_uid}`);
-        }
+        navigate(`/clothes/${clothes.clothes_uid}`);
     };
 
     const toggle3D = (e, uid) => {
@@ -235,11 +206,11 @@ const WardrobePage = () => {
                                                 className="clothes-item"
                                                 onClick={() => handleClotheClick(clothes)}
                                                 style={{ cursor: 'pointer' }}
-                                                title={clothes.is_dev_clothes ? '開發用衣服 - 點擊進入上傳頁面' : clothes.clothes_category}
+                                                title={clothes.clothes_category}
                                             >
                                                 <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1' }}>
                                                     <img
-                                                        src={clothes.is_dev_clothes ? clothes.clothes_image_url : getFullClothesImageUrl(clothes.clothes_image_url)}
+                                                        src={getFullClothesImageUrl(clothes.clothes_image_url)}
                                                         alt={clothes.clothes_category}
                                                         className="clothes-image"
                                                         style={{
@@ -247,29 +218,10 @@ const WardrobePage = () => {
                                                             height: '100%',
                                                             objectFit: 'contain',
                                                             borderRadius: '8px',
-                                                            opacity: clothes.is_dev_clothes ? 0.7 : 1,
                                                         }}
                                                         onError={() => console.error('圖片加載失敗:', clothes.clothes_image_url)}
                                                     />
-                                                    {clothes.is_dev_clothes && (
-                                                        <div style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '50%',
-                                                            transform: 'translate(-50%, -50%)',
-                                                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                                                            color: 'white',
-                                                            padding: '8px 12px',
-                                                            borderRadius: 'var(--radius-lg)',
-                                                            fontSize: '12px',
-                                                            zIndex: 10,
-                                                            pointerEvents: 'none',
-                                                            fontWeight: '500'
-                                                        }}>
-                                                            🔧 開發衣服
-                                                        </div>
-                                                    )}
-                                                    {clothes.clothes_favorite && !clothes.is_dev_clothes && (
+                                                    {clothes.clothes_favorite && (
                                                         <span style={{
                                                             position: 'absolute',
                                                             top: '8px',

@@ -8,7 +8,6 @@ import BackButton from '../../components/Header/BackButton';
 import BottomNavigation from '../../components/Navigation/BottomNavigation';
 import { getClothesDetail, updateClothesWithImage, deleteClothes, toggleClothesLike } from '../../services/imageService';
 import { API_URL } from '../../services/api';
-import * as Images from '../../assets';
 
 const ClothesInfoPage = () => {
   const navigate = useNavigate();
@@ -18,7 +17,6 @@ const ClothesInfoPage = () => {
   // 狀態管理
   const [clothesData, setClothesData] = useState(null);
   const [originalClothesData, setOriginalClothesData] = useState(null);
-  const [isDevImage, setIsDevImage] = useState(false);
   const [sleeveLength, setSleeveLength] = useState('');
   const [pantLength, setPantLength] = useState('');
   const [shoulderWidth, setShoulderWidth] = useState('');
@@ -59,37 +57,6 @@ const ClothesInfoPage = () => {
       console.log('📍 開始載入衣服詳細信息，clothesId:', clothesId);
       setIsLoading(true);
       setError('');
-
-      // 檢查是否是開發衣服
-      if (location.state?.isDevImage) {
-        console.log('📌 這是開發圖片，使用虛擬數據');
-        setIsDevImage(true);
-        
-        const devData = {
-          clothes_uid: clothesId,
-          clothes_image_url: Images.test_clothes,
-          clothes_category: '開發',
-          clothes_arm_length: 0,
-          clothes_leg_length: 0,
-          clothes_shoulder_width: 0,
-          clothes_waistline: 0,
-          clothes_favorite: false,
-          is_dev_clothes: true,
-          styles: [{ style_name: '開發' }],
-        };
-        
-        setClothesData(devData);
-        setOriginalClothesData(devData);
-        setSleeveLength(devData.clothes_arm_length || 0);
-        setPantLength(devData.clothes_leg_length || 0);
-        setShoulderWidth(devData.clothes_shoulder_width || 0);
-        setWaistCircumference(devData.clothes_waistline || 0);
-        setClothesType(devData.clothes_category || '');
-        setClothesStyles(devData.styles || []);
-        setIsFavorite(devData.clothes_favorite || false);
-        setIsLoading(false);
-        return;
-      }
 
       if (!clothesId) {
         throw new Error('缺少衣服ID (clothesId)');
@@ -162,13 +129,6 @@ const ClothesInfoPage = () => {
 
   // 處理切換喜歡狀態
   const handleToggleLike = async () => {
-    // 開發衣服只在本地切換
-    if (isDevImage) {
-      console.log('📌 開發衣服 - 本地切換喜歡狀態');
-      setIsFavorite(!isFavorite);
-      return;
-    }
-
     setIsTogglingLike(true);
     setError('');
 
@@ -199,6 +159,7 @@ const ClothesInfoPage = () => {
       setIsTogglingLike(false);
     }
   };
+
   const handleUpdateClothes = async () => {
     if (!validateInputs()) {
       return;
@@ -209,17 +170,6 @@ const ClothesInfoPage = () => {
     setError('');
 
     try {
-      // 如果是開發衣服，只更新本地狀態
-      if (isDevImage) {
-        console.log('📌 開發衣服 - 跳過後端更新');
-        setStatusMessage('開發衣服已更新（本地測試）');
-        
-        setTimeout(() => {
-          navigate('/wardrobe');
-        }, 2000);
-        return;
-      }
-
       const measurements = {
         sleeve_length: parseFloat(sleeveLength),
         pant_length: parseFloat(pantLength),
@@ -269,17 +219,6 @@ const ClothesInfoPage = () => {
     setError('');
 
     try {
-      // 如果是開發衣服，只返回衣櫃
-      if (isDevImage) {
-        console.log('📌 開發衣服 - 跳過後端刪除');
-        setStatusMessage('開發衣服已刪除（本地測試）');
-        
-        setTimeout(() => {
-          navigate('/wardrobe');
-        }, 2000);
-        return;
-      }
-
       const result = await deleteClothes(clothesId);
 
       console.log('✅ 衣服刪除成功:', result);
@@ -433,34 +372,13 @@ const ClothesInfoPage = () => {
 
       {/* 主要內容區域 */}
       <div className="clothes-info-content">
-        {/* 開發衣服提示 */}
-        {isDevImage && (
-          <div style={{
-            width: '100%',
-            maxWidth: '360px',
-            backgroundColor: 'rgba(255, 193, 7, 0.08)',
-            color: '#f57f17',
-            padding: '14px 16px',
-            marginBottom: '16px',
-            borderRadius: '12px',
-            fontSize: '14px',
-            textAlign: 'center',
-            fontWeight: 600,
-            border: '1px solid rgba(255, 193, 7, 0.2)',
-            borderLeft: '4px solid #ffc107',
-            animation: 'slideIn 0.3s ease-out'
-          }}>
-            🔧 這是開發模式 - 本地測試數據
-          </div>
-        )}
-
         {/* 衣服圖片區域 */}
         {clothesData && (
           <div 
             className="clothes-image-section"
           >
             <img
-              src={isDevImage ? clothesData.clothes_image_url : getFullImageUrl(clothesData.clothes_image_url)}
+              src={getFullImageUrl(clothesData.clothes_image_url)}
               alt="clothes-image"
               className="clothes-image"
             />
