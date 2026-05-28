@@ -4,23 +4,19 @@
 
 .container {
   width: 100%;
-  max-width: 430px;
+  max-width: 26.875rem;
   height: 100vh;
-  max-height: 932px;
+  max-height: 58.25rem;
   
   display: flex;
   flex-direction: column;
   position: relative;
   
-  background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
-  background-image: url('./assets/background/background_color.png');
-  background-size: 55vh auto;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: linear-gradient(180deg, #ffffff 0%, #bde0f7 100%);
   
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  border-radius: 40px;
+  border-radius: 2.5rem;
 }
 
 /* 狀態覆蓋層 */
@@ -30,7 +26,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: rgba(255, 255, 255, 0.95);
-  padding: 24px 48px;
+  padding: 1.5rem 3rem;
   border-radius: var(--radius-xl);
   z-index: 50;
   text-align: center;
@@ -43,7 +39,7 @@
 /* 共用導覽列樣式 */
 .shared-nav {
   width: 100%;
-  height: 100px;
+  height: 6.25rem;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(230, 245, 255, 0.8) 100%);
   display: flex;
   justify-content: space-around;
@@ -70,7 +66,7 @@
   font-size: var(--font-3xl);
   color: var(--gray-900);
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -79,8 +75,8 @@
 
 /* 登入按鈕 */
 .login-btn {
-  width: 300px;
-  padding: 14px 28px;
+  width: 18.75rem;
+  padding: 0.875rem 1.75rem;
   background: var(--gradient-primary);
   color: white;
   border: none;
@@ -88,7 +84,7 @@
   font-size: var(--font-lg);
   font-weight: 600;
   cursor: pointer;
-  margin-bottom: 30px;
+  margin-bottom: 1.875rem;
   transition: all var(--transition-base);
   box-shadow: var(--shadow-lg);
 }

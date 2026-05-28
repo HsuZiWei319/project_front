@@ -4,20 +4,20 @@
 
 /* 註冊頁專用的 Header 樣式 */
 .register-header {
-  margin-top: 50px; /* 往下移一點 (預設為 100px) */
+  margin-top: 3.125rem;
 }
 
 /* 左上角返回箭頭 */
 .back-arrow {
   position: absolute;
-  top: 105px;
-  left: 10px;
-  width: 14px;
+  top: 6.5625rem;
+  left: 0.625rem;
+  width: 0.875rem;
   height: auto;
   cursor: pointer;
-  padding: 10px;
+  padding: 0.625rem;
   transition: all var(--transition-base);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.1));
 }
 
 .back-arrow:hover {
@@ -26,7 +26,8 @@
 
 /* 註冊頁專用的輸入框群組 */
 .input-group-register {
-  width: 300px;
+  max-width: 18.75rem;
+  width: 90%;
   margin-bottom: var(--spacing-lg);
   text-align: left;
   animation: slideUp 0.4s ease-out;
@@ -61,7 +62,7 @@
 .input-group-register input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  box-shadow: 0 0 0 0.1875rem rgba(99, 102, 241, 0.1);
   background-color: rgba(99, 102, 241, 0.02);
 }
 

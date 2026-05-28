@@ -1,10 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-TW">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 優化viewport設置：禁用用戶縮放以確保一致的渲染 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
     <title>upload_image</title>
+    <style>
+      /* 基礎字體大小設置 */
+      html {
+        font-size: 16px;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+      }
+      
+      /* 響應式設計：小螢幕設備 */
+      @media (max-width: 480px) {
+        html {
+          font-size: 14px;
+        }
+      }
+      
+      /* 響應式設計：中等螢幕 */
+      @media (min-width: 768px) and (max-width: 1024px) {
+        html {
+          font-size: 16px;
+        }
+      }
+      
+      /* 響應式設計：大螢幕 */
+      @media (min-width: 1025px) {
+        html {
+          font-size: 18px;
+        }
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
