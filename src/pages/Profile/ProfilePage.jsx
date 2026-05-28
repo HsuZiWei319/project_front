@@ -72,13 +72,12 @@ const ProfilePage = () => {
     } catch (err) {
       console.error('登出失敗:', err);
     } finally {
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('email');
+      // 清除所有前端快取與暫存資料
+      localStorage.clear();
+      sessionStorage.clear();
       setIsLoading(false);
       setShowLogoutModal(false);
-      navigate('/');
+      window.location.href = '/';
     }
   };
 
@@ -91,11 +90,10 @@ const ProfilePage = () => {
     setError('');
     try {
       await deleteUser(deletePassword);
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
-      localStorage.removeItem('email');
-      navigate('/');
+      // 清除所有前端快取與暫存資料
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/';
     } catch (err) {
       console.error('刪除帳號失敗:', err);
       const errorMessage = err.response?.data?.password?.[0] 

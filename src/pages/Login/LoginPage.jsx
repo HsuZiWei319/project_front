@@ -32,6 +32,10 @@ const LoginPage = () => {
       
       // 保存 token 和用戶資訊
       if (response.access || response.token) {
+        // 先清除舊的快取與暫存資料，以防萬一
+        localStorage.clear();
+        sessionStorage.clear();
+        
         // 兼容兩種 token 格式
         const token = response.access || response.token;
         const refreshToken = response.refresh || '';

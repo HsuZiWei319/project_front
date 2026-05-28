@@ -37,8 +37,8 @@ const CameraCapture = ({ isOpen, onClose, onCapture, initialFacingMode = true })
         const constraints = {
           video: {
             facingMode: isFacingUser ? 'user' : 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
           },
           audio: false,
         };

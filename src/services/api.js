@@ -75,10 +75,9 @@ apiClient.interceptors.response.use(
       const refreshToken = localStorage.getItem('refreshToken');
 
       if (!refreshToken) {
-        // 沒有 refreshToken，直接登出
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        // 沒有 refreshToken，直接登出並清除所有前端快取與暫存資料
+        localStorage.clear();
+        sessionStorage.clear();
         window.location.href = '/';
         return Promise.reject(error);
       }
@@ -110,10 +109,9 @@ apiClient.interceptors.response.use(
         isRefreshing = false;
         return apiClient(originalRequest);
       }).catch(err => {
-        // 刷新失敗，清除存儲並登出
-        localStorage.removeItem('token');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
+        // 刷新失敗，清除所有前端快取與暫存資料並登出
+        localStorage.clear();
+        sessionStorage.clear();
         
         processQueue(err, null);
         
