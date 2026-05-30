@@ -112,19 +112,21 @@ const RegisterPage = () => {
     <div className="container">
         <Navigation position="top_register" />
 
-        {/* 左上角返回箭頭 */}
-        <BackButton />
+        {/* 可滾動內容區域 */}
+        <div className="login-scroll-container">
+          {/* 左上角返回箭頭 */}
+          <BackButton />
 
-        <AppHeader className="register-header" />
+          <AppHeader className="register-header" />
 
-        {isSuccess ? (
-          /* 成功訊息 */
-          <div style={{ margin: '40px 0', textAlign: 'center' }}>
-            <h2 style={{ fontSize: '30px', fontWeight: 'bold' }}>帳號建立成功！</h2>
-          </div>
-        ) : null}
+          {isSuccess ? (
+            /* 成功訊息 */
+            <div style={{ margin: '40px 0', textAlign: 'center' }}>
+              <h2 style={{ fontSize: '30px', fontWeight: 'bold' }}>帳號建立成功！</h2>
+            </div>
+          ) : null}
 
-        <div className="login-form">
+          <div className="login-form">
           {isSuccess ? (
             /* 登入按鈕 */
             <PrimaryButton onClick={handleGoHome}>
@@ -197,6 +199,7 @@ const RegisterPage = () => {
               </PrimaryButton>
             </>
           )}
+          </div>
         </div>
 
         <Navigation position="bottom" />

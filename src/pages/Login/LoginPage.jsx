@@ -74,11 +74,13 @@ const LoginPage = () => {
     <div className="container">
       <Navigation position="top_login" />
       
-      {/* 標題區 */}
-      <AppHeader />
+      {/* 可滾動內容區域 */}
+      <div className="login-scroll-container">
+        {/* 標題區 */}
+        <AppHeader />
 
-      {/* 表單區 */}
-      <div className="login-form">
+        {/* 表單區 */}
+        <div className="login-form">
         
         {/* 錯誤提示 */}
         {error && (
@@ -147,6 +149,7 @@ const LoginPage = () => {
             <img src={Images.icon_facebook} alt="Facebook login" className="social-icon" />
         </div>
         */}
+        </div>
         </div>
       </div>
 

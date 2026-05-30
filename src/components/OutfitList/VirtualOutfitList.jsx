@@ -151,15 +151,17 @@ const VirtualOutfitList = ({
       </h2>
 
       {itemCount > 0 ? (
-        <List
-          height={windowHeight}
-          itemCount={itemCount}
-          itemSize={itemHeight}
-          width="100%"
-          overscanCount={2}
-        >
-          {Row}
-        </List>
+        <div className="virtual-outfit-list-wrapper">
+          <List
+            height={windowHeight}
+            itemCount={itemCount}
+            itemSize={itemHeight}
+            width="100%"
+            overscanCount={2}
+          >
+            {Row}
+          </List>
+        </div>
       ) : (
         <div className="virtual-outfit-list-empty">
           <div className="virtual-outfit-list-empty-icon">✨</div>

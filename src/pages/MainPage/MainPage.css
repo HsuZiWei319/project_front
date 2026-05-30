@@ -10,29 +10,29 @@
   align-items: center;
   flex: 1;
   z-index: 100;
-  margin-top: 20px;
+  margin-top: var(--spacing-xl);
   cursor: pointer;
   transition: all var(--transition-base);
-  padding: 12px;
+  padding: 0.75rem;
   border-radius: var(--radius-lg);
 }
 
 .profile-card:hover {
   background: rgba(99, 102, 241, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
 /* 個人檔案icon */
 .profile-icon {
-  width: 30px;
+  width: 1.875rem;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
 }
 
 /* 個人檔案文字 */
 .profile-text {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   font-size: var(--font-sm);
   font-weight: 600;
   color: var(--gray-800);
@@ -52,28 +52,28 @@
   align-items: center;
   flex: 1;
   z-index: 100;
-  margin-top: 20px;
+  margin-top: var(--spacing-xl);
   cursor: pointer;
   transition: all var(--transition-base);
-  padding: 12px;
+  padding: 0.75rem;
   border-radius: var(--radius-lg);
 }
 
 .like-card:hover {
   background: rgba(236, 72, 153, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
 /* 喜歡icon */
 .like-icon {
-  width: 30px;
+  width: 1.875rem;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
 }
 
 .like-text {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   font-size: var(--font-sm);
   font-weight: 600;
   color: var(--gray-700);
@@ -93,24 +93,24 @@
   align-items: center;
   flex: 1;
   z-index: 100;
-  margin-top: 20px;
+  margin-top: var(--spacing-xl);
   cursor: pointer;
   transition: all var(--transition-base);
-  padding: 12px;
+  padding: 0.75rem;
   border-radius: var(--radius-lg);
 }
 
 .setting-card:hover {
   background: rgba(107, 114, 128, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
 /* 設定icon */
 .setting-icon {
-  width: 30px;
+  width: 1.875rem;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
   animation: spin 0.5s ease-in-out;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .setting-text {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   font-size: var(--font-sm);
   font-weight: 600;
   color: var(--gray-700);
@@ -139,28 +139,28 @@
   align-items: center;
   flex: 1;
   z-index: 100;
-  margin-top: -10px;
+  margin-top: -0.625rem;
   cursor: pointer;
   transition: all var(--transition-base);
-  padding: 12px;
+  padding: 0.75rem;
   border-radius: var(--radius-lg);
 }
 
 .home-card:hover {
   background: rgba(16, 185, 129, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
 /* 設定icon */
 .home-icon {
-  width: 30px;
+  width: 1.875rem;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
 }
 
 .home-text {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   font-size: var(--font-sm);
   font-weight: 600;
   color: var(--gray-800);
@@ -186,12 +186,12 @@
 
 .plus-icon {
   position: relative;
-  width: 100px;
+  width: 6.25rem;
   display: flex;
   align-items: center;
   flex: 1;
   z-index: 100;
-  margin-top: -10px;
+  margin-top: -0.625rem;
 }
 
 .add-button-container {
@@ -218,12 +218,12 @@
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  margin-bottom: 8px;
-  padding: 8px 12px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  font-size: 12px;
-  border-radius: 6px;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
@@ -242,28 +242,28 @@
   align-items: center;
   flex: 1;
   z-index: 100;
-  margin-top: -10px;
+  margin-top: -0.625rem;
   cursor: pointer;
   transition: all var(--transition-base);
-  padding: 12px;
+  padding: 0.75rem;
   border-radius: var(--radius-lg);
 }
 
 .notification-card:hover {
   background: rgba(59, 130, 246, 0.05);
-  transform: translateY(-2px);
+  transform: translateY(-0.125rem);
 }
 
 /* 通知icon */
 .notification-icon {
-  width: 30px;
+  width: 1.875rem;
   height: auto;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
 }
 
 .notification-text {
-  margin-top: 8px;
+  margin-top: 0.5rem;
   font-size: var(--font-sm);
   font-weight: 600;
   color: var(--gray-800);
@@ -278,47 +278,48 @@
 
 .plus-sign {
   color: white;
-  font-size: 40px;
-  margin-top: -5px; /* 微調加號位置 */
+  font-size: 2.5rem;
+  margin-top: -0.3125rem;
 }
-
 
 .main-content {
   flex: 1;
   display: flex;
-  flex-direction: column; /* 讓圖片跟文字垂直排列 */
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
-  width: 100%; /* 確保內容區塊寬度足夠 */
+  width: 100%;
 }
 
 /* 圖片容器：設定為相對定位，當作對齊的基準點 */
 .avatar-wrapper {
   position: relative;
-  top: -20px;
-  width: 550px; /* 確保容器寬度足夠 */
-  height: 550px;
+  top: -1.25rem;
+  width: 34.375rem;
+  height: 34.375rem;
   aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 100%;
+  max-height: 60%;
 }
 
 /* 確保你的圖片不會被切掉或變形 */
 .model-img {
-  width: 100%; /* 使用全寬 */
-  height: 100%; /* 使用全高 */
-  object-fit: contain; /* 保持圖片比例 */
-  display: block; /* 消除圖片底部空隙 */
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
   transition: transform 0.3s ease-in-out, filter 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .model-img:hover {
   transform: scale(1.03);
-  filter: drop-shadow(0 8px 16px rgba(99, 102, 241, 0.3));
+  filter: drop-shadow(0 0.5rem 1rem rgba(99, 102, 241, 0.3));
 }
 
 .model-img.trying-opacity {
@@ -338,18 +339,18 @@
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.02);
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
   color: #999;
-  gap: 16px;
+  gap: 1rem;
 }
 
 /* 加載動畫旋轉效果 */
 .loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(99, 102, 241, 0.1);
-  border-top: 4px solid rgba(99, 102, 241, 0.8);
+  width: 3.125rem;
+  height: 3.125rem;
+  border: 0.25rem solid rgba(99, 102, 241, 0.1);
+  border-top: 0.25rem solid rgba(99, 102, 241, 0.8);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -363,21 +364,21 @@
 /* 提示文字 */
 .model-hint {
   position: absolute;
-  bottom: 30px;
+  bottom: 1.875rem;
   left: 50%;
   transform: translateX(-50%);
   background: rgba(99, 102, 241, 0.9);
   color: white;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 13px;
+  padding: 0.5rem 1rem;
+  border-radius: 1.25rem;
+  font-size: 0.8125rem;
   font-weight: 500;
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
   pointer-events: none;
   z-index: 25;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 0.25rem 0.75rem rgba(99, 102, 241, 0.3);
 }
 
 .avatar-wrapper:hover .model-hint {
@@ -386,47 +387,45 @@
 
 .wardrobe-card {
   position: absolute;
-  top: 730px; /* 固定在上方，不受底部高度變化影響 */
-  right: 20px;
-  width: 35px;
+  bottom: 8.625rem;
+  right: 1.25rem;
+  width: 2.1875rem;
   height: auto;
   opacity: 1;
   transition: all 0.1s ease-in-out;
   z-index: 30;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-  /* 防模糊 */
-  transform: translateZ(0); 
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
+  transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
 }
 
 .wardrobe-card:hover {
-  transform: scale(1.05) translateY(-5px);
-  filter: drop-shadow(0 6px 12px rgba(99, 102, 241, 0.4));
+  transform: scale(1.05) translateY(-0.3125rem);
+  filter: drop-shadow(0 0.375rem 0.75rem rgba(99, 102, 241, 0.4));
   opacity: 0.9;
 }
 
 .chat-card {
   position: absolute;
-  top: 150px;
-  right: 20px;
-  width: 40px;
+  top: 9.375rem;
+  right: 1.25rem;
+  width: 2.5rem;
   height: auto;
   opacity: 1;
   transition: all 0.1s ease-in-out;
   z-index: 30;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-  /* 防模糊 */
-  transform: translateZ(0); 
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
+  transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
 }
 
 .chat-card:hover {
-  transform: scale(1.1) translateY(-3px);
-  filter: drop-shadow(0 6px 12px rgba(102, 126, 234, 0.5));
+  transform: scale(1.1) translateY(-0.1875rem);
+  filter: drop-shadow(0 0.375rem 0.75rem rgba(102, 126, 234, 0.5));
   opacity: 0.95;
 }
 
@@ -439,29 +438,29 @@
   background: rgba(255, 255, 255, 0.517);
   backdrop-filter: blur(10px);
   color: var(--primary);
-  padding: 40px;
-  border-radius: 24px;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
   text-align: center;
   z-index: 200;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1.25rem 2.5rem rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 250px;
+  min-width: 15.625rem;
 }
 
 .lottie-container {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 20px;
+  width: 12.5rem;
+  height: 12.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .virtual-tryon-status-overlay h2 {
   margin: 0;
-  font-size: 22px;
+  font-size: 1.375rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.125rem;
   background: linear-gradient(135deg, #6366f1, #ec4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -478,24 +477,23 @@
 
 .favorite-card {
   position: absolute;
-  top: 220px;
-  right: 20px;
-  width: 35px;
+  top: 13.75rem;
+  right: 1.25rem;
+  width: 2.1875rem;
   height: auto;
   opacity: 1;
   transition: all 0.1s ease-in-out;
   z-index: 30;
   cursor: pointer;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
-  /* 防模糊 */
-  transform: translateZ(0); 
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.15));
+  transform: translateZ(0);
   backface-visibility: hidden;
   will-change: transform;
 }
 
 .favorite-card:hover {
-  transform: scale(1.1) translateY(-3px);
-  filter: drop-shadow(0 6px 12px rgba(236, 72, 153, 0.5));
+  transform: scale(1.1) translateY(-0.1875rem);
+  filter: drop-shadow(0 0.375rem 0.75rem rgba(236, 72, 153, 0.5));
   opacity: 0.95;
 }
 
@@ -505,16 +503,16 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-0.5rem);
   }
 }
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7), 0 8px 20px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7), 0 0.5rem 1.25rem rgba(99, 102, 241, 0.35);
   }
   50% {
-    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0), 0 12px 30px rgba(99, 102, 241, 0.5);
+    box-shadow: 0 0 0 0.625rem rgba(99, 102, 241, 0), 0 0.75rem 1.875rem rgba(99, 102, 241, 0.5);
   }
 }
 
@@ -529,14 +527,14 @@
 
 .unified-view-button {
   position: absolute;
-  top: 160px;
-  left: 60px;
-  width: 64px;
-  height: 64px;
+  top: 10rem;
+  left: 3.75rem;
+  width: 4rem;
+  height: 4rem;
   color: white;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 0.1875rem solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   padding: 0;
   display: flex;
@@ -544,7 +542,7 @@
   justify-content: center;
   text-align: center;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
   opacity: 1;
   pointer-events: auto;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -558,13 +556,13 @@
 /* 模型模式样式（紫色） */
 .unified-view-button.model-mode {
   background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0.5rem 1.25rem rgba(99, 102, 241, 0.35), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   animation: pulse-glow 2.5s ease-in-out infinite;
 }
 
 .unified-view-button.model-mode:hover {
-  transform: scale(1.2) translateY(-4px);
-  box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5), inset -2px -2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 8px rgba(255, 255, 255, 0.3);
+  transform: scale(1.2) translateY(-0.25rem);
+  box-shadow: 0 0.75rem 2rem rgba(99, 102, 241, 0.5), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.2), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #7c3aed, #a855f7);
   border-color: rgba(255, 255, 255, 0.5);
 }
@@ -572,20 +570,20 @@
 /* 结果模式样式（青色） */
 .unified-view-button.result-mode {
   background: linear-gradient(135deg, #06b6d4, #0891b2);
-  box-shadow: 0 8px 20px rgba(6, 182, 212, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0.5rem 1.25rem rgba(6, 182, 212, 0.35), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   animation: pulse-glow-cyan 2.5s ease-in-out infinite;
 }
 
 .unified-view-button.result-mode:hover {
-  transform: scale(1.2) translateY(-4px);
-  box-shadow: 0 12px 32px rgba(6, 182, 212, 0.5), inset -2px -2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 8px rgba(255, 255, 255, 0.3);
+  transform: scale(1.2) translateY(-0.25rem);
+  box-shadow: 0 0.75rem 2rem rgba(6, 182, 212, 0.5), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.2), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #0891b2, #0369a1);
   border-color: rgba(255, 255, 255, 0.5);
 }
 
 .unified-view-button:active {
   transform: scale(0.95);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3), inset -1px -1px 4px rgba(0, 0, 0, 0.2), inset 1px 1px 4px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0.25rem 0.75rem rgba(99, 102, 241, 0.3), inset -0.0625rem -0.0625rem 0.25rem rgba(0, 0, 0, 0.2), inset 0.0625rem 0.0625rem 0.25rem rgba(255, 255, 255, 0.1);
 }
 
 .avatar-wrapper:hover .unified-view-button.model-mode {
@@ -597,22 +595,22 @@
 }
 
 .view-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
   display: block;
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: 0.125rem;
 }
 
 .view-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
 }
 
 /* === 3D 模型容器 === */
 .model-3d-container {
   width: 100%;
-  height: 100vh; /* 這裡設定跟container的高度一致 */
-  max-width: 1000px;
+  height: 100vh;
+  max-width: 62.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -624,7 +622,7 @@
 /* 響應式調整 3D 容器 */
 @media (max-width: 768px) {
   .model-3d-container {
-    height: 500px;
+    height: 31.25rem;
     width: 95vw;
   }
 }
@@ -632,40 +630,40 @@
 /* 響應式調整 */
 @media (max-width: 768px) {
   .unified-view-button {
-    width: 56px;
-    height: 56px;
-    font-size: 10px;
-    top: 70px;
-    right: 12px;
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 0.625rem;
+    top: 4.375rem;
+    right: 0.75rem;
   }
   
   .view-icon {
-    font-size: 22px;
-    margin-bottom: 2px;
+    font-size: 1.375rem;
+    margin-bottom: 0.125rem;
   }
   
   .view-label {
-    font-size: 10px;
+    font-size: 0.625rem;
   }
 }
 
 /* === 虛擬試穿模式選擇器 === */
 .virtual-tryon-mode-selector {
   position: absolute;
-  top: 240px;
-  left: 60px;
+  top: 15rem;
+  left: 3.75rem;
   z-index: 35;
 }
 
 .mode-selector-button {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 4rem;
+  height: 4rem;
   background: linear-gradient(135deg, #ec4899, #f472b6);
   color: white;
-  border: 3px solid rgba(255, 255, 255, 0.3);
+  border: 0.1875rem solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
   padding: 0;
   display: flex;
@@ -673,12 +671,12 @@
   justify-content: center;
   text-align: center;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
   opacity: 1;
   pointer-events: auto;
   transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0.5rem 1.25rem rgba(236, 72, 153, 0.35), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   line-height: 1.1;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
   animation: pulse-glow-pink 2.5s ease-in-out infinite;
@@ -686,14 +684,14 @@
 }
 
 .mode-icon {
-  font-size: 24px;
+  font-size: 1.5rem;
   display: block;
   line-height: 1;
-  margin-bottom: 2px;
+  margin-bottom: 0.125rem;
 }
 
 .mode-label {
-  font-size: 11px;
+  font-size: 0.6875rem;
   font-weight: 700;
 }
 
@@ -702,15 +700,15 @@
 }
 
 .mode-selector-button:hover {
-  transform: scale(1.2) translateY(-4px);
-  box-shadow: 0 12px 32px rgba(236, 72, 153, 0.5), inset -2px -2px 8px rgba(0, 0, 0, 0.2), inset 2px 2px 8px rgba(255, 255, 255, 0.3);
+  transform: scale(1.2) translateY(-0.25rem);
+  box-shadow: 0 0.75rem 2rem rgba(236, 72, 153, 0.5), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.2), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.3);
   background: linear-gradient(135deg, #be185d, #db2777);
   border-color: rgba(255, 255, 255, 0.5);
 }
 
 .mode-selector-button:active {
   transform: scale(0.95);
-  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3), inset -1px -1px 4px rgba(0, 0, 0, 0.2), inset 1px 1px 4px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0.25rem 0.75rem rgba(236, 72, 153, 0.3), inset -0.0625rem -0.0625rem 0.25rem rgba(0, 0, 0, 0.2), inset 0.0625rem 0.0625rem 0.25rem rgba(255, 255, 255, 0.1);
 }
 
 /* === 下拉菜單 === */
@@ -718,21 +716,21 @@
   position: absolute;
   top: 100%;
   left: 0;
-  margin-top: 8px;
+  margin-top: 0.5rem;
   background: white;
-  border: 2px solid #ec4899;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 0.125rem solid #ec4899;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
   overflow: hidden;
   animation: slideDown 0.3s ease-out;
   z-index: 100;
-  min-width: 120px;
+  min-width: 7.5rem;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-0.625rem);
   }
   to {
     opacity: 1;
@@ -743,16 +741,16 @@
 .mode-option {
   display: block;
   width: 100%;
-  padding: 12px 16px;
+  padding: 0.75rem 1rem;
   background: white;
   border: none;
   color: #333;
-  font-size: 13px;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-align: left;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 0.0625rem solid #f0f0f0;
 }
 
 .mode-option:last-child {
@@ -762,7 +760,7 @@
 .mode-option:hover {
   background: #ffe4f0;
   color: #ec4899;
-  padding-left: 20px;
+  padding-left: 1.25rem;
 }
 
 .mode-option.active {
@@ -773,58 +771,58 @@
 
 .mode-option.active::before {
   content: '✓ ';
-  margin-right: 4px;
+  margin-right: 0.25rem;
 }
 
 /* === 粉紅色脈動動畫 === */
 @keyframes pulse-glow-pink {
   0%, 100% {
-    box-shadow: 0 8px 20px rgba(236, 72, 153, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0.5rem 1.25rem rgba(236, 72, 153, 0.35), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   }
   50% {
-    box-shadow: 0 8px 30px rgba(236, 72, 153, 0.6), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0.5rem 1.875rem rgba(236, 72, 153, 0.6), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   }
 }
 
 /* === 青色脈動動畫 === */
 @keyframes pulse-glow-cyan {
   0%, 100% {
-    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.35), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0.5rem 1.25rem rgba(6, 182, 212, 0.35), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   }
   50% {
-    box-shadow: 0 8px 30px rgba(6, 182, 212, 0.6), inset -2px -2px 8px rgba(0, 0, 0, 0.15), inset 2px 2px 8px rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0.5rem 1.875rem rgba(6, 182, 212, 0.6), inset -0.125rem -0.125rem 0.5rem rgba(0, 0, 0, 0.15), inset 0.125rem 0.125rem 0.5rem rgba(255, 255, 255, 0.2);
   }
 }
 
 /* 響應式調整虛擬試穿模式選擇器 */
 @media (max-width: 768px) {
   .virtual-tryon-mode-selector {
-    top: 140px;
+    top: 8.75rem;
     left: auto;
-    right: 80px;
+    right: 5rem;
   }
   
   .mode-selector-button {
-    width: 56px;
-    height: 56px;
-    font-size: 10px;
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 0.625rem;
   }
   
   .mode-icon {
-    font-size: 22px;
-    margin-bottom: 2px;
+    font-size: 1.375rem;
+    margin-bottom: 0.125rem;
   }
   
   .mode-label {
-    font-size: 10px;
+    font-size: 0.625rem;
   }
   
   .mode-dropdown {
-    min-width: 110px;
+    min-width: 6.875rem;
   }
   
   .mode-option {
-    padding: 10px 14px;
-    font-size: 12px;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.75rem;
   }
 }

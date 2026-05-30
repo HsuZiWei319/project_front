@@ -14,7 +14,10 @@
 .favorites-page .pagetitle-label {
     font-size: var(--font-3xl);
     font-weight: 700;
-    color: #ec4899;
+    background: linear-gradient(135deg, #ec4899, #f43f5e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: var(--spacing-lg);
     letter-spacing: -0.5px;
 }
@@ -165,6 +168,17 @@
     animation: slideUp 0.4s ease-out;
 }
 
+/* 衣櫃視圖 - 啟用滾動 */
+.wardrobe-content.wardrobe-clothes-view {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* 穿搭視圖 - 禁用外層滾動，讓 react-window 處理 */
+.wardrobe-content.wardrobe-outfit-view {
+    overflow: hidden;
+}
+
 /* 分類標題 */
 .category-group {
     margin-bottom: 48px;
@@ -271,23 +285,23 @@
     font-weight: 500;
 }
 
-/* 隱藏滾動條 */
-.wardrobe-content::-webkit-scrollbar {
+/* 隱藏滾動條 - 僅在衣櫃視圖顯示 */
+.favorites-page .wardrobe-content.wardrobe-clothes-view::-webkit-scrollbar {
     width: 8px;
 }
 
-.wardrobe-content::-webkit-scrollbar-track {
+.favorites-page .wardrobe-content.wardrobe-clothes-view::-webkit-scrollbar-track {
     background: var(--gray-100);
     border-radius: 10px;
 }
 
-.wardrobe-content::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--primary), #a855f7);
+.favorites-page .wardrobe-content.wardrobe-clothes-view::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ec4899, #f43f5e);
     border-radius: 10px;
 }
 
-.wardrobe-content::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
+.favorites-page .wardrobe-content.wardrobe-clothes-view::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #f43f5e, #ec4899);
 }
 
 /* 穿搭項目樣式 */
