@@ -16,7 +16,26 @@ CONTAINER_NAME="upload-image-cont"
 IMAGE_NAME="upload-image-img"
 PORT=5173
 AI_PORT=8000
-DEV_MODE=${1:-dev}  # 預設為開發模式，可以傳入其他值改為生產模式
+
+# 模式選擇邏輯
+if [ -z "$1" ]; then
+    # 沒有傳入參數，提示用戶選擇
+    echo "請選擇運行模式:"
+    echo "  1) 開發模式 (dev) - 支援熱更新 (HMR)"
+    echo "  2) 生產模式 (prod) - 使用 Nginx"
+    read -p "請輸入選擇 (1 或 2): " choice
+    
+    case $choice in
+        1|dev) DEV_MODE="dev" ;;
+        2|prod) DEV_MODE="prod" ;;
+        *) 
+            echo "❌ 無效選擇，預設使用開發模式"
+            DEV_MODE="dev"
+            ;;
+    esac
+else
+    DEV_MODE=$1
+fi
 
 # 顯示顏色輸出
 RED='\033[0;31m'
@@ -200,7 +219,6 @@ else
     # 生產模式
     if run_docker_cmd run -d \
        -p "$PORT:80" \
-       -p "$AI_PORT:8000" \
        --name "$CONTAINER_NAME" \
        "$IMAGE_NAME"; then
         echo "✓ 容器啟動命令已執行"
@@ -224,8 +242,12 @@ fi
 
 echo ""
 echo "========================================"
-echo -e "${GREEN}🎉 前端模式運行在: http://localhost:$PORT${NC}"
-echo -e "${GREEN}🤖 AI API 運行在: http://localhost:$AI_PORT${NC}"
+if [ "$IS_DEV" = true ]; then
+    echo -e "${GREEN}🎉 開發模式運行在: http://localhost:$PORT${NC}"
+    echo -e "${GREEN}🤖 AI API 運行在: http://localhost:$AI_PORT${NC}"
+else
+    echo -e "${GREEN}🎉 生產模式運行在: http://localhost:$PORT${NC}"
+fi
 echo "========================================"
 echo ""
 echo "📋 容器名稱: $CONTAINER_NAME"

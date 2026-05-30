@@ -49,18 +49,11 @@ EXPOSE 5173 8000
 CMD ["./entrypoint.sh"]
 
 # --- 階段四：生產模式 (Prod) ---
-# 生產環境改用 Debian 版本的 Nginx，避免 Alpine 的 Python 報錯
 FROM nginx:stable AS prod
 WORKDIR /app
 
-# 從基礎環境安裝 Python (Nginx 官方 Image 預設沒 Python)
-RUN apt-get update && apt-get install -y python3 python3-venv && rm -rf /var/lib/apt/lists/*
-
-# 複製建置好的前端與 AI 邏輯
+# 複製建置好的前端靜態文件
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY --from=builder /app/ai_api ./ai_api
-COPY --from=base /opt/venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
 
 # 複製 Nginx 配置
 COPY nginx.conf /etc/nginx/conf.d/default.conf
@@ -69,5 +62,5 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY entrypoint_prod.sh ./
 RUN chmod +x entrypoint_prod.sh
 
-EXPOSE 80 8000
+EXPOSE 80
 CMD ["./entrypoint_prod.sh"]
