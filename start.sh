@@ -177,13 +177,15 @@ echo ""
 echo "   🔨 開始 Docker 構建..."
 if [ "$IS_DEV" = true ]; then
     BUILD_TARGET="dev"
+    BUILD_BACKEND_URL=$BACKEND_URL
 else
     BUILD_TARGET="prod"
+    BUILD_BACKEND_URL=""
 fi
 
 if run_docker_cmd build \
    --target $BUILD_TARGET \
-   --build-arg VITE_API_URL=$BACKEND_URL \
+   --build-arg VITE_API_URL=$BUILD_BACKEND_URL \
    --build-arg VITE_AI_API_URL=$AI_API_URL \
    -t $IMAGE_NAME . ; then
     echo -e "   ${GREEN}✅ Docker Image 構建成功！${NC}"
@@ -203,8 +205,9 @@ echo "🔥 啟動容器中..."
 # 啟動開發模式容器
 if [ "$IS_DEV" = true ]; then
     if run_docker_cmd run -d \
-       -p "$PORT:5173" \
-       -p "$AI_PORT:8000" \
+       --network app-network \
+       -p "0.0.0.0:$PORT:5173" \
+       -p "0.0.0.0:$AI_PORT:8000" \
        -v "$(pwd)/src:/app/src" \
        -v "$(pwd)/public:/app/public" \
        -v "$(pwd)/ai_api:/app/ai_api" \
@@ -218,7 +221,8 @@ if [ "$IS_DEV" = true ]; then
 else
     # 生產模式
     if run_docker_cmd run -d \
-       -p "$PORT:80" \
+       --network app-network \
+       -p "0.0.0.0:$PORT:80" \
        --name "$CONTAINER_NAME" \
        "$IMAGE_NAME"; then
         echo "✓ 容器啟動命令已執行"
@@ -229,7 +233,7 @@ else
 fi
 
 # 等待容器完全啟動
-sleep 5
+sleep 2
 
 # 檢查容器是否成功啟動
 if run_docker_cmd ps --filter "name=$CONTAINER_NAME" --filter "status=running" &>/dev/null; then

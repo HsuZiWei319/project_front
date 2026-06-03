@@ -4,11 +4,11 @@ services:
       context: .
       target: prod
       args:
-        VITE_API_URL: "http://localhost:30000"
+        VITE_API_URL: ""
     container_name: upload-image-cont
     ports:
-      - "80:80"
-      - "8000:8000"
+      - "0.0.0.0:5173:5173"
+      - "0.0.0.0:8000:8000"
     volumes:
       - .:/app
       - /app/node_modules

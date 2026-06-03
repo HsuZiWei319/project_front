@@ -243,6 +243,9 @@
 
 .ai-chat-card-image {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   overflow: hidden;
   background: #f0f0f0;
@@ -454,6 +457,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  align-items: center;
 }
 
 .ai-chat-detail-image img {

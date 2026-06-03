@@ -105,6 +105,16 @@ const ProfilePage = () => {
       setShowDeleteModal(false);
     }
   };
+  const clearMainPageModelCache = () => {
+    // 清除與舊模特兒相關的所有試穿暫存資料
+    localStorage.removeItem('virtualTryOnResult');
+    localStorage.removeItem('virtualTryOnError');
+    sessionStorage.removeItem('virtualTryingStatus');
+    sessionStorage.removeItem('virtualTryOnHistory');
+    
+    // 通知 SWR 重新獲取主頁的模特兒照片
+    mutate('modelPhoto');
+  };
 
   const handlePhotoClick = () => {
     if (hookIsLoading) return;
@@ -117,7 +127,8 @@ const ProfilePage = () => {
     try {
       await handleFileSelectedForModelUpload(file, () => {
         event.target.value = '';
-        // 上傳成功後，通知 SWR 重新獲取數據
+        // 上傳成功後，清除主頁暫存並重新載入 SWR 數據
+        clearMainPageModelCache();
         mutate('profileModelPhoto');
       });
     } catch (error) {
@@ -151,7 +162,8 @@ const ProfilePage = () => {
     
     try {
       await handleFileSelectedForModelUpload(file, () => {
-        // 上傳成功後，通知 SWR 重新獲取數據
+        // 上傳成功後，清除主頁暫存並重新載入 SWR 數據
+        clearMainPageModelCache();
         mutate('profileModelPhoto');
       });
     } catch (error) {

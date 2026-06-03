@@ -116,11 +116,11 @@
 /* 試穿按鈕容器 */
 .try-on-button-container {
   position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%); /* 將容器向左平移自身寬度的50%，使中心對齊中點 */
+  bottom: 8rem;
+  left: 47.25%;
+  transform: translateX(-50%);
   z-index: 100;
-  animation: slideUp 0.4s ease-out;
+  animation: slideUp 0.4s ease-out forwards;
 }
 
 /* 試穿按鈕 */
@@ -166,4 +166,27 @@
 
 .virtual-tryon-content::-webkit-scrollbar-thumb:hover {
   background: var(--secondary-dark);
+}
+
+/* 動畫定義 */
+@keyframes slideUp {
+  from {
+    transform: translateX(-50%) translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }

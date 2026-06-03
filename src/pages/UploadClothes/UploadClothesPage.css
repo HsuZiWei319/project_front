@@ -9,6 +9,7 @@
 
 /* UploadClothesPage 主容器 */
 .upload-clothes-content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

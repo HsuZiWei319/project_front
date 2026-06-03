@@ -9,6 +9,7 @@
 
 /* ClothesInfoPage 主容器 */
 .clothes-info-content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
