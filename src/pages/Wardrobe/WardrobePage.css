@@ -111,6 +111,7 @@
 
 /* 衣櫃視圖 */
 .wardrobe-clothes-view {
+    width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.02), rgba(168, 85, 247, 0.02));
@@ -118,8 +119,14 @@
 
 /* 穿搭視圖 */
 .wardrobe-outfit-view {
+  width: 100%;
   background: transparent;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: calc(6.25rem + var(--spacing-lg)); /* 避免被 absolute 定位的 bottom nav 擋住，並與 container 底部保持距離 */
+  box-sizing: border-box;
 }
 
 /* 分類標題 */
@@ -334,6 +341,10 @@
   animation: slideUp 0.4s ease-out;
   background: transparent;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 /* 穿搭歷史列表 */

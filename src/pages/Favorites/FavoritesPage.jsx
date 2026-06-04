@@ -318,7 +318,6 @@ const FavoritesPage = () => {
                                 }}
                                 getImageUrl={getFullOutfitImageUrl}
                                 itemHeight={420}
-                                windowHeight={window.innerHeight - 300}
                             />
                         ) : (
                             !outfitIsLoading && (
@@ -329,7 +328,6 @@ const FavoritesPage = () => {
                                 </div>
                             )
                         )}
-                        <div style={{ height: '80px' }}></div>
                     </>
                 )}
             </main>

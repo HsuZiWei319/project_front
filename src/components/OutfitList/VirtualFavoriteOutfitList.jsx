@@ -20,6 +20,39 @@ const VirtualFavoriteOutfitList = ({
   const pressTimerRef = React.useRef({}); // 追蹤每個穿搭項的按下計時器
   const LONG_PRESS_THRESHOLD = 500; // 500ms 判定為長按
 
+  const containerRef = React.useRef(null);
+  const [listHeight, setListHeight] = React.useState(windowHeight);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const height = entry.target.clientHeight;
+        if (height > 0) {
+          setListHeight(height);
+        }
+      }
+    });
+
+    resizeObserver.observe(containerRef.current);
+
+    const initialHeight = containerRef.current.clientHeight;
+    if (initialHeight > 0) {
+      setListHeight(initialHeight);
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!containerRef.current || containerRef.current.clientHeight === 0) {
+      setListHeight(windowHeight);
+    }
+  }, [windowHeight]);
+
   const Row = useCallback(({ index, style }) => {
     const outfit = outfits[index];
     if (!outfit) return null;
@@ -141,9 +174,9 @@ const VirtualFavoriteOutfitList = ({
       </h2>
 
       {itemCount > 0 ? (
-        <div className="virtual-favorite-outfit-list-wrapper">
+        <div className="virtual-favorite-outfit-list-wrapper" ref={containerRef}>
           <List
-            height={windowHeight}
+            height={listHeight}
             itemCount={itemCount}
             itemSize={itemHeight}
             width="100%"

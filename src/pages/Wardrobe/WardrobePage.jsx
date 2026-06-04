@@ -292,7 +292,6 @@ const WardrobePage = () => {
                                 }}
                                 getImageUrl={getFullClothesImageUrl}
                                 itemHeight={420}
-                                windowHeight={window.innerHeight - 300}
                             />
                         ) : (
                             !isOutfitLoading && (
@@ -303,7 +302,6 @@ const WardrobePage = () => {
                                 </div>
                             )
                         )}
-                        <div style={{ height: '80px' }}></div>
                     </>
                 )}
             </main>

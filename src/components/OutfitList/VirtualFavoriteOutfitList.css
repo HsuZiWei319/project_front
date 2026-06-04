@@ -135,7 +135,8 @@
 /* 虛擬列表包裝器 - 滾動條樣式 (桃紅色) */
 .virtual-favorite-outfit-list-wrapper {
   width: 100%;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
 }
 
 .virtual-favorite-outfit-list-wrapper > div {

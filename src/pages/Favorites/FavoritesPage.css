@@ -177,6 +177,11 @@
 /* 穿搭視圖 - 禁用外層滾動，讓 react-window 處理 */
 .wardrobe-content.wardrobe-outfit-view {
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-bottom: calc(6.25rem + var(--spacing-lg)); /* 避免被 absolute 定位的 bottom nav 擋住，並與 container 底部保持距離 */
+    box-sizing: border-box;
 }
 
 /* 分類標題 */
@@ -307,6 +312,10 @@
 /* 穿搭項目樣式 */
 .outfit-history-container {
     animation: slideUp 0.4s ease-out;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .outfit-history-list {
